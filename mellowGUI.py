@@ -64,6 +64,8 @@ class MellowGUI:
 	THROW_TIME=1000
 	FRAME_WAIT_TIME = 100
 	
+	#Dealers:
+	desler = ''
 	
 	WHITE = (255, 255, 255)
 
@@ -124,24 +126,43 @@ class MellowGUI:
 						self.tricks = 4 *[0]
 
 
+	def setDealer(self, name):
+		self.desler = name
 	
-	def bidSouth(self, mellowGUI, bid):
-		self.southBid = bid
+	def bidSouth(self, bid):
+		with self.bidLock:
+			self.southBid = bid
 		
-	def bidWest(self, mellowGUI, bid):
-		self.westBid = bid
+	def bidWest(self, bid):
+		with self.bidLock:
+			self.westBid = bid
 		
-	def bidNorth(self, mellowGUI, bid):
-		self.northBid = bid
+	def bidNorth(self, bid):
+		with self.bidLock:
+			self.northBid = bid
 		
-	def bidEast(self, mellowGUI, bid):
-		self.eastBid = bid
-	
+	def bidEast(self, bid):
+		with self.bidLock:
+			self.eastBid = bid
+			
+	def addTrickSouth(self):
+		self.tricks[0] = self.tricks[0] + 1
+		
+	def addTrickWest(self):
+		self.tricks[1] = self.tricks[1] + 1
+		
+	def addTrickNorth(self):
+		self.tricks[2] = self.tricks[2] + 1
+		
+	def addTrickEast(self):
+		self.tricks[3] = self.tricks[3] + 1
+		
 	southCardLock = threading.Lock()
 	westCardLock = threading.Lock()
 	northCardLock = threading.Lock()
 	eastCardLock = threading.Lock()
 	scoreLock = threading.Lock()
+	bidLock = threading.Lock()
 	
 	#0: south, 1: west, 2: north, 3: east
 	#TODO: say which card is the one thrown
@@ -210,9 +231,30 @@ class MellowGUI:
 			#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 2*40))
 			#self.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 2*40))
 			
-			labelExample4 = myfont.render(str(self.scoreForUs) + "  " + str(self.scoreForThem) + "  (DEALER)", 1, (0,0,255))
+			
+			labelExample4 = myfont.render(str(self.scoreForUs) + "  " + str(self.scoreForThem) + "  (" + self.desler + ")", 1, (0,0,255))
 			self.screen.blit(labelExample4, ((1*self.width)/32, (4*self.height)/5 + 10 + 2*40))
 	
+	def printTricks(self):
+		with self.bidLock:
+			myfont = pygame.font.SysFont("comicsansms", 30)
+			
+			labelTricksSouth = myfont.render(str(self.tricks[0]) + "/" + str(self.southBid), 1, (0,0,255))
+			labelTricksWest = myfont.render(str(self.tricks[1]) + "/" + str(self.westBid), 1, (0,0,255))
+			labelTricksNorth = myfont.render(str(self.tricks[2]) + "/" + str(self.northBid), 1, (0,0,255))
+			labelTricksEast = myfont.render(str(self.tricks[3]) + "/" + str(self.eastBid), 1, (0,0,255))
+			
+			if self.westBid >= 0:
+				self.screen.blit(labelTricksWest, (5, self.height/2))
+			
+			if self.eastBid >= 0:
+				self.screen.blit(labelTricksEast, (1*self.width - 85, self.height/2))
+			
+			if self.northBid >= 0:
+				self.screen.blit(labelTricksNorth, (self.width/2, self.height/20))
+			
+			if self.southBid >= 0:
+				self.screen.blit(labelTricksSouth, (self.width/2, self.height - 90))
 	
 	def printcard(self, x, y, num, rotate90):
 		if num >= 52:
@@ -240,13 +282,16 @@ class MellowGUI:
 			self.printcard(int(centerX - self.card_height/2), int(centerY - self.card_width/2), num, rotate90)
 
 	def getXCordFirstCardNorthSouth(self, cardList):
-		firstX = self.screen_width/2
-		if len(cardList) % 2 == 0:
-			firstX = firstX + self.card_width/4
-		
-		firstX = firstX - int(len(cardList)/2)*(self.card_width/2)
-		
-		return firstX
+		if cardList != None:
+			firstX = self.screen_width/2
+			if len(cardList) % 2 == 0:
+				firstX = firstX + self.card_width/4
+			
+			firstX = firstX - int(len(cardList)/2)*(self.card_width/2)
+			
+			return firstX
+		else:
+			return 0
 
 
 	def isMouseHoveringOverCard(self, mx, my):
@@ -351,6 +396,8 @@ class MellowGUI:
 					for x in range(0, numSpaces):
 						self.southCards[origIndex + x] = self.southCards[origIndex + x + 1]
 					self.southCards[origIndex + numSpaces] = temp
+		
+		return self.southCards
 
 
 	def getCardLocation(self, cardHeldIndex):
@@ -359,41 +406,42 @@ class MellowGUI:
 
 
 	def reorgSouthCards(self, mx, my, mouseJustPressed, mouseHeld, mouseJustRelease, cardHeldIndex):
-		indexOfMouseOnCard = self.getIndexCardHover(mx, my)
-		
-		mouseHoveringOverCard = self.isMouseHoveringOverCard(mx, my)
-		
-		#no card held:
-		if mouseJustPressed == 1:
+		with self.southCardLock:
+			indexOfMouseOnCard = self.getIndexCardHover(mx, my)
 			
-			if mouseHoveringOverCard == 1:
-				cardHeldIndex = indexOfMouseOnCard
-		
-		
-		if mouseJustRelease == 1:
-			if my < self.screen_height - self.off_the_edgeY - self.card_height/2:
-				if cardHeldIndex >= 0:
-					print '#TODO: if allowed to play....'
-					if cardHeldIndex >=0 and cardHeldIndex < len(self.southCards):
-						cardHeldIndex = self.NOINDEX
-						#TODO: send command to controller about what card the user wants to play.
-						
-						
-		
-		if mouseHeld == 1:
-			if mouseHoveringOverCard == 1:
-				if cardHeldIndex > indexOfMouseOnCard:
-					shiftAmount = cardHeldIndex - indexOfMouseOnCard
-					self.southCards = shiftSouthCards(cardHeldIndex, 1, shiftAmount)
-					cardHeldIndex = indexOfMouseOnCard
-					#print southCards[0]
-					
-				elif cardHeldIndex < indexOfMouseOnCard:
-					shiftAmount = indexOfMouseOnCard - cardHeldIndex
-					self.southCards = shiftSouthCards(cardHeldIndex, 0, shiftAmount)
+			mouseHoveringOverCard = self.isMouseHoveringOverCard(mx, my)
+			
+			#no card held:
+			if mouseJustPressed == 1:
+				
+				if mouseHoveringOverCard == 1:
 					cardHeldIndex = indexOfMouseOnCard
 			
-		return cardHeldIndex
+			
+			if mouseJustRelease == 1:
+				if my < self.screen_height - self.off_the_edgeY - self.card_height/2:
+					if cardHeldIndex >= 0:
+						print '#TODO: if allowed to play....'
+						if cardHeldIndex >=0 and cardHeldIndex < len(self.southCards):
+							cardHeldIndex = self.NOINDEX
+							#TODO: send command to controller about what card the user wants to play.
+							
+							
+			
+			if mouseHeld == 1:
+				if mouseHoveringOverCard == 1:
+					if cardHeldIndex > indexOfMouseOnCard:
+						shiftAmount = cardHeldIndex - indexOfMouseOnCard
+						self.southCards = self.shiftSouthCards(cardHeldIndex, 1, shiftAmount)
+						cardHeldIndex = indexOfMouseOnCard
+						#print southCards[0]
+						
+					elif cardHeldIndex < indexOfMouseOnCard:
+						shiftAmount = indexOfMouseOnCard - cardHeldIndex
+						self.southCards = self.shiftSouthCards(cardHeldIndex, 0, shiftAmount)
+						cardHeldIndex = indexOfMouseOnCard
+				
+			return cardHeldIndex
 		
 
 		
@@ -528,7 +576,6 @@ def main(name):
 		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 1*40))
 		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 2*40))
 		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 3*40))
-		mellowGUI.printScore()
 		
 		mellowGUI.screen.blit(ball, ballrect)
 		mx,my = pygame.mouse.get_pos()
@@ -548,6 +595,10 @@ def main(name):
 			mellowGUI.screen.blit(mellowGUI.reddot, (mx-5, my-5), (0, 0, 10, 10))
 		else:
 			mellowGUI.screen.blit(mellowGUI.dot, (mx-5, my-5), (0, 0, 10, 10))
+		
+		mellowGUI.printScore()
+		
+		mellowGUI.printTricks()
 		
 		pygame.display.update()
 		mouseJustPressed = 0

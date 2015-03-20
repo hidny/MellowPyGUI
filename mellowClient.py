@@ -226,14 +226,25 @@ def serverListener(name, host, mellowGUIVars):
 							bidder = msgTokens[2][0:-1]
 							if isBid == 1:
 								bid = msgTokens[3]
+								if bid[len(bid) - 1] == '\n':
+									bid = bid[0:-1]
+								
 								if players[0]  == bidder:
+									mellowGUIVars.bidSouth(bid)
 									print 'South(' + bidder + ') bids ' + bid
+									
 								elif players[1] == bidder:
+									mellowGUIVars.bidWest(bid)
 									print 'West(' + bidder + ') bids ' + bid
+									
 								elif players[2] == bidder:
+									mellowGUIVars.bidNorth(bid)
 									print 'North(' + bidder + ') bids ' + bid
+									
 								elif players[3] == bidder:
+									mellowGUIVars.bidEast(bid)
 									print 'East(' + bidder + ') bids ' + bid
+									
 								else:
 									print 'ERROR: unknown player bids'
 									sys.exit(1)
@@ -268,12 +279,20 @@ def serverListener(name, host, mellowGUIVars):
 						
 						if players[0]  == dealer:
 							print 'Dealer is South(' + dealer + ')'
+							mellowGUIVars.setDealer("South(" + dealer + ")")
+							
 						elif players[1] == dealer:
 							print 'Dealer is West(' + dealer + ')'
+							mellowGUIVars.setDealer("West(" + dealer + ")")
+							
 						elif players[2] == dealer:
 							print 'Dealer is North(' + dealer + ')'
+							mellowGUIVars.setDealer("North(" + dealer + ")")
+							
 						elif players[3] == dealer:
 							print 'Dealer is East(' + dealer + ')'
+							mellowGUIVars.setDealer("East(" + dealer + ")")
+							
 						else:
 							print 'current dealer: ' + dealer
 							print 'ERROR: unknown dealer'
@@ -286,12 +305,16 @@ def serverListener(name, host, mellowGUIVars):
 							fightWinner = fightWinner[0:-1]
 						
 						if players[0]  == fightWinner:
+							mellowGUIVars.addTrickSouth()
 							print 'Fight Winner is South(' + fightWinner + ')'
 						elif players[1] == fightWinner:
+							mellowGUIVars.addTrickWest()
 							print 'Fight Winner is West(' + fightWinner + ')'
 						elif players[2] == fightWinner:
+							mellowGUIVars.addTrickNorth()
 							print 'Fight Winner is North(' + fightWinner + ')'
 						elif players[3] == fightWinner:
+							mellowGUIVars.addTrickEast()
 							print 'Fight Winner is East(' + fightWinner + ')'
 						else:
 							print 'current fightWinner: ' + fightWinner
