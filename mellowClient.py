@@ -110,7 +110,7 @@ def shiftArrayByOne(array):
 	array[len(array) - 1] = temp
 	return array
 
-def serverListener(name, host, mellowGUIVars):
+def serverListener(name, host, mellowGUIVars, interact):
 	global gameStarted
 	global players
 	global currentPlayerName
@@ -128,7 +128,7 @@ def serverListener(name, host, mellowGUIVars):
 		print 'Card height in server Listener: ' + str(mellowGUIVars.card_height)
 		
 		data =''
-		while 1:
+		while mellowGUIVars.isStillRunning() == 1:
 			if data != '':
 				data = data + s.recv(BUFFER_SIZE)
 			else:
@@ -307,15 +307,23 @@ def serverListener(name, host, mellowGUIVars):
 						if players[0]  == fightWinner:
 							mellowGUIVars.addTrickSouth()
 							print 'Fight Winner is South(' + fightWinner + ')'
+							#mellowGUIVars.setMessage('Fight Winner is South(' + fightWinner + ')')
+							
 						elif players[1] == fightWinner:
 							mellowGUIVars.addTrickWest()
 							print 'Fight Winner is West(' + fightWinner + ')'
+							#mellowGUIVars.setMessage('Fight Winner is West(' + fightWinner + ')')
+							
 						elif players[2] == fightWinner:
 							mellowGUIVars.addTrickNorth()
 							print 'Fight Winner is North(' + fightWinner + ')'
+							#mellowGUIVars.setMessage('Fight Winner is North(' + fightWinner + ')')
+							
 						elif players[3] == fightWinner:
 							mellowGUIVars.addTrickEast()
 							print 'Fight Winner is East(' + fightWinner + ')'
+							#mellowGUIVars.setMessage('Fight Winner is East(' + fightWinner + ')')
+							
 						else:
 							print 'current fightWinner: ' + fightWinner
 							print 'ERROR: unknown fight winner'
@@ -409,7 +417,7 @@ def serverListener(name, host, mellowGUIVars):
 	except:
 		print 'ERROR: in server listener'
 
-def clientListener(name, host, mellowGUIVars):
+def clientListener(name, host, mellowGUIVars, interact):
 	global gameStarted
 	global currentPlayerName
 	global players
@@ -427,22 +435,42 @@ def clientListener(name, host, mellowGUIVars):
 		else:
 			s.send('/join mellowpy' + '\n')
 		
-		while 1:
-			time.sleep(0.2)
+		
+		playedACardInFight = 0
+			
+		while mellowGUIVars.isStillRunning() == 1:
 			if host == 1 and gameStarted == 0:
+				time.sleep(0.2)
 				s.send('/start' + '\n')
 				#print 'sent msg'
-			elif itsYourBid==1:
-				with turn_lock:
-					s.send('/move 1' + '\n')
-					itsYourBid = 0
-					itsYourTurn = 0
-				print 'sent msg'
-			elif itsYourTurn==1:
-				with turn_lock:
-					s.send('/move 1' + '\n')
-					itsYourBid = 0
-					itsYourTurn = 0
+			
+			
+			if interact == 0:
+				time.sleep(0.2)
+				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
+					time.sleep(1)
+					#CODE TO SLOW game down so I could follow it:
+					mellowGUIVars.remove_Projectiles()
+					playedACardInFight = 0
+				
+				if itsYourBid==1:
+					with turn_lock:
+						s.send('/move 1' + '\n')
+						itsYourBid = 0
+						itsYourTurn = 0
+					print 'sent msg'
+				elif itsYourTurn==1:
+					print 'Your turn'
+					with turn_lock:
+						if mellowGUIVars.isNewFightStarting():
+							time.sleep(0.5)
+						time.sleep(0.2)
+						s.send('/move 1' + '\n')
+						playedACardInFight = 1
+						itsYourBid = 0
+						itsYourTurn = 0
+			elif interact == 1:
+				pass
 				#print 'sent msg'
 			#s.send('Hello server' + '\n')
 			#For some reason, the sleep command is necessary.
@@ -457,22 +485,28 @@ def main(mellowGUIVars):
 	else:
 		name = 'Michael'
 	
-	if len(sys.argv) > 2:
-		host = 1
-	else:
-		host = 0
+	host = 0
+	interact = 0
 	
+	for x in range (0, len(sys.argv)):
+		print str(sys.argv[x])
+		if sys.argv[x].find('host') != -1:
+			host = 1
+		elif sys.argv[x].find('meatbag') != -1:
+			interact = 1
+	
+	print 'HELLO HOST'
 	#Sanity testing:
 	#print 'Card height: ' + str(mellowGUIVars.card_height)
 	
 	try:
-		thread.start_new_thread( serverListener, (name, host, mellowGUIVars) )
+		thread.start_new_thread( serverListener, (name, host, mellowGUIVars, interact) )
 	except:
 		print "Error: unable to start thread 1"
 
 	#TODO: figure out if you could do multiprocessing.
 	
-	clientListener(name, host, mellowGUIVars)
+	clientListener(name, host, mellowGUIVars, interact)
 
 	
 if __name__ == "__main__":

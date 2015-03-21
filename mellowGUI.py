@@ -88,10 +88,25 @@ class MellowGUI:
 	green_dot_image_file = 'Image/greendot.png'
 	greendot = pygame.image.load(green_dot_image_file).convert()
 	
+	currentMsg = ''
+	
+	#variable to check if there's been a crash. (Or manual close)
+	
+	lastFrameTime = int(round(time.time() * 1000))
 	
 	def __init__(self):
 		#For now do nothing.
 		pass
+	
+	def updateLastFrameTime(self):
+		self.lastFrameTime = int(round(time.time() * 1000))
+		
+	def isStillRunning(self):
+		currentTime = int(round(time.time() * 1000))
+		if currentTime - self.lastFrameTime > 1000:
+			return 0
+		else:
+			return 1
 	
 	#Functions called by some controller file:
 	def setupCardsForNewRound(self, southCardsInput):
@@ -202,14 +217,28 @@ class MellowGUI:
 		for x in range(0, 4):
 			self.projectiles[x].printThrownCard(self)
 	
-		
+	#hack to see if the current player is leading.
+	#pre: we're assuming it's his turn to play.
+	def isNewFightStarting(self):
+		#TODO: is this the best way to lock it?
+		#Do I have to lock it to do a read?
+		temp = 0
+		with self.southCardLock:
+			with self.westCardLock:
+				with self.northCardLock:
+					with self.eastCardLock:
+						temp = len(self.southCards)
+						if temp == len(self.westCards) and temp == len(self.northCards) and temp == len(self.eastCards):
+							return 1
+						else:
+							return 0
+	
+	#TODO: use this or lose it.	
 	#pre: all projectiles are known.
-	def remove_Projectiles(self, winnerIndex):
-		for x in range(0, 4):
-			self.projectiles[x].endThrow()
-		
-		#TODO: do something with the tricks thing.
-		self.tricks[winnerIndex] = self.tricks[winnerIndex] + 1
+	def remove_Projectiles(self):
+		if len(self.projectiles) >= 4:
+			for x in range(0, 4):
+				self.projectiles[x].endThrow(self)
 	
 	def updateScore(self, us, them):
 		with self.scoreLock:
@@ -442,8 +471,16 @@ class MellowGUI:
 						cardHeldIndex = indexOfMouseOnCard
 				
 			return cardHeldIndex
+	
+	def setMessage(self, message):
+		self.currentMsg = message
+	
+	def displayCenterGameMsg(self):
+		myfont = pygame.font.SysFont("comicsansms", 30)
+		xOffset = len(self.currentMsg)
+		labelExample = myfont.render(str(self.currentMsg), 1, (0,0,255))
+		self.screen.blit(labelExample, (self.width/2 - 10 * xOffset, self.height/2 - 50))
 		
-
 		
 #FUNCTIONS THAT OUTSIDE CLASSES SHOULD USE:
 def convertCardStringToNum(card):
@@ -562,7 +599,7 @@ def main(name):
 		mellowGUI.screen.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
 		mellowGUI.screen.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
 		
-		mellowGUI.screen.blit(labelExample, (mellowGUI.width/2, mellowGUI.height/2))
+		#mellowGUI.screen.blit(labelExample, (mellowGUI.width/2, mellowGUI.height/2))
 		
 		#TODO: Score screen:
 		pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE, [(6*mellowGUI.width)/8, (4*mellowGUI.height)/5 + 10, 300, 200])
@@ -600,11 +637,15 @@ def main(name):
 		
 		mellowGUI.printTricks()
 		
+		#mellowGUI.setMessage('Chocolate')
+		mellowGUI.displayCenterGameMsg()
+		
 		pygame.display.update()
 		mouseJustPressed = 0
 		mouseJustRelease = 0
 		
 		#print 'Done frame'
+		mellowGUI.updateLastFrameTime()
 		clock.tick(mellowGUI.FRAME_WAIT_TIME)
 		
 
