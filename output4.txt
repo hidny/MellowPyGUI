@@ -1,7 +1,0 @@
-Inside Mellow GUI main!
-Card height in client Listener: 123
-Card height in server Listener: 123
-*****************************
-received message: Hello, Mom. Type /help or /h for help.
-*****************************
-received message: ERROR: couldn't find game.
