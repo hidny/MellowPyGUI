@@ -43,7 +43,6 @@ class Projectile:
 		self.rotation = 0
 
 def throwSouthCard(mellowVars, southCards, cardHeldIndex):
-	print 'Throw south'
 	if len(southCards) > 0:
 		southStartX = mellowVars.getCardLocation(cardHeldIndex)
 		southStartY = mellowVars.screen_height - mellowVars.off_the_edgeY - mellowVars.card_height/4
@@ -70,7 +69,6 @@ def getCardYLocation(mellowVars, eastWestcards, indexCard):
 	return ret
 
 def throwWestCard(mellowVars, westCards, cardNum):
-	print 'Throw west'
 	if len(westCards) > 0:
 		indexThrow = random.randint(0,len(westCards) - 1)
 		
@@ -87,21 +85,16 @@ def throwWestCard(mellowVars, westCards, cardNum):
 		return Projectile(0, 0, 0, 0, 0, 0, 0)
 	
 def throwEastCard(mellowVars, eastCards, cardNum):
-	print 'Throw east'
 	if len(eastCards) > 0:
-		print 'Throw east2'
 		indexThrow = random.randint(0,len(eastCards) - 1)
-		print 'Throw east3'
 		
 		eastStartX = mellowVars.screen_width -  mellowVars.off_the_edgeX
 		eastStartY = getCardYLocation(mellowVars, eastCards, indexThrow)
 		
-		print 'Throw east4'
 		eastEndX= mellowVars.screen_width/2 + mellowVars.card_width + mellowVars.card_height/4
 		eastEndY= mellowVars.screen_height/2
 		
 		eastCards.pop(indexThrow)
-		print 'Throw east5'
 		
 		return Projectile(1, eastStartX, eastStartY, eastEndX, eastEndY, cardNum, 1)
 	else:
@@ -109,11 +102,9 @@ def throwEastCard(mellowVars, eastCards, cardNum):
 		
 	
 def throwNorthCard(mellowVars, northCards, cardNum):
-	print 'Throw north'
 	if len(northCards) > 0:
 		indexThrow = random.randint(0,len(northCards) - 1)
 		
-		print 'Throw north2'
 		northStartX = mellowVars.getCardLocation(indexThrow)
 		northStartY = mellowVars.off_the_edgeY + mellowVars.card_height/2
 		northEndX   = mellowVars.screen_width/2
@@ -121,7 +112,6 @@ def throwNorthCard(mellowVars, northCards, cardNum):
 		
 		northCards.pop(indexThrow)
 		
-		print 'Throw north3'
 		return Projectile(1, northStartX, northStartY, northEndX, northEndY, cardNum, 0)
 	else:
 		return Projectile(0, 0, 0, 0, 0, 0, 0)

@@ -90,6 +90,9 @@ class MellowGUI:
 	
 	currentMsg = ''
 	
+	cardUserWantsToPlay = ''
+	
+	
 	#variable to check if there's been a crash. (Or manual close)
 	
 	lastFrameTime = int(round(time.time() * 1000))
@@ -433,7 +436,18 @@ class MellowGUI:
 		currentX = self.getXCordFirstCardNorthSouth(self.southCards)
 		return currentX + cardHeldIndex* (self.card_width/2)
 
-
+	#cardUserWantsToPlay = ''
+	
+	def setCardUserWantsToPlay(self, cardString):
+		self.cardUserWantsToPlay = cardString
+	
+	def setCardUserWantsToPlayToNull(self):
+		self.cardUserWantsToPlay = ''
+	
+	def getCardUserWantsToPlay(self):
+		return self.cardUserWantsToPlay
+	
+	
 	def reorgSouthCards(self, mx, my, mouseJustPressed, mouseHeld, mouseJustRelease, cardHeldIndex):
 		with self.southCardLock:
 			indexOfMouseOnCard = self.getIndexCardHover(mx, my)
@@ -452,9 +466,10 @@ class MellowGUI:
 					if cardHeldIndex >= 0:
 						print '#TODO: if allowed to play....'
 						if cardHeldIndex >=0 and cardHeldIndex < len(self.southCards):
-							cardHeldIndex = self.NOINDEX
 							#TODO: send command to controller about what card the user wants to play.
-							
+							print 'Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
+							self.setCardUserWantsToPlay(convertCardNumToString(self.southCards[cardHeldIndex]))
+							cardHeldIndex = self.NOINDEX
 							
 			
 			if mouseHeld == 1:
@@ -481,7 +496,34 @@ class MellowGUI:
 		labelExample = myfont.render(str(self.currentMsg), 1, (0,0,255))
 		self.screen.blit(labelExample, (self.width/2 - 10 * xOffset, self.height/2 - 50))
 		
-		
+
+def convertCardNumToString(num):
+	suit = ''
+	if num >=0 and num <13:
+		suit = 'C'
+	elif num >=13 and num <26:
+		suit = 'D'
+	elif num >=26 and num <39:
+		suit = 'H'
+	elif num >=39 and num <52:
+		suit = 'S'
+	
+	CardNumber = -1
+	if num % 13 == 0:
+		CardNumber = 'A'
+	elif num % 13 == 9:
+		CardNumber = 'T'
+	elif num % 13 == 10:
+		CardNumber = 'J'
+	elif num % 13 == 11:
+		CardNumber = 'Q'
+	elif num % 13 == 12:
+		CardNumber = 'K'
+	else:
+		CardNumber = str((num % 13) + 1)
+	
+	return str(CardNumber) + suit
+	
 #FUNCTIONS THAT OUTSIDE CLASSES SHOULD USE:
 def convertCardStringToNum(card):
 	row = 0
@@ -654,11 +696,15 @@ if __name__ == "__main__":
 	
 '''
 cd desktop\cardGamePython\pythoninternet
-
+For autogame:
 python mellowGUI.py Michael host > output1.txt
 python mellowGUI.py Phil
 python mellowGUI.py Richard
 python mellowGUI.py Doris
 
-#Starting game in
+For game played by user:
+python mellowGUI.py Michael host slow interact > output1.txt
+python mellowGUI.py Phil slow
+python mellowGUI.py Richard slow
+python mellowGUI.py Doris slow
 '''
