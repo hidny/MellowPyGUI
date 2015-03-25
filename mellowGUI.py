@@ -14,6 +14,7 @@ from sys import exit
 import projectile
 import starterTest
 import mellowClient
+import box
 
 
 class MellowGUI:
@@ -97,9 +98,27 @@ class MellowGUI:
 	
 	lastFrameTime = int(round(time.time() * 1000))
 	
+	isAwaitingBid = 0
+	currentBid = -1
+	bidButtons = []
+	
 	def __init__(self):
-		#For now do nothing.
-		pass
+		#boxes = []
+		self.bidButtons.append(box.Box(self.width/2 - 180, self.height/2 - 90, 110, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 60, self.height/2 - 90, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 0, self.height/2 - 90, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 + 60, self.height/2 - 90, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 + 120, self.height/2 - 90, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 180, self.height/2 - 30, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 120, self.height/2 - 30, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 60, self.height/2 - 30, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 0, self.height/2 - 30, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 + 60, self.height/2 - 30, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 + 120, self.height/2 - 30, 50, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 180, self.height/2 + 30, 110, 50))
+		self.bidButtons.append(box.Box(self.width/2 - 60, self.height/2 + 30 , 110, 50))
+		self.bidButtons.append(box.Box(self.width/2 + 60, self.height/2 + 30, 110, 50))
+		
 	
 	def updateLastFrameTime(self):
 		self.lastFrameTime = int(round(time.time() * 1000))
@@ -183,7 +202,6 @@ class MellowGUI:
 	bidLock = threading.Lock()
 	
 	#0: south, 1: west, 2: north, 3: east
-	#TODO: say which card is the one thrown
 	def throwSouthCard(self, cardString):
 		with self.southCardLock:
 			cardNum = convertCardStringToNum(cardString)
@@ -196,12 +214,9 @@ class MellowGUI:
 			if indexCard == -1:
 				print 'AHHH!!!!'
 			
-			print 'TESTING' + str(indexCard)
-			
-			#TODO: get index of card num
 			self.projectiles[0] = projectile.throwSouthCard(self, self.southCards, indexCard)
 		
-	def throwWestCard(self, cardString):#TODO: cardHeldIndex
+	def throwWestCard(self, cardString):
 		with self.westCardLock:
 			cardNum = convertCardStringToNum(cardString)
 			self.projectiles[1] = projectile.throwWestCard(self, self.westCards, cardNum)
@@ -462,11 +477,13 @@ class MellowGUI:
 			
 			
 			if mouseJustRelease == 1:
+				#TODO: bid:
+				if self.isWaitingForBid() == 1:
+					self.checkIfUserBidAfterClick(mx, my)
+				
 				if my < self.screen_height - self.off_the_edgeY - self.card_height/2:
 					if cardHeldIndex >= 0:
-						print '#TODO: if allowed to play....'
 						if cardHeldIndex >=0 and cardHeldIndex < len(self.southCards):
-							#TODO: send command to controller about what card the user wants to play.
 							print 'Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
 							self.setCardUserWantsToPlay(convertCardNumToString(self.southCards[cardHeldIndex]))
 							cardHeldIndex = self.NOINDEX
@@ -495,8 +512,45 @@ class MellowGUI:
 		xOffset = len(self.currentMsg)
 		labelExample = myfont.render(str(self.currentMsg), 1, (0,0,255))
 		self.screen.blit(labelExample, (self.width/2 - 10 * xOffset, self.height/2 - 50))
+	
+	#TODO: bid placement.
+	#bidButtonPlacement = []
+	def displayBidChoices(self):
 		
-
+		pygame.draw.rect(self.screen, (255, 0, 255, 0), (self.width/2 - 200, self.height/2 - 100, 400, 200))
+		
+		myfont = pygame.font.SysFont("Bauhaus 93", 30)
+		
+		for i in range(0, len(self.bidButtons)):
+			pygame.draw.rect(self.screen, (0, 0, 0, 0), self.bidButtons[i].getCoordBox())
+			if i == 0:
+				labelExample = myfont.render("Mellow", 1, (0,255,0))
+			else:
+				labelExample = myfont.render(str(i), 1, (0,255,0))
+			
+			self.screen.blit(labelExample, self.bidButtons[i].getTopLeftBox())
+	
+	def askUserForBid(self):
+		self.isAwaitingBid = 1
+	
+	def isWaitingForBid(self):
+		return self.isAwaitingBid
+	
+	def checkIfUserBidAfterClick(self, x, y):
+		for i in range(0, len(self.bidButtons)):
+			if self.bidButtons[i].isWithinBox(x, y):
+				print 'Clicked on ' + str(i)
+				self.currentBid = i
+		return -1
+	
+	#returns the bid if the user bid. Returns -1 otherwise.
+	def consumeBid(self):
+		if self.currentBid >= 0:
+			self.isAwaitingBid = 0
+		temp = self.currentBid
+		self.currentBid = -1
+		return temp
+	
 def convertCardNumToString(num):
 	suit = ''
 	if num >=0 and num <13:
@@ -682,9 +736,13 @@ def main(name):
 		#mellowGUI.setMessage('Chocolate')
 		mellowGUI.displayCenterGameMsg()
 		
+		if mellowGUI.isWaitingForBid() == 1:
+			mellowGUI.displayBidChoices()
+		
 		pygame.display.update()
 		mouseJustPressed = 0
 		mouseJustRelease = 0
+		
 		
 		#print 'Done frame'
 		mellowGUI.updateLastFrameTime()

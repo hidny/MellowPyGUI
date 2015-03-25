@@ -32,7 +32,7 @@ TCP_PORT = 6789
 BUFFER_SIZE = 1024
 
 #http://stackoverflow.com/questions/419145/python-threads-critical-section
-turn_lock = threading.Lock()
+#turn_lock = threading.Lock()
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -119,7 +119,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 	global players
 	global currentPlayerName
 	
-	global turn_lock
+	#global turn_lock
 	global itsYourBid
 	global itsYourTurn
 	global playerInTeamA
@@ -177,14 +177,16 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 						
 					elif currentLine.find(YOUR_BID) != -1:
 						currentLine = currentLine[currentLine.index(YOUR_BID) + len(YOUR_BID):]
-						with turn_lock:
-							itsYourBid=1
+						#with turn_lock:
+						itsYourBid=1
+						if interact == 1:
+							mellowGUIVars.askUserForBid()
 						
 					
 					elif currentLine.find(YOUR_TURN) != -1:
 						currentLine = currentLine[currentLine.index(YOUR_TURN) + len(YOUR_TURN):]
-						with turn_lock:
-							itsYourTurn=1
+						#with turn_lock:
+						itsYourTurn=1
 					
 					elif currentLine.find(PUBLIC_SERVER_MSG) != -1:
 						if currentLine.find(PLAYING_CARD) != -1:
@@ -398,7 +400,7 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 	global currentPlayerName
 	global players
 	
-	global turn_lock
+	#global turn_lock
 	global itsYourBid
 	global itsYourTurn
 	try:
@@ -431,22 +433,22 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 					playedACardInFight = 0
 				
 				if itsYourBid==1:
-					with turn_lock:
-						s.send('/move 1' + '\n')
-						itsYourBid = 0
-						itsYourTurn = 0
+					#with turn_lock:
+					s.send('/move 1' + '\n')
+					itsYourBid = 0
+					itsYourTurn = 0
 					print 'sent msg'
 				elif itsYourTurn==1:
 					print 'Your turn'
-					with turn_lock:
-						if slowdown == 1:
-							if mellowGUIVars.isNewFightStarting():
-								time.sleep(0.5)
-							time.sleep(0.2)
-						s.send('/move 1' + '\n')
-						playedACardInFight = 1
-						itsYourBid = 0
-						itsYourTurn = 0
+					#with turn_lock:
+					if slowdown == 1:
+						if mellowGUIVars.isNewFightStarting():
+							time.sleep(0.5)
+						time.sleep(0.2)
+					s.send('/move 1' + '\n')
+					playedACardInFight = 1
+					itsYourBid = 0
+					itsYourTurn = 0
 			elif interact == 1:
 				time.sleep(0.2)
 				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
@@ -456,20 +458,20 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 					playedACardInFight = 0
 				
 				if itsYourBid==1:
-					#TODO: ask user for bid.
-					with turn_lock:
-						s.send('/move 1' + '\n')
+					temp = mellowGUIVars.consumeBid()
+					#if temp >=0, the the user bid temp.
+					if temp >=0:
+						s.send('/move ' + str(temp) + '\n')
 						itsYourBid = 0
 						itsYourTurn = 0
-					print 'sent msg'
 				elif itsYourTurn==1:
 					if mellowGUIVars.getCardUserWantsToPlay() != '':
-						with turn_lock:
-							s.send('/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
-							mellowGUIVars.setCardUserWantsToPlayToNull()
-							playedACardInFight = 1
-							itsYourBid = 0
-							itsYourTurn = 0
+						#with turn_lock:
+						s.send('/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
+						mellowGUIVars.setCardUserWantsToPlayToNull()
+						playedACardInFight = 1
+						itsYourBid = 0
+						itsYourTurn = 0
 			
 			
 	except:
