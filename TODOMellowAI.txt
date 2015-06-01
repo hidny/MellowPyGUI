@@ -1,0 +1,7 @@
+TODO:
+make sure java gets the full message the same way as python
+and make sure the java ai gets the data the same way python gets it
+
+-build the AI
+
+-Merge the connect4 AI handler with the mellow handler?

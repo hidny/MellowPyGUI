@@ -1,0 +1,1048 @@
+Inside Mellow GUI main!
+mellowGUI.py
+Michael
+host
+slow
+interact
+Card height in client Listener: 123
+Card height in server Listener: 123
+*****************************
+received message: Hello, Michael. Type /help or /h for help.
+*****************************
+received message: mellow: mellowpy (1/4) host: Michael:
+*****************************
+received message: Slot #1: Michael
+*****************************
+received message: Slot #2: Open
+*****************************
+received message: Slot #3: Open
+*****************************
+received message: Slot #4: Open
+*****************************
+received message: Game created:mellow: mellowpy (1/4) host: Michael:
+*****************************
+received message: Slot #1: Michael
+*****************************
+received message: Slot #2: Open
+*****************************
+received message: Slot #3: Open
+*****************************
+received message: Slot #4: Open
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: mellow: mellowpy (2/4) host: Michael:
+*****************************
+received message: Slot #1: Michael
+*****************************
+received message: Slot #2: Dad
+*****************************
+received message: Slot #3: Open
+*****************************
+received message: Slot #4: Open
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: mellow: mellowpy (3/4) host: Michael:
+*****************************
+received message: Slot #1: Michael
+*****************************
+received message: Slot #2: Dad
+*****************************
+received message: Slot #3: Dick
+*****************************
+received message: Slot #4: Open
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: mellow: mellowpy (4/4) host: Michael:
+*****************************
+received message: Slot #1: Michael
+*****************************
+received message: Slot #2: Dad
+*****************************
+received message: Slot #3: Dick
+*****************************
+received message: Slot #4: Mom
+*****************************
+received message: Countdown started.
+*****************************
+received message: Starting game in:
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: WARNING: countdown already started.
+*****************************
+received message: From Game(public): Starting Mellow! Michael & Dick vs Dad & Mom
+*****************************
+received message: From Game(public): Michael: /start
+*****************************
+received message: From Game(public): First dealer is Dick
+Dealer is North(Dick)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C QD 8C AC TC AH 6S KC 6H 
+todo: setup cards for new round
+card indexes:
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+QD
+8C
+AC
+TC
+AH
+6S
+KC
+6H
+Done printing cards
+*****************************
+received message: From Game(public): Mom's turn to bid:
+*****************************
+received message: From Game(public): Mom: 1
+East(Mom) bids 1
+*****************************
+received message: From Game(public): Michael's turn to bid:
+*****************************
+received message: From Game(private): What's your bid?
+*****************************
+received message: From Game(public): Michael: /start
+Clicked on 7
+*****************************
+received message: From Game(private): Thank you.
+*****************************
+received message: From Game(public): Michael: 7
+South(Michael) bids 7
+*****************************
+received message: From Game(public): Dad's turn to bid:
+*****************************
+received message: From Game(public): Dad: 1
+West(Dad) bids 1
+*****************************
+received message: From Game(public): Dick's turn to bid:
+*****************************
+received message: From Game(public): Dick: 1
+North(Dick) bids 1
+*****************************
+received message: From Game(public): Bids:
+*****************************
+received message: From Game(public):   8
+*****************************
+received message: From Game(public):   2
+*****************************
+received message: From Game(public): Dealer Index: 2
+*****************************
+received message: From Game(public): Dealer: Dick
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C QD 8C AC TC AH 6S KC 6H 
+todo: setup cards for new round
+card indexes:
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+QD
+8C
+AC
+TC
+AH
+6S
+KC
+6H
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 3
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: 5D
+East(Mom) plays 5D
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: QD
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: QD
+South(Michael) plays QD
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad tried to renege.
+*****************************
+received message: From Game(public): Dad playing: 6D
+West(Dad) plays 6D
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick tried to renege.
+*****************************
+received message: From Game(public): Dick playing: TD
+North(Dick) plays TD
+*****************************
+received message: From Game(public): Fight Winner: Michael
+Fight Winner is South(Michael)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C 6H 8C AC TC AH 6S KC 
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+6H
+8C
+AC
+TC
+AH
+6S
+KC
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: AH
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: AH
+South(Michael) plays AH
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad tried to renege.
+*****************************
+received message: From Game(public): Dad playing: 7H
+West(Dad) plays 7H
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: KH
+North(Dick) plays KH
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom tried to renege.
+*****************************
+received message: From Game(public): Mom playing: 5H
+East(Mom) plays 5H
+*****************************
+received message: From Game(public): Fight Winner: Michael
+Fight Winner is South(Michael)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C 6H 8C AC TC KC 6S 
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+6H
+8C
+AC
+TC
+KC
+6S
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: AC
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: AC
+South(Michael) plays AC
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad tried to renege.
+*****************************
+received message: From Game(public): Dad playing: 6C
+West(Dad) plays 6C
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick tried to renege.
+*****************************
+received message: From Game(public): Dick playing: 7C
+North(Dick) plays 7C
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom tried to renege.
+*****************************
+received message: From Game(public): Mom playing: JC
+East(Mom) plays JC
+*****************************
+received message: From Game(public): Fight Winner: Michael
+Fight Winner is South(Michael)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C 6H 8C 6S TC KC 
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+6H
+8C
+6S
+TC
+KC
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: KC
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: KC
+South(Michael) plays KC
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad tried to renege.
+*****************************
+received message: From Game(public): Dad playing: QC
+West(Dad) plays QC
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick tried to renege.
+*****************************
+received message: From Game(public): Dick playing: 9C
+North(Dick) plays 9C
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom tried to renege.
+*****************************
+received message: From Game(public): Mom playing: 2C
+East(Mom) plays 2C
+*****************************
+received message: From Game(public): Fight Winner: Michael
+Fight Winner is South(Michael)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C 6H 8C 6S TC 
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+6H
+8C
+6S
+TC
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: TC
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: TC
+South(Michael) plays TC
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: KS
+West(Dad) plays KS
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: 5S
+North(Dick) plays 5S
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: 3S
+East(Mom) plays 3S
+*****************************
+received message: From Game(public): Fight Winner: Dad
+Fight Winner is West(Dad)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C 6H 8C 6S 
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+6H
+8C
+6S
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 1
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 4S
+West(Dad) plays 4S
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick tried to renege.
+*****************************
+received message: From Game(public): Dick playing: 8S
+North(Dick) plays 8S
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom tried to renege.
+*****************************
+received message: From Game(public): Mom playing: QS
+East(Mom) plays QS
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: 6S
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 6S
+South(Michael) plays 6S
+*****************************
+received message: From Game(public): Fight Winner: Mom
+Fight Winner is East(Mom)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C 6H 8C 
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+6H
+8C
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 3
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: TH
+East(Mom) plays TH
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: 6H
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 6H
+South(Michael) plays 6H
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 9H
+West(Dad) plays 9H
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick tried to renege.
+*****************************
+received message: From Game(public): Dick playing: 2H
+North(Dick) plays 2H
+*****************************
+received message: From Game(public): Fight Winner: Mom
+Fight Winner is East(Mom)
+*****************************
+received message: From Game(private): 3C 8H 5C 7S 4C 8C 
+Printing cards:
+3C
+8H
+5C
+7S
+4C
+8C
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 3
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: JD
+East(Mom) plays JD
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: 7S
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 7S
+South(Michael) plays 7S
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 8D
+West(Dad) plays 8D
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: AD
+North(Dick) plays AD
+*****************************
+received message: From Game(public): Fight Winner: Michael
+Fight Winner is South(Michael)
+*****************************
+received message: From Game(private): 3C 8H 5C 8C 4C 
+Printing cards:
+3C
+8H
+5C
+8C
+4C
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: 8C
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 8C
+South(Michael) plays 8C
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 3D
+West(Dad) plays 3D
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: 7D
+North(Dick) plays 7D
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: 3H
+East(Mom) plays 3H
+*****************************
+received message: From Game(public): Fight Winner: Michael
+Fight Winner is South(Michael)
+ Trying to play: 5C*****************************
+
+received message: From Game(private): 3C 8H 5C 4C 
+Printing cards:
+3C
+8H
+5C
+4C
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 5C
+South(Michael) plays 5C
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: JH
+West(Dad) plays JH
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: QH
+North(Dick) plays QH
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: KD
+East(Mom) plays KD
+*****************************
+received message: From Game(public): Fight Winner: Michael
+Trying to play: 4C
+Fight Winner is South(Michael)
+*****************************
+received message: From Game(private): 3C 8H 4C 
+Printing cards:
+3C
+8H
+4C
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 4C
+South(Michael) plays 4C
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 9S
+West(Dad) plays 9S
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: AS
+North(Dick) plays AS
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: 4H
+East(Mom) plays 4H
+*****************************
+received message: From Game(public): Fight Winner: Dick
+Trying to play: 3C
+Fight Winner is North(Dick)
+*****************************
+received message: From Game(private): 3C 8H 
+Printing cards:
+3C
+8H
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 2
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: JS
+North(Dick) plays JS
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: 9D
+East(Mom) plays 9D
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 3C
+South(Michael) plays 3C
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 2S
+West(Dad) plays 2S
+*****************************
+received message: From Game(public): Fight Winner: Dick
+Fight Winner is North(Dick)
+*****************************
+received message: From Game(private): 8H 
+Printing cards:
+8H
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 2
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: 4D
+North(Dick) plays 4D
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: 2D
+East(Mom) plays 2D
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: 8H
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: 8H
+South(Michael) plays 8H
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: TS
+West(Dad) plays TS
+*****************************
+received message: From Game(public): Fight Winner: Dad
+Fight Winner is West(Dad)
+*****************************
+received message: From Game(public): ALL: END ROUND!
+*****************************
+received message: From Game(public): ALL: Michael got 7 trick(s).
+python South(Michael) has 7 tricks.
+*****************************
+received message: From Game(public): ALL: Dad got 2 trick(s).
+West(Dad) has 2 tricks.
+*****************************
+received message: From Game(public): ALL: Dick got 2 trick(s).
+North(Dick) has 2 tricks.
+*****************************
+received message: From Game(public): ALL: Mom got 2 trick(s).
+East(Mom) has 2 tricks.
+*****************************
+received message: From Game(public): 0    0
+previous scores: 
+US(team A): 0
+THEM(team B): 0
+*****************************
+received message: From Game(public): 81    22
+Scores added: 
+US(team A): 81
+THEM(team B): 22
+*****************************
+received message: From Game(public): 81    22
+Current Total:
+US(team A): 81
+THEM(team B): 22
+*****************************
+received message: From Game(public): END PRINT SCORE!
+*****************************
+received message: From Game(public): Current dealer is Mom
+Dealer is East(Mom)
+*****************************
+received message: From Game(private): QH TD 6D 9D QC JS TH AH JD 3S JH QD 5D 
+todo: setup cards for new round
+card indexes:
+Printing cards:
+QH
+TD
+6D
+9D
+QC
+JS
+TH
+AH
+JD
+3S
+JH
+QD
+5D
+Done printing cards
+*****************************
+received message: From Game(public): Michael's turn to bid:
+*****************************
+received message: From Game(private): What's your bid?
+Clicked on 4
+*****************************
+received message: From Game(private): Thank you.
+*****************************
+received message: From Game(public): Michael: 4
+South(Michael) bids 4
+*****************************
+received message: From Game(public): Dad's turn to bid:
+*****************************
+received message: From Game(public): Dad: 1
+West(Dad) bids 1
+*****************************
+received message: From Game(public): Dick's turn to bid:
+*****************************
+received message: From Game(public): Dick: 1
+North(Dick) bids 1
+*****************************
+received message: From Game(public): Mom's turn to bid:
+*****************************
+received message: From Game(public): Mom: 1
+East(Mom) bids 1
+*****************************
+received message: From Game(public): Bids:
+*****************************
+received message: From Game(public):   5
+*****************************
+received message: From Game(public):   2
+*****************************
+received message: From Game(public): Dealer Index: 3
+*****************************
+received message: From Game(public): Dealer: Mom
+*****************************
+received message: From Game(private): QH TD 6D 9D QC JS TH AH JD 3S JH QD 5D 
+todo: setup cards for new round
+card indexes:
+Printing cards:
+QH
+TD
+6D
+9D
+QC
+JS
+TH
+AH
+JD
+3S
+JH
+QD
+5D
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 0
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+Trying to play: TH
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael playing: TH
+South(Michael) plays TH
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad tried to renege.
+*****************************
+received message: From Game(public): Dad playing: KH
+West(Dad) plays KH
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick tried to renege.
+*****************************
+received message: From Game(public): Dick playing: 5H
+North(Dick) plays 5H
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: 9H
+East(Mom) plays 9H
+*****************************
+received message: From Game(public): Fight Winner: Dad
+Fight Winner is West(Dad)
+*****************************
+received message: From Game(private): QH TD 6D 9D QC JS 5D AH JD 3S JH QD 
+Printing cards:
+QH
+TD
+6D
+9D
+QC
+JS
+5D
+AH
+JD
+3S
+JH
+QD
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 1
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: KS
+West(Dad) plays KS
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick tried to renege.
+*****************************
+received message: From Game(public): Dick playing: 2S
+North(Dick) plays 2S
+ Trying to play: AH
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom tried to renege.
+*****************************
+received message: From Game(public): Mom playing: 4S
+East(Mom) plays 4S
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+*****************************
+received message: From Game(private): Thank you!
+*****************************
+received message: From Game(public): Michael tried to renege.
+*****************************
+received message: From Game(public): Michael playing: JS
+South(Michael) plays JS
+*****************************
+received message: From Game(public): Fight Winner: Dad
+Fight Winner is West(Dad)
+*****************************
+received message: From Game(private): QH TD 6D 9D QC QD 5D AH JD 3S JH 
+Printing cards:
+QH
+TD
+6D
+9D
+QC
+QD
+5D
+AH
+JD
+3S
+JH
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 1
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 3D
+West(Dad) plays 3D
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: 8D
+North(Dick) plays 8D
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom tried to renege.
+*****************************
+received message: From Game(public): Mom playing: AD
+East(Mom) plays AD
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
+GAME OVER according to isStillRunning(self)
+Trying to play: TD
+Trying to play: TD
+Trying to play: 9D
+Trying to play: 9D
+Trying to play: TD
+Trying to play: 3S

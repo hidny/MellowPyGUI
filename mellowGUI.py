@@ -50,7 +50,6 @@ class MellowGUI:
 	scoreForUs = 0
 	scoreForThem = 0
 
-	#TODO: post the bid.
 	southBid = -1
 	westBid = -1
 	northBid = -1
@@ -122,10 +121,13 @@ class MellowGUI:
 	
 	def updateLastFrameTime(self):
 		self.lastFrameTime = int(round(time.time() * 1000))
-		
+	
+	#If there's a deadlock, then the frametime will be delayed compared to the real time...
+	#and that's how we know there's a crash!
 	def isStillRunning(self):
 		currentTime = int(round(time.time() * 1000))
 		if currentTime - self.lastFrameTime > 1000:
+			print 'GAME OVER according to isStillRunning(self)'
 			return 0
 		else:
 			return 1
@@ -141,26 +143,23 @@ class MellowGUI:
 			tempArray.append(convertCardStringToNum(southCardsInput[index]))
 			#print int(convertCardStringToNum(southCardsInput[index]))
 		
-		#for index in range(0, len(tempArray)):
-		#	print tempArray[index]
 		
 		tempArray.sort()
 		
-		self.southCards = tempArray
-		'''
-		print 'South cards: '
-		for index in range(0, len(southCards)):
-			print southCards[index]
-		'''
-		with self.southCardLock:
-			with self.westCardLock:
-				with self.northCardLock:
-					with self.eastCardLock:
-						self.westCards  =  13* [-1]
-						self.northCards =  13* [-1]
-						self.eastCards  =  13* [-1]
-						
-						self.tricks = 4 *[0]
+		#if the south cards haven't been set yet, setup the 4 players cards and reset the bids:
+		if len(self.southCards)  < 13 or self.southCards[0] == -1:
+			self.southBid = -1
+			self.westBid = -1
+			self.northBid = -1
+			self.eastBid = -1
+			
+			with self.cardLock:
+				self.southCards = tempArray
+				self.westCards  =  13* [-1]
+				self.northCards =  13* [-1]
+				self.eastCards  =  13* [-1]
+				
+				self.tricks = 4 *[0]
 
 
 	def setDealer(self, name):
@@ -194,16 +193,13 @@ class MellowGUI:
 	def addTrickEast(self):
 		self.tricks[3] = self.tricks[3] + 1
 		
-	southCardLock = threading.Lock()
-	westCardLock = threading.Lock()
-	northCardLock = threading.Lock()
-	eastCardLock = threading.Lock()
+	cardLock = threading.Lock()
 	scoreLock = threading.Lock()
 	bidLock = threading.Lock()
 	
 	#0: south, 1: west, 2: north, 3: east
 	def throwSouthCard(self, cardString):
-		with self.southCardLock:
+		with self.cardLock:
 			cardNum = convertCardStringToNum(cardString)
 			indexCard = -1
 			for x in range(0, len(self.southCards)):
@@ -217,17 +213,17 @@ class MellowGUI:
 			self.projectiles[0] = projectile.throwSouthCard(self, self.southCards, indexCard)
 		
 	def throwWestCard(self, cardString):
-		with self.westCardLock:
+		with self.cardLock:
 			cardNum = convertCardStringToNum(cardString)
 			self.projectiles[1] = projectile.throwWestCard(self, self.westCards, cardNum)
 
 	def throwNorthCard(self, cardString):
-		with self.northCardLock:
+		with self.cardLock:
 			cardNum = convertCardStringToNum(cardString)
 			self.projectiles[2] = projectile.throwNorthCard(self, self.northCards, cardNum)
 
 	def throwEastCard(self, cardString):
-		with self.eastCardLock:
+		with self.cardLock:
 			cardNum = convertCardStringToNum(cardString)
 			self.projectiles[3] = projectile.throwEastCard(self, self.eastCards, cardNum)
 	
@@ -241,18 +237,14 @@ class MellowGUI:
 		#TODO: is this the best way to lock it?
 		#Do I have to lock it to do a read?
 		temp = 0
-		with self.southCardLock:
-			with self.westCardLock:
-				with self.northCardLock:
-					with self.eastCardLock:
-						temp = len(self.southCards)
-						if temp == len(self.westCards) and temp == len(self.northCards) and temp == len(self.eastCards):
-							return 1
-						else:
-							return 0
+		with self.cardLock:
+			temp = len(self.southCards)
+			if temp == len(self.westCards) and temp == len(self.northCards) and temp == len(self.eastCards):
+				return 1
+			else:
+				return 0
 	
-	#TODO: use this or lose it.	
-	#pre: all projectiles are known.
+	#post: removes the 0-4 cards played/thrown from the game.
 	def remove_Projectiles(self):
 		if len(self.projectiles) >= 4:
 			for x in range(0, 4):
@@ -366,8 +358,7 @@ class MellowGUI:
 		indexOfMouseOnCard = self.getIndexCardHover(mx, my)
 		mouseHoveringOverCard = self.isMouseHoveringOverCard(mx, my)
 		
-		#print 'TO DELETE: Number of south cards: ' + str(len(southCards))
-		with self.southCardLock:
+		with self.cardLock:
 			for x in range(0, len(self.southCards)):
 				
 				if mouseHoveringOverCard == 1 and indexOfMouseOnCard == x:
@@ -464,7 +455,7 @@ class MellowGUI:
 	
 	
 	def reorgSouthCards(self, mx, my, mouseJustPressed, mouseHeld, mouseJustRelease, cardHeldIndex):
-		with self.southCardLock:
+		with self.cardLock:
 			indexOfMouseOnCard = self.getIndexCardHover(mx, my)
 			
 			mouseHoveringOverCard = self.isMouseHoveringOverCard(mx, my)
@@ -753,6 +744,8 @@ if __name__ == "__main__":
 	main('hello world')
 	
 '''
+cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
+
 cd desktop\cardGamePython\pythoninternet
 For autogame:
 python mellowGUI.py Michael host > output1.txt

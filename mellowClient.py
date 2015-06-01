@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-#import thread
 import time
 
 import socket
@@ -9,8 +8,6 @@ import thread
 
 import mellowGUI
 import projectile
-
-#threading and not thread?
 
 #TODO:
 # 1) update scores
@@ -32,7 +29,7 @@ TCP_PORT = 6789
 BUFFER_SIZE = 1024
 
 #http://stackoverflow.com/questions/419145/python-threads-critical-section
-#turn_lock = threading.Lock()
+turn_lock = threading.Lock()
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -119,7 +116,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 	global players
 	global currentPlayerName
 	
-	#global turn_lock
+	global turn_lock
 	global itsYourBid
 	global itsYourTurn
 	global playerInTeamA
@@ -138,6 +135,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 			else:
 				data = s.recv(BUFFER_SIZE)
 			
+			
 			while END_OF_TRANSMISSION in data:
 				message = data[0: data.index(END_OF_TRANSMISSION)]
 				data = data[data.index(END_OF_TRANSMISSION) + len(END_OF_TRANSMISSION):]
@@ -151,7 +149,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 					if len(currentLine) > 1:
 						print '*****************************'
 						print "received message: " + str(currentLine)
-					
+						
 					if currentLine.find(HELLO_MSG) != -1:
 						currentLine = currentLine[currentLine.index(HELLO_MSG) + len(HELLO_MSG):]
 						currentPlayerName = currentLine.split(' ')[1][0:-1]
@@ -177,16 +175,16 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 						
 					elif currentLine.find(YOUR_BID) != -1:
 						currentLine = currentLine[currentLine.index(YOUR_BID) + len(YOUR_BID):]
-						#with turn_lock:
-						itsYourBid=1
-						if interact == 1:
-							mellowGUIVars.askUserForBid()
+						with turn_lock:
+							itsYourBid=1
+							if interact == 1:
+								mellowGUIVars.askUserForBid()
 						
 					
 					elif currentLine.find(YOUR_TURN) != -1:
 						currentLine = currentLine[currentLine.index(YOUR_TURN) + len(YOUR_TURN):]
-						#with turn_lock:
-						itsYourTurn=1
+						with turn_lock:
+							itsYourTurn=1
 					
 					elif currentLine.find(PUBLIC_SERVER_MSG) != -1:
 						if currentLine.find(PLAYING_CARD) != -1:
@@ -197,6 +195,9 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 							if isACard(card) == 0:
 								print 'UH OH! Could not find card: ' + str(card)
 								sys.exit(1)
+							
+							if players[0] != player:
+								slowDownIfInteract(0.25, gameStarted, slowdown, interact)
 							
 							if players[0] == player:
 								print 'South(' + player + ') plays ' + card
@@ -235,25 +236,26 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 								if bid[len(bid) - 1] == '\n':
 									bid = bid[0:-1]
 								
-								if players[0]  == bidder:
-									mellowGUIVars.bidSouth(bid)
-									print 'South(' + bidder + ') bids ' + bid
-									
-								elif players[1] == bidder:
-									mellowGUIVars.bidWest(bid)
-									print 'West(' + bidder + ') bids ' + bid
-									
-								elif players[2] == bidder:
-									mellowGUIVars.bidNorth(bid)
-									print 'North(' + bidder + ') bids ' + bid
-									
-								elif players[3] == bidder:
-									mellowGUIVars.bidEast(bid)
-									print 'East(' + bidder + ') bids ' + bid
-									
-								else:
-									print 'ERROR: unknown player bids'
-									sys.exit(1)
+								if bid.isdigit():
+									if players[0]  == bidder:
+										mellowGUIVars.bidSouth(bid)
+										print 'South(' + bidder + ') bids ' + bid
+										
+									elif players[1] == bidder:
+										mellowGUIVars.bidWest(bid)
+										print 'West(' + bidder + ') bids ' + bid
+										
+									elif players[2] == bidder:
+										mellowGUIVars.bidNorth(bid)
+										print 'North(' + bidder + ') bids ' + bid
+										
+									elif players[3] == bidder:
+										mellowGUIVars.bidEast(bid)
+										print 'East(' + bidder + ') bids ' + bid
+										
+									else:
+										print 'ERROR: unknown player bids'
+										sys.exit(1)
 						#TODO: send this fact to some AI or GUI program so it could think.
 							
 						
@@ -264,17 +266,13 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 						
 						
 						if len(cardsTemp) > 0 and isACard(cardsTemp[0]) == 1:
-							#TODO: make connection to mellowGUI go through a middleman!
-							print 'Trying to use mellowGUI!'
-							#TODO: make sure setup cards for new round happens once per game
 							if len(cardsTemp) == 13:
 								mellowGUIVars.setupCardsForNewRound(cardsTemp)
-							#End todo.
+							
 							print 'Printing cards:'
 							for card in cardsTemp:
 								print card
 							print 'Done printing cards'
-							#TODO: if # cards less than 13, do a sanity check.
 				
 					if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(DEALER_MSG) != -1:
 						#From Game(public): First dealer is Mom
@@ -305,6 +303,9 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 							sys.exit(1)
 					
 					if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(FIGHT_SUMMARY_MSG) != -1:
+						slowDownIfInteract(1, gameStarted, slowdown, interact)
+						mellowGUIVars.remove_Projectiles()
+						
 						#copy of dealer logic:
 						fightWinner = message.split(' ')[len(message.split(' ')) - 1]
 						while fightWinner[len(fightWinner) -1] == '\n':
@@ -342,6 +343,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 					
 					if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(TRICKS) != -1:
 						#From Game(public): ALL: Mom got 4 trick(s).
+						slowDownIfInteract(1, gameStarted, slowdown, interact)
 						
 						#TODO: send this update somewhere.
 						#Trying to send: From Game(public): ALL: Michael got 1 trick(s).
@@ -370,12 +372,15 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 						endOfRoundIndex = 0
 					
 					if currentLine.find(PUBLIC_MSG) != -1:# and endOfRoundIndex < 3:
+						
 						currentScores = currentLine[currentLine.find(PUBLIC_MSG) + len(PUBLIC_MSG):]
 						currentScores = currentScores.strip()
 						tokens = currentScores.split(' ')
 						if len(tokens) > 1 and isNumber(tokens[0]) == 1 and isNumber(tokens[len(tokens) - 1]) == 1:
 							endOfRoundIndex = endOfRoundIndex + 1
-						
+							print '***'
+							print '**TESTING: in getting current Score if cond'
+							print '**'
 							if endOfRoundIndex == 1:
 								print 'previous scores: '
 							elif endOfRoundIndex == 2:
@@ -400,7 +405,7 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 	global currentPlayerName
 	global players
 	
-	#global turn_lock
+	global turn_lock
 	global itsYourBid
 	global itsYourTurn
 	try:
@@ -422,56 +427,41 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 				s.send('/start' + '\n')
 				#print 'sent msg'
 			
-			
 			if interact == 0:
-				time.sleep(0.2)
 				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
-					if slowdown == 1:
-						time.sleep(1)
-					#CODE TO SLOW game down so I could follow it:
-					mellowGUIVars.remove_Projectiles()
 					playedACardInFight = 0
 				
 				if itsYourBid==1:
-					#with turn_lock:
-					s.send('/move 1' + '\n')
-					itsYourBid = 0
-					itsYourTurn = 0
-					print 'sent msg'
+					with turn_lock:
+						s.send('/move 1' + '\n')
+						itsYourBid = 0
+						itsYourTurn = 0
+						print 'sent msg'
 				elif itsYourTurn==1:
 					print 'Your turn'
-					#with turn_lock:
-					if slowdown == 1:
-						if mellowGUIVars.isNewFightStarting():
-							time.sleep(0.5)
-						time.sleep(0.2)
-					s.send('/move 1' + '\n')
-					playedACardInFight = 1
-					itsYourBid = 0
-					itsYourTurn = 0
+					with turn_lock:
+						s.send('/move 1' + '\n')
+						playedACardInFight = 1
+						itsYourBid = 0
+						itsYourTurn = 0
 			elif interact == 1:
-				time.sleep(0.2)
 				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
-					time.sleep(1)
-					#CODE TO SLOW game down so I could follow it:
-					mellowGUIVars.remove_Projectiles()
 					playedACardInFight = 0
-				
+					
 				if itsYourBid==1:
 					temp = mellowGUIVars.consumeBid()
-					#if temp >=0, the the user bid temp.
 					if temp >=0:
 						s.send('/move ' + str(temp) + '\n')
 						itsYourBid = 0
 						itsYourTurn = 0
 				elif itsYourTurn==1:
 					if mellowGUIVars.getCardUserWantsToPlay() != '':
-						#with turn_lock:
-						s.send('/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
-						mellowGUIVars.setCardUserWantsToPlayToNull()
-						playedACardInFight = 1
-						itsYourBid = 0
-						itsYourTurn = 0
+						with turn_lock:
+							s.send('/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
+							mellowGUIVars.setCardUserWantsToPlayToNull()
+							playedACardInFight = 1
+							itsYourBid = 0
+							itsYourTurn = 0
 			
 			
 	except:
@@ -496,31 +486,16 @@ def main(mellowGUIVars):
 		elif sys.argv[x].find('slow') != -1:
 			slowdown = 1
 	
-	print 'HELLO HOST'
-	#Sanity testing:
-	#print 'Card height: ' + str(mellowGUIVars.card_height)
-	
 	try:
 		thread.start_new_thread( serverListener, (name, host, mellowGUIVars, interact, slowdown) )
 	except:
 		print "Error: unable to start thread 1"
-
-	#TODO: figure out if you could do multiprocessing.
 	
 	clientListener(name, host, mellowGUIVars, interact, slowdown)
 
+def slowDownIfInteract(amountOfTime, gameStarted, slowdown, interact):
+	if gameStarted == 1 and (slowdown == 1 or interact == 1):
+		time.sleep(amountOfTime)
 	
 if __name__ == "__main__":
 	main('testing')
-
-	
-'''
-cd desktop\cardGamePython\pythoninternet
-
-python mellowClient.py Michael host
-python mellowClient.py Phil
-python mellowClient.py Richard
-python mellowClient.py Doris
-
-#Starting game in
-'''

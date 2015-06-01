@@ -4,13 +4,8 @@ Michael
 host
 slow
 interact
-HELLO HOST
 Card height in client Listener: 123
 Card height in server Listener: 123
-slowing down1
-slowing down2
-slowing down1
-slowing down2
 *****************************
 received message: Hello, Michael. Type /help or /h for help.
 *****************************
@@ -41,8 +36,6 @@ received message: ERROR: game conditions haven't been meet.
 received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
 *****************************
 received message: ERROR: game conditions haven't been meet.
 *****************************
@@ -55,8 +48,40 @@ received message: ERROR: game conditions haven't been meet.
 received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: ERROR: game conditions haven't been meet.
 *****************************
@@ -75,8 +100,22 @@ received message: ERROR: game conditions haven't been meet.
 received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: ERROR: game conditions haven't been meet.
 *****************************
@@ -97,8 +136,18 @@ received message: ERROR: game conditions haven't been meet.
 received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
+*****************************
+received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: ERROR: game conditions haven't been meet.
 *****************************
@@ -121,8 +170,6 @@ received message: Slot #4: Mom
 received message: Countdown started.
 *****************************
 received message: Starting game in:
-slowing down1
-slowing down2
 *****************************
 received message: WARNING: countdown already started.
 *****************************
@@ -133,8 +180,6 @@ received message: WARNING: countdown already started.
 received message: WARNING: countdown already started.
 *****************************
 received message: WARNING: countdown already started.
-slowing down1
-slowing down2
 *****************************
 received message: WARNING: countdown already started.
 *****************************
@@ -145,17 +190,7 @@ received message: WARNING: countdown already started.
 received message: WARNING: countdown already started.
 *****************************
 received message: WARNING: countdown already started.
-slowing down1
-slowing down2
 *****************************
 received message: WARNING: countdown already started.
-*****************************
-received message: WARNING: countdown already started.
-*****************************
-received message: WARNING: countdown already started.
-*****************************
-received message: WARNING: countdown already started.
-*****************************
-received message: WARNING: countdown already started.
-slowing down1
+GAME OVER according to isStillRunning(self)
 GAME OVER according to isStillRunning(self)
