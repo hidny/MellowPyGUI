@@ -2,7 +2,6 @@ import sys, pygame
 import time
 
 import random, os
-import time 
 import pygame
 from threading import Thread
 import threading
@@ -101,6 +100,16 @@ class MellowGUI:
 	currentBid = -1
 	bidButtons = []
 	
+	southCardLock = threading.Lock()
+	westCardLock = threading.Lock()
+	northCardLock = threading.Lock()
+	eastCardLock = threading.Lock()
+
+	#TODO: put 4 locks for 4 different orientations back in.
+	#That didn't cause a bug.
+	scoreLock = threading.Lock()
+	#bidLock = threading.Lock()
+	
 	def __init__(self):
 		#boxes = []
 		self.bidButtons.append(box.Box(self.width/2 - 180, self.height/2 - 90, 110, 50))
@@ -153,33 +162,36 @@ class MellowGUI:
 			self.northBid = -1
 			self.eastBid = -1
 			
-			with self.cardLock:
-				self.southCards = tempArray
-				self.westCards  =  13* [-1]
-				self.northCards =  13* [-1]
-				self.eastCards  =  13* [-1]
-				
-				self.tricks = 4 *[0]
+			with self.southCardLock:
+					with self.eastCardLock:
+						with self.westCardLock:
+							with self.northCardLock:
+								self.southCards = tempArray
+								self.westCards  =  13* [-1]
+								self.northCards =  13* [-1]
+								self.eastCards  =  13* [-1]
+								
+								self.tricks = 4 *[0]
 
 
 	def setDealer(self, name):
 		self.desler = name
 	
 	def bidSouth(self, bid):
-		with self.bidLock:
-			self.southBid = bid
+		#with self.bidLock:
+		self.southBid = bid
 		
 	def bidWest(self, bid):
-		with self.bidLock:
-			self.westBid = bid
+		#with self.bidLock:
+		self.westBid = bid
 		
 	def bidNorth(self, bid):
-		with self.bidLock:
-			self.northBid = bid
+		#with self.bidLock:
+		self.northBid = bid
 		
 	def bidEast(self, bid):
-		with self.bidLock:
-			self.eastBid = bid
+		#with self.bidLock:
+		self.eastBid = bid
 			
 	def addTrickSouth(self):
 		self.tricks[0] = self.tricks[0] + 1
@@ -193,13 +205,11 @@ class MellowGUI:
 	def addTrickEast(self):
 		self.tricks[3] = self.tricks[3] + 1
 		
-	cardLock = threading.Lock()
-	scoreLock = threading.Lock()
-	bidLock = threading.Lock()
+	
 	
 	#0: south, 1: west, 2: north, 3: east
 	def throwSouthCard(self, cardString):
-		with self.cardLock:
+		with self.southCardLock:
 			cardNum = convertCardStringToNum(cardString)
 			indexCard = -1
 			for x in range(0, len(self.southCards)):
@@ -213,17 +223,17 @@ class MellowGUI:
 			self.projectiles[0] = projectile.throwSouthCard(self, self.southCards, indexCard)
 		
 	def throwWestCard(self, cardString):
-		with self.cardLock:
+		with self.westCardLock:
 			cardNum = convertCardStringToNum(cardString)
 			self.projectiles[1] = projectile.throwWestCard(self, self.westCards, cardNum)
 
 	def throwNorthCard(self, cardString):
-		with self.cardLock:
+		with self.northCardLock:
 			cardNum = convertCardStringToNum(cardString)
 			self.projectiles[2] = projectile.throwNorthCard(self, self.northCards, cardNum)
 
 	def throwEastCard(self, cardString):
-		with self.cardLock:
+		with self.eastCardLock:
 			cardNum = convertCardStringToNum(cardString)
 			self.projectiles[3] = projectile.throwEastCard(self, self.eastCards, cardNum)
 	
@@ -237,12 +247,15 @@ class MellowGUI:
 		#TODO: is this the best way to lock it?
 		#Do I have to lock it to do a read?
 		temp = 0
-		with self.cardLock:
-			temp = len(self.southCards)
-			if temp == len(self.westCards) and temp == len(self.northCards) and temp == len(self.eastCards):
-				return 1
-			else:
-				return 0
+		with self.southCardLock:
+			with self.westCardLock:
+				with self.northCardLock:
+					with self.eastCardLock:
+						temp = len(self.southCards)
+						if temp == len(self.westCards) and temp == len(self.northCards) and temp == len(self.eastCards):
+							return 1
+						else:
+							return 0
 	
 	#post: removes the 0-4 cards played/thrown from the game.
 	def remove_Projectiles(self):
@@ -275,29 +288,32 @@ class MellowGUI:
 			self.screen.blit(labelExample4, ((1*self.width)/32, (4*self.height)/5 + 10 + 2*40))
 	
 	def printTricks(self):
-		with self.bidLock:
-			myfont = pygame.font.SysFont("comicsansms", 30)
-			
-			labelTricksSouth = myfont.render(str(self.tricks[0]) + "/" + str(self.southBid), 1, (0,0,255))
-			labelTricksWest = myfont.render(str(self.tricks[1]) + "/" + str(self.westBid), 1, (0,0,255))
-			labelTricksNorth = myfont.render(str(self.tricks[2]) + "/" + str(self.northBid), 1, (0,0,255))
-			labelTricksEast = myfont.render(str(self.tricks[3]) + "/" + str(self.eastBid), 1, (0,0,255))
-			
-			if self.westBid >= 0:
-				self.screen.blit(labelTricksWest, (5, self.height/2))
-			
-			if self.eastBid >= 0:
-				self.screen.blit(labelTricksEast, (1*self.width - 85, self.height/2))
-			
-			if self.northBid >= 0:
-				self.screen.blit(labelTricksNorth, (self.width/2, self.height/20))
-			
-			if self.southBid >= 0:
-				self.screen.blit(labelTricksSouth, (self.width/2, self.height - 90))
+		#with self.bidLock:
+		#print 'TEST2: print tricks.'
+		myfont = pygame.font.SysFont("comicsansms", 30)
+		
+		labelTricksSouth = myfont.render(str(self.tricks[0]) + "/" + str(self.southBid), 1, (0,0,255))
+		labelTricksWest = myfont.render(str(self.tricks[1]) + "/" + str(self.westBid), 1, (0,0,255))
+		labelTricksNorth = myfont.render(str(self.tricks[2]) + "/" + str(self.northBid), 1, (0,0,255))
+		labelTricksEast = myfont.render(str(self.tricks[3]) + "/" + str(self.eastBid), 1, (0,0,255))
+		
+		if self.westBid >= 0:
+			self.screen.blit(labelTricksWest, (5, self.height/2))
+		
+		if self.eastBid >= 0:
+			self.screen.blit(labelTricksEast, (1*self.width - 85, self.height/2))
+		
+		if self.northBid >= 0:
+			self.screen.blit(labelTricksNorth, (self.width/2, self.height/20))
+		
+		if self.southBid >= 0:
+			self.screen.blit(labelTricksSouth, (self.width/2, self.height - 90))
+		#print 'TEST3: print tricks.'
 	
 	def printcard(self, x, y, num, rotate90):
 		if num >= 52:
 			#crash
+			print 'ERROR: card num is greater than 52!'
 			num = 0
 			sys.exit(1)
 		
@@ -358,7 +374,7 @@ class MellowGUI:
 		indexOfMouseOnCard = self.getIndexCardHover(mx, my)
 		mouseHoveringOverCard = self.isMouseHoveringOverCard(mx, my)
 		
-		with self.cardLock:
+		with self.southCardLock:
 			for x in range(0, len(self.southCards)):
 				
 				if mouseHoveringOverCard == 1 and indexOfMouseOnCard == x:
@@ -455,7 +471,7 @@ class MellowGUI:
 	
 	
 	def reorgSouthCards(self, mx, my, mouseJustPressed, mouseHeld, mouseJustRelease, cardHeldIndex):
-		with self.cardLock:
+		with self.southCardLock:
 			indexOfMouseOnCard = self.getIndexCardHover(mx, my)
 			
 			mouseHoveringOverCard = self.isMouseHoveringOverCard(mx, my)
@@ -543,6 +559,9 @@ class MellowGUI:
 		return temp
 	
 def convertCardNumToString(num):
+	if num < 0:
+		return '??'
+	
 	suit = ''
 	if num >=0 and num <13:
 		suit = 'C'
@@ -552,6 +571,8 @@ def convertCardNumToString(num):
 		suit = 'H'
 	elif num >=39 and num <52:
 		suit = 'S'
+	else:
+		print 'ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)'
 	
 	CardNumber = -1
 	if num % 13 == 0:
@@ -753,6 +774,7 @@ python mellowGUI.py Phil
 python mellowGUI.py Richard
 python mellowGUI.py Doris
 
+TODO: make the argument handling part better!
 For game played by user:
 python mellowGUI.py Michael host slow interact > output1.txt
 python mellowGUI.py Phil slow

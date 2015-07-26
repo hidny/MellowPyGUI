@@ -4,13 +4,8 @@ Michael
 host
 slow
 interact
-HELLO HOST
 Card height in client Listener: 123
 Card height in server Listener: 123
-slowing down1
-slowing down2
-slowing down1
-slowing down2
 *****************************
 received message: Hello, Michael. Type /help or /h for help.
 *****************************
@@ -33,31 +28,56 @@ received message: Slot #2: Open
 received message: Slot #3: Open
 *****************************
 received message: Slot #4: Open
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
+sent start msg
 *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+*****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+*****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
 received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: mellow: mellowpy (2/4) host: Michael:
@@ -69,17 +89,38 @@ received message: Slot #2: Dad
 received message: Slot #3: Open
 *****************************
 received message: Slot #4: Open
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+*****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+*****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+*****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
 received message: ERROR: game conditions haven't been meet.
 *****************************
 received message: mellow: mellowpy (3/4) host: Michael:
@@ -91,20 +132,40 @@ received message: Slot #2: Dad
 received message: Slot #3: Dick
 *****************************
 received message: Slot #4: Open
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
-slowing down1
-slowing down2
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
+sent start msg
+*****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+*****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
+ *****************************
+received message: ERROR: game conditions haven't been meet.
+sent start msg
 *****************************
 received message: ERROR: game conditions haven't been meet.
 *****************************
@@ -117,45 +178,184 @@ received message: Slot #2: Dad
 received message: Slot #3: Dick
 *****************************
 received message: Slot #4: Mom
+sent start msg
 *****************************
 received message: Countdown started.
 *****************************
 received message: Starting game in:
-slowing down1
-slowing down2
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+ *****************************
+received message: WARNING: countdown already started.
+sent start msg
+ *****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+ *****************************
+received message: WARNING: countdown already started.
+sent start msg
+ *****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+ *****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
+*****************************
+received message: WARNING: countdown already started.
+sent start msg
 *****************************
 received message: WARNING: countdown already started.
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): Starting Mellow! Michael & Dick vs Dad & Mom
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): First dealer is Michael
+Dealer is South(Michael)
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(private): JH KH QC 3S QD 6S 2H JD 5H KC KS 3D AS 
+todo: setup cards for new round
+card indexes:
+Printing cards:
+JH
+KH
+QC
+3S
+QD
+6S
+2H
+JD
+5H
+KC
+KS
+3D
+AS
+Done printing cards
 *****************************
-received message: WARNING: countdown already started.
-slowing down1
-slowing down2
+received message: From Game(public): Dad's turn to bid:
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): Dad: 1
+West(Dad) bids 1
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): Dick's turn to bid:
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): Dick: 1
+North(Dick) bids 1
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): Mom's turn to bid:
 *****************************
-received message: WARNING: countdown already started.
-slowing down1
-slowing down2
+received message: From Game(public): Mom: 1
+East(Mom) bids 1
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): Michael's turn to bid:
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(private): What's your bid?
+Its my bid!
+sent start msg
+ *****************************
+received message: From Game(public): Michael: /start
+Clicked on 3
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(private): Thank you.
 *****************************
-received message: WARNING: countdown already started.
+received message: From Game(public): Michael: 3
+South(Michael) bids 3
 *****************************
-received message: WARNING: countdown already started.
-slowing down1
+received message: From Game(public): Bids:
+*****************************
+received message: From Game(public):   4
+*****************************
+received message: From Game(public):   2
+*****************************
+received message: From Game(public): Dealer Index: 0
+*****************************
+received message: From Game(public): Dealer: Michael
+*****************************
+received message: From Game(private): JH KH QC 3S QD 6S 2H JD 5H KC KS 3D AS 
+todo: setup cards for new round
+card indexes:
+Printing cards:
+JH
+KH
+QC
+3S
+QD
+6S
+2H
+JD
+5H
+KC
+KS
+3D
+AS
+Done printing cards
+*****************************
+received message: From Game(public): Initial Action index: 1
+*****************************
+received message: From Game(public): Dad's turn:
+*****************************
+received message: From Game(public): Dad playing: 2D
+West(Dad) plays 2D
+*****************************
+received message: From Game(public): Dick's turn:
+*****************************
+received message: From Game(public): Dick playing: 4D
+North(Dick) plays 4D
+*****************************
+received message: From Game(public): Mom's turn:
+*****************************
+received message: From Game(public): Mom playing: AD
+East(Mom) plays AD
+*****************************
+received message: From Game(public): Michael's turn:
+*****************************
+received message: From Game(private): Play a card!
 GAME OVER according to isStillRunning(self)

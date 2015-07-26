@@ -31,6 +31,7 @@ BUFFER_SIZE = 1024
 #http://stackoverflow.com/questions/419145/python-threads-critical-section
 turn_lock = threading.Lock()
 
+sendMsgLock = threading.Lock()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((TCP_IP, TCP_PORT))
@@ -135,7 +136,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 			else:
 				data = s.recv(BUFFER_SIZE)
 			
-			
+			#print 'DATA: ' + str(data)
 			while END_OF_TRANSMISSION in data:
 				message = data[0: data.index(END_OF_TRANSMISSION)]
 				data = data[data.index(END_OF_TRANSMISSION) + len(END_OF_TRANSMISSION):]
@@ -177,6 +178,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 						currentLine = currentLine[currentLine.index(YOUR_BID) + len(YOUR_BID):]
 						with turn_lock:
 							itsYourBid=1
+							print 'Its my bid!'
 							if interact == 1:
 								mellowGUIVars.askUserForBid()
 						
@@ -412,11 +414,11 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 		#Sanity testing:
 		print 'Card height in client Listener: ' + str(mellowGUIVars.card_height)
 	
-		s.send(name + '\n')
+		sendMessageToServer(s, name + '\n')
 		if host == 1:
-			s.send('/create mellow mellowpy' + '\n')
+			sendMessageToServer(s, '/create mellow mellowpy' + '\n')
 		else:
-			s.send('/join mellowpy' + '\n')
+			sendMessageToServer(s, '/join mellowpy' + '\n')
 		
 		
 		playedACardInFight = 0
@@ -424,23 +426,26 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 		while mellowGUIVars.isStillRunning() == 1:
 			if host == 1 and gameStarted == 0:
 				time.sleep(0.2)
-				s.send('/start' + '\n')
-				#print 'sent msg'
+				sendMessageToServer(s, '/start' + '\n')
+				print 'sent start msg'
 			
 			if interact == 0:
 				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
 					playedACardInFight = 0
 				
 				if itsYourBid==1:
+					print 'Your bid'
 					with turn_lock:
-						s.send('/move 1' + '\n')
+						#TODO: put this back!
+						sendMessageToServer(s, '/move 1' + '\n')
+						
 						itsYourBid = 0
 						itsYourTurn = 0
 						print 'sent msg'
 				elif itsYourTurn==1:
 					print 'Your turn'
 					with turn_lock:
-						s.send('/move 1' + '\n')
+						sendMessageToServer(s, '/move 1' + '\n')
 						playedACardInFight = 1
 						itsYourBid = 0
 						itsYourTurn = 0
@@ -451,13 +456,13 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 				if itsYourBid==1:
 					temp = mellowGUIVars.consumeBid()
 					if temp >=0:
-						s.send('/move ' + str(temp) + '\n')
+						sendMessageToServer(s, '/move ' + str(temp) + '\n')
 						itsYourBid = 0
 						itsYourTurn = 0
 				elif itsYourTurn==1:
 					if mellowGUIVars.getCardUserWantsToPlay() != '':
 						with turn_lock:
-							s.send('/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
+							sendMessageToServer(s, '/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
 							mellowGUIVars.setCardUserWantsToPlayToNull()
 							playedACardInFight = 1
 							itsYourBid = 0
@@ -493,6 +498,11 @@ def main(mellowGUIVars):
 	
 	clientListener(name, host, mellowGUIVars, interact, slowdown)
 
+def sendMessageToServer(s, msg):
+	global sendMsgLock
+	with sendMsgLock:
+		s.send(str(msg))
+	
 def slowDownIfInteract(amountOfTime, gameStarted, slowdown, interact):
 	if gameStarted == 1 and (slowdown == 1 or interact == 1):
 		time.sleep(amountOfTime)
