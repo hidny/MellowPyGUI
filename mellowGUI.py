@@ -19,6 +19,9 @@ import box
 class MellowGUI:
 	
 	pygame.init()
+	
+	gameOver = 0
+	
 	screen_width = 1300
 	screen_height = 900
 	
@@ -60,8 +63,8 @@ class MellowGUI:
 	#Variable to handle the animation of thrown cards:
 	projectiles = []
 
-	THROW_TIME=1000
-	FRAME_WAIT_TIME = 100
+	THROW_TIME=100
+	FRAME_WAIT_TIME = 40
 	
 	#Dealers:
 	desler = ''
@@ -134,13 +137,21 @@ class MellowGUI:
 	#If there's a deadlock, then the frametime will be delayed compared to the real time...
 	#and that's how we know there's a crash!
 	def isStillRunning(self):
+		#TODO: mellowGUI should probably have a boolean that says it is dead somehow.
+		if self.gameOver == 0:
+			return 1
+		else:
+			print 'GAME OVER according to isStillRunning(self)'
+			return 0
+		#The below code doesn't work because the game freezes when you're dragging the screen.
+		'''
 		currentTime = int(round(time.time() * 1000))
 		if currentTime - self.lastFrameTime > 1000:
 			print 'GAME OVER according to isStillRunning(self)'
 			return 0
 		else:
 			return 1
-	
+		'''
 	#Functions called by some controller file:
 	def setupCardsForNewRound(self, southCardsInput):
 		tempArray = []
@@ -621,18 +632,17 @@ def convertCardStringToNum(card):
 	
 	return 13*row + column
 
-#TODO: make it display the bid.
 
-
-def main(name):
+def main(name, arguments):
 	mellowGUI = MellowGUI()
+	#keep track of the last frame/heartbeat. 
+	#if the last frame/heartbeat was too long ago, we could assume this program has crashed.
+	mellowGUI.updateLastFrameTime()
 	
 	print 'Inside Mellow GUI main!'
 	
 	try:
-		#t = Thread(name = 'Testing', target=starterTest.main, args=('Michael', ))
-		t = Thread(name = 'Testing', target=mellowClient.main, args=(mellowGUI, ))
-		#t = Thread(name = 'Testing', target=melloClient.main, args=('Michael',))
+		t = Thread(name = 'Testing', target=mellowClient.main, args=(mellowGUI, arguments))
 		t.start()
 	except:
 		print "Error: unable to start thread"
@@ -655,11 +665,10 @@ def main(name):
 	clock = pygame.time.Clock()
 	
 	ballspeed = [2, 2]
-	
-	
 	ball = pygame.image.load("ball.png").convert()
 	transColor = ball.get_at((0,0))
 	ball.set_colorkey(transColor)
+	ballrect = ball.get_rect()
 	
 	mellowLogo = pygame.image.load("MellowLogo.png").convert()
 	transColor = mellowLogo.get_at((0,0))
@@ -669,11 +678,6 @@ def main(name):
 	transColor = versNumber.get_at((0,0))
 	versNumber.set_colorkey(transColor)
 	
-	ball = pygame.image.load("ball.png").convert()
-	transColor = ball.get_at((0,0))
-	ball.set_colorkey(transColor)
-	
-	ballrect = ball.get_rect()
 
 	mouseJustPressed = 0
 	mouseHeld = 0
@@ -685,6 +689,7 @@ def main(name):
 		
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
+				mellowGUI.gameOver = 1
 				sys.exit()
 			elif event.type == MOUSEBUTTONDOWN:
 				if event.button == 1:
@@ -758,11 +763,14 @@ def main(name):
 		
 		#print 'Done frame'
 		mellowGUI.updateLastFrameTime()
-		clock.tick(mellowGUI.FRAME_WAIT_TIME)
 		
+		clock.tick(1000/MellowGUI.FRAME_WAIT_TIME)
+	
+	print 'HELLO'
+	mellowGUI.gameOver = 1
 
 if __name__ == "__main__":
-	main('hello world')
+	main('hello world', sys.argv)
 	
 '''
 cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
@@ -780,4 +788,7 @@ python mellowGUI.py Michael host slow interact > output1.txt
 python mellowGUI.py Phil slow
 python mellowGUI.py Richard slow
 python mellowGUI.py Doris slow
+
+
+python mellowGUI.py Michael host slow interact p=6789 ip=127.0.0.1
 '''

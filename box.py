@@ -17,6 +17,21 @@ class Box:
 	def getCoordBox(self):
 		return (self.x, self.y, self.width, self.height)
 	
+	def getCoordBoxOffset(self, outset):
+		return (self.x - outset, self.y - outset, self.width + 2 * outset, self.height + 2 * outset)
+	
+	def getX(self):
+		return self.x
+	
+	def getY(self):
+		return self.y
+	
+	def getHeight(self):
+		return self.height
+	
+	def getWidth(self):
+		return self.width
+	
 	def isWithinBox(self, x, y):
 		if x >= self.x and x<= self.x + self.width:
 			if y >= self.y and y <= self.y + self.height:

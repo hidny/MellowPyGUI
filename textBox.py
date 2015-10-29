@@ -33,12 +33,13 @@ class TextBox:
 	timePressed = 0
 	currentKeyPressed = 0
 	
-	def __init__(self, x, y, width, height, currentText, labelColour, bkColour):
+	def __init__(self, x, y, width, height, currentText, labelColour, bkColour, text = ''):
 		self.box = box.Box(x, y, width, height)
 		
 		self.currentText = currentText
 		self.labelColour = labelColour
 		self.bkColour = bkColour
+		self.currentText = text
 	
 	def getTopLeftBox(self):
 		return self.box.getTopLeftBox(self.x, self.y)
@@ -50,34 +51,141 @@ class TextBox:
 		return self.box.isWithinBox(x, y)
 	
 	#TODO: have a variable for the currently selected textbox.
-	def updateButtonAndCheckIfPressed(self, x, y, mouseJustPressed, mouseJustRelease):
-		if self.isWithinBox(x, y) == 0:
-			self.isFocussed = 0
-			self.isPressedDown = 0
-		else:
-			self.isFocussed = 1
-			if mouseJustPressed == 1:
-				self.isPressedDown = 1
-		
-		if mouseJustRelease == 1 and self.isFocussed == 1 and self.isPressedDown == 1 and self.isWithinBox(x, y) == 1:
-			self.isPressedDown = 0
-			return 1
-		else:
-			if  mouseJustRelease == 1:
-				self.isPressedDown = 0
-			return 0
+	def shouldFocusBasedOnMouse(self, x, y, mouseJustPressed):
+		if mouseJustPressed == 1:
+			if self.isWithinBox(x, y) == 1:
+				return 1
+			else:
+				return 0
 	
+	def updateFocusBasedOnMouse(self, x, y, mouseJustPressed):
+		if mouseJustPressed == 1:
+			if self.isWithinBox(x, y) == 1:
+				self.setFocussed()
+			else:
+				self.setUnFocussed()
+			
 	
 	#TODO: autoprint and auto delete when button is held.
 	def dealWithKeyboard(self, event):
 		
 		#Check if a button was pressed down for the first time:
 		if event.type == pygame.KEYDOWN:
-			if self.isKeyHeldDown == 0 or self.currentKeyPressed != event.key:
-				if event.key == pygame.K_LEFT:
-					location -= 1
-				if event.key == pygame.K_RIGHT:
-					location += 1
+			if pygame.key.get_mods() & pygame.KMOD_LSHIFT or pygame.key.get_mods() & pygame.KMOD_RSHIFT:
+				if event.key == pygame.K_a:
+					self.currentText = self.currentText + 'A'
+				if event.key == pygame.K_b:
+					self.currentText = self.currentText + 'B'
+				if event.key == pygame.K_c:
+					self.currentText = self.currentText + 'C'
+				if event.key == pygame.K_d:
+					self.currentText = self.currentText + 'D'
+				if event.key == pygame.K_e:
+					self.currentText = self.currentText + 'E'
+				
+				if event.key == pygame.K_f:
+					self.currentText = self.currentText + 'F'
+				if event.key == pygame.K_g:
+					self.currentText = self.currentText + 'G'
+				if event.key == pygame.K_h:
+					self.currentText = self.currentText + 'H'
+				if event.key == pygame.K_i:
+					self.currentText = self.currentText + 'I'
+				if event.key == pygame.K_j:
+					self.currentText = self.currentText + 'J'
+				
+				if event.key == pygame.K_k:
+					self.currentText = self.currentText + 'K'
+				if event.key == pygame.K_l:
+					self.currentText = self.currentText + 'L'
+				if event.key == pygame.K_m:
+					self.currentText = self.currentText + 'M'
+				if event.key == pygame.K_n:
+					self.currentText = self.currentText + 'N'
+				if event.key == pygame.K_o:
+					self.currentText = self.currentText + 'O'
+				
+				if event.key == pygame.K_p:
+					self.currentText = self.currentText + 'P'
+				if event.key == pygame.K_q:
+					self.currentText = self.currentText + 'Q'
+				if event.key == pygame.K_r:
+					self.currentText = self.currentText + 'R'
+				if event.key == pygame.K_s:
+					self.currentText = self.currentText + 'S'
+				if event.key == pygame.K_t:
+					self.currentText = self.currentText + 'T'
+				
+				if event.key == pygame.K_u:
+					self.currentText = self.currentText + 'U'
+				if event.key == pygame.K_v:
+					self.currentText = self.currentText + 'V'
+				if event.key == pygame.K_w:
+					self.currentText = self.currentText + 'W'
+				if event.key == pygame.K_x:
+					self.currentText = self.currentText + 'X'
+				if event.key == pygame.K_y:
+					self.currentText = self.currentText + 'Y'
+				if event.key == pygame.K_z:
+					self.currentText = self.currentText + 'Z' 
+					
+				
+				if event.key == pygame.K_0:
+					self.currentText = self.currentText + ')' 
+				if event.key == pygame.K_1:
+					self.currentText = self.currentText + '!' 
+				if event.key == pygame.K_2:
+					self.currentText = self.currentText + '@' 
+				if event.key == pygame.K_3:
+					self.currentText = self.currentText + '#' 
+				if event.key == pygame.K_4:
+					self.currentText = self.currentText + '$' 
+				if event.key == pygame.K_5:
+					self.currentText = self.currentText + '%' 
+				if event.key == pygame.K_6:
+					self.currentText = self.currentText + '^' 
+				if event.key == pygame.K_7:
+					self.currentText = self.currentText + '&' 
+				if event.key == pygame.K_8:
+					self.currentText = self.currentText + '*' 
+				if event.key == pygame.K_9:
+					self.currentText = self.currentText + '('
+				
+				if event.key == pygame.K_MINUS:
+					self.currentText = self.currentText + '_'
+					
+				if event.key == pygame.K_PLUS:
+					self.currentText = self.currentText + '='
+					
+					
+				if event.key == pygame.K_COMMA:
+					self.currentText = self.currentText + '<'
+				if event.key == pygame.K_PERIOD:
+					self.currentText = self.currentText + '>'
+				if event.key == K_SEMICOLON:
+					self.currentText = self.currentText + ':'
+				
+				if event.key == K_BACKSLASH:
+					self.currentText = self.currentText + '|'
+				
+				if event.key == K_SLASH:
+					self.currentText = self.currentText + '?'
+				
+				if event.key == K_BACKQUOTE:
+					self.currentText = self.currentText + '~'
+				
+				
+				if event.key == K_LEFTBRACKET:
+					self.currentText = self.currentText + '{'
+				
+				if event.key == K_RIGHTBRACKET:
+					self.currentText = self.currentText + '}'
+				
+				if event.key == K_QUOTE:
+					self.currentText = self.currentText + '"'
+				
+			else:
+				#self.isKeyHeldDown == 0 or self.currentKeyPressed != event.key:
 				if event.key == pygame.K_a:
 					self.currentText = self.currentText + 'a'
 				if event.key == pygame.K_b:
@@ -156,9 +264,8 @@ class TextBox:
 					self.currentText = self.currentText + '8' 
 				if event.key == pygame.K_9:
 					self.currentText = self.currentText + '9' 
-				
-				if event.key == pygame.K_SPACE:
-					self.currentText = self.currentText + ' '
+			
+			
 				if event.key == pygame.K_ASTERISK:
 					self.currentText = self.currentText + '*'
 				if event.key == pygame.K_PLUS:
@@ -168,29 +275,52 @@ class TextBox:
 				if event.key == pygame.K_PERIOD:
 					self.currentText = self.currentText + '.'
 				if event.key == pygame.K_MINUS:
-					self.currentText = self.currentText + '!'
+					self.currentText = self.currentText + '-'
 				if event.key == pygame.K_EXCLAIM:
-					self.currentText = self.currentText + '!'
+					self.currentText = self.currentText + '-'
 				if event.key == pygame.K_QUESTION:
-					self.currentText = self.currentText + '?'
+					self.currentText = self.currentText + '/'
 					
 				if event.key == pygame.K_HASH:
 					self.currentText = self.currentText + '#'
+				
+				if event.key == K_SEMICOLON:
+					self.currentText = self.currentText + ';'
+				
+				if event.key == K_BACKSLASH:
+					self.currentText = self.currentText + '\\'
+				
+				if event.key == K_SLASH:
+					self.currentText = self.currentText + '/'
+					
+				if event.key == K_BACKQUOTE:
+					self.currentText = self.currentText + '`'
+				
+				if event.key == K_LEFTBRACKET:
+					self.currentText = self.currentText + '['
+				
+				if event.key == K_RIGHTBRACKET:
+					self.currentText = self.currentText + ']'
+		
+				if event.key == K_QUOTE:
+					self.currentText = self.currentText + '\''
+		
+			if event.key == pygame.K_BACKSPACE:
+				#if len(currentText) >= 1:
+				self.currentText = self.currentText[0:-1]
+				self.isDeletingText = 1
 			
-				if event.key == pygame.K_BACKSPACE:
-					#if len(currentText) >= 1:
-					self.currentText = self.currentText[0:-1]
-					self.isDeletingText = 1
-				
-				self.currentKeyPressed = event.key
-				self.isKeyHeldDown = 1
-				self.timePressed = round(time.time() * 1000)
-				
+			if event.key == pygame.K_SPACE:
+					self.currentText = self.currentText + ' '
+					
+			
+			self.currentKeyPressed = event.key
+			self.isKeyHeldDown = 1
+			self.timePressed = round(time.time() * 1000)
+		
 		#check if the key was raised:
 		elif event.type == pygame.KEYUP:
-				self.isKeyHeldDown = 0
-				self.isDeletingText = 0
-				self.numRepeatedCharacters = 0
+				self.setFingerLiftedOffKey()
 		
 		self.handleKeyboardButtonHeldDown()
 	
@@ -202,15 +332,7 @@ class TextBox:
 				self.currentText = self.currentText + self.currentText[-1]
 			elif self.isDeletingText == 1:
 				self.currentText = self.currentText[0:-1]
-		'''else:
-			else:
-				if self.shouldRepeatTypeCommand():
-					self.numRepeatedCharacters = self.numRepeatedCharacters + 1
-					if self.isDeletingText == 0:
-						self.currentText = self.currentText + self.currentText[-1]
-					elif self.isDeletingText == 1:
-						self.currentText = self.currentText[0:-1]
-			'''
+		
 	def shouldRepeatTypeCommand(self):
 		if self.isKeyHeldDown == 1 and len(self.currentText) > 0:
 			
@@ -227,7 +349,11 @@ class TextBox:
 	
 	def getCurrentText(self):
 		return self.currentText
-		
+
+	def setCurrentTextEmpty(self):
+		self.currentText = ''
+	
+	
 	#TODO: get rid of screen_width and screen height params.
 	def drawTextBox(self, screen):
 		#TODO: make this customizable.
@@ -237,8 +363,34 @@ class TextBox:
 		#pygame.draw.rect()
 		#draw a rectangle shape
 		#pygame.draw.rect(screen, (23,128,0), ((1*screen_width)/32, (4*screen_height)/5 + 10 + 3*40, 1000, 100 ))
+		
+		if self.isFocussed == 1:
+			pygame.draw.rect(screen, (255,255,255), self.box.getCoordBoxOffset(10) )
+		else: #TODO: don't assume  a black background.
+			pygame.draw.rect(screen, (0,0,0), self.box.getCoordBoxOffset(10) )
+			
 		pygame.draw.rect(screen, self.bkColour, self.box.getCoordBox() )
 		
 		#TODO: use X offset and y offset.
 		screen.blit(labelExample3, (self.box.x + 10, self.box.y + 10))
+	
+	#TODO: make the background change if focused... or something...
+	def setFocussed(self):
+		print 'FOCUS on textbox'
+		self.isFocussed = 1
+	
+	def setUnFocussed(self):
+		print 'UNfOCUS on textbox'
+		self.isFocussed = 0
+		self.setFingerLiftedOffKey()
+	
+	def setFingerLiftedOffKey(self):
+		self.isKeyHeldDown = 0
+		self.isDeletingText = 0
+		self.numRepeatedCharacters = 0
+	
+	#Check if the textbox is focused.
+	def isFocussed(self):
+		return self.isFocussed
+		
 	

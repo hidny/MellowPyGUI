@@ -21,16 +21,24 @@ class Projectile:
 		self.endY   = endY
 		self.throwCardNum = throwCardNum
 		self.rotation = rotation
-
+		
+		self.percStop = 100 + random.randint(0, 20)
+		
 	def printThrownCard(self, mellowVars):
+		
+		#THROW_TIME=100
+		#FRAME_WAIT_TIME = 40
 		if self.beingThrown == 1:
 			currentX = (self.perc * (self.endX) + (100 - self.perc) * (self.startX))/100
 			currentY = (self.perc * (self.endY) + (100 - self.perc) * (self.startY))/100
 			mellowVars.printcardFromCenter(currentX, currentY, self.throwCardNum, self.rotation)
-			if self.perc < 100:
+			if self.perc < self.percStop:
 				jump = (100*mellowVars.FRAME_WAIT_TIME)/mellowVars.THROW_TIME
 				self.perc = self.perc + jump
-	
+				#make it boring:
+				#TODO: take this line away to get cooler projectiles.
+				if self.perc > self.percStop:
+					self.perc = self.percStop
 	
 	def endThrow(self, mellowVars):
 		self.beingThrown=0

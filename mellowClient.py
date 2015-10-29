@@ -8,33 +8,28 @@ import thread
 
 import mellowGUI
 import projectile
+#October 22, 2015: It's static because I only want one mellow client for the whole execution.
 
 #TODO:
-# 1) update scores
+# DONE! 1) update scores
 # DONE! 2) Sanity check tricks.
 # 3) Send useful updates to a middleman that will then send variable to AI or GUI.
 # 4) Make Middle man file that takes msgs from here and sends them to some player interface.
 # 5) Implement the player interface with the GUI and with an AI.
 
-#TODO: does turn lock even make sense?
-#TODO: allow user to bid.
-#TODO: 
+#DONE: does turn lock even make sense? YES!
+#DONE! Allow user to bid.
 
 #Key: do multithread. (NOT: multiprocesses)
 
 END_OF_TRANSMISSION = '**end of transmission**'
 
-TCP_IP = '127.0.0.1'
-TCP_PORT = 6789
 BUFFER_SIZE = 1024
 
 #http://stackoverflow.com/questions/419145/python-threads-critical-section
 turn_lock = threading.Lock()
 
 sendMsgLock = threading.Lock()
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((TCP_IP, TCP_PORT))
 
 
 gameStarted = 0
@@ -74,6 +69,8 @@ PUBLIC_SERVER_MSG = 'From Game(public): '
 WIN = 'win!'
 END_OF_ROUND = 'END ROUND!'
 
+serverSocket = []
+
 #What's your bid?
 #Dealer: Mom
 #Game(private): Play a card!
@@ -112,7 +109,9 @@ def shiftArrayByOne(array):
 	array[len(array) - 1] = temp
 	return array
 
-def serverListener(name, host, mellowGUIVars, interact, slowdown):
+#TODO: use starts with instead of find to avoid hacking.
+#aString.startswith("hello")
+def serverListener(name, isHostingGame, mellowGUIVars, interact, slowdown):
 	global gameStarted
 	global players
 	global currentPlayerName
@@ -123,6 +122,7 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 	global playerInTeamA
 	
 	global endOfRoundIndex
+	global serverSocket
 	
 	try:
 	
@@ -132,9 +132,9 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 		data =''
 		while mellowGUIVars.isStillRunning() == 1:
 			if data != '':
-				data = data + s.recv(BUFFER_SIZE)
+				data = data + serverSocket.recv(BUFFER_SIZE)
 			else:
-				data = s.recv(BUFFER_SIZE)
+				data = serverSocket.recv(BUFFER_SIZE)
 			
 			#print 'DATA: ' + str(data)
 			while END_OF_TRANSMISSION in data:
@@ -401,32 +401,40 @@ def serverListener(name, host, mellowGUIVars, interact, slowdown):
 			
 	except:
 		print 'ERROR: in server listener'
+		mellowGUIVars.setMessage("ERROR: in server listener")
 
-def clientListener(name, host, mellowGUIVars, interact, slowdown):
+def clientListener(name, isHostingGame, mellowGUIVars, interact, slowdown):
 	global gameStarted
-	global currentPlayerName
 	global players
 	
-	global turn_lock
-	global itsYourBid
-	global itsYourTurn
+	global serverSocket
+	
 	try:
 		#Sanity testing:
-		print 'Card height in client Listener: ' + str(mellowGUIVars.card_height)
+		print 'Card height in client Listener2: ' + str(mellowGUIVars.card_height)
 	
-		sendMessageToServer(s, name + '\n')
-		if host == 1:
-			sendMessageToServer(s, '/create mellow mellowpy' + '\n')
+		sendMessageToServer(serverSocket, name + '\n')
+		if isHostingGame == 1:
+			sendMessageToServer(serverSocket, '/create mellow mellowpy' + '\n')
 		else:
-			sendMessageToServer(s, '/join mellowpy' + '\n')
+			sendMessageToServer(serverSocket, '/join mellowpy' + '\n')
 		
-		
+		#TODO: PUT THIS INTO FUNCTION
+		while mellowGUIVars.isStillRunning() == 1:
+			if isHostingGame == 1 and gameStarted == 0:
+				time.sleep(0.2)
+				sendMessageToServer(serverSocket, '/start' + '\n')
+				print 'sent start msg'
+			elif gameStarted == 1:
+				break
+			
+		'''
 		playedACardInFight = 0
 			
 		while mellowGUIVars.isStillRunning() == 1:
-			if host == 1 and gameStarted == 0:
+			if isHostingGame == 1 and gameStarted == 0:
 				time.sleep(0.2)
-				sendMessageToServer(s, '/start' + '\n')
+				sendMessageToServer(serverSocket, '/start' + '\n')
 				print 'sent start msg'
 			
 			if interact == 0:
@@ -437,18 +445,19 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 					print 'Your bid'
 					with turn_lock:
 						#TODO: put this back!
-						sendMessageToServer(s, '/move 1' + '\n')
-						
+						sendMessageToServer(serverSocket, '/move 1' + '\n')
 						itsYourBid = 0
 						itsYourTurn = 0
 						print 'sent msg'
+					
 				elif itsYourTurn==1:
 					print 'Your turn'
 					with turn_lock:
-						sendMessageToServer(s, '/move 1' + '\n')
+						sendMessageToServer(serverSocket, '/move 1' + '\n')
 						playedACardInFight = 1
 						itsYourBid = 0
 						itsYourTurn = 0
+					
 			elif interact == 1:
 				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
 					playedACardInFight = 0
@@ -456,56 +465,144 @@ def clientListener(name, host, mellowGUIVars, interact, slowdown):
 				if itsYourBid==1:
 					temp = mellowGUIVars.consumeBid()
 					if temp >=0:
-						sendMessageToServer(s, '/move ' + str(temp) + '\n')
-						itsYourBid = 0
-						itsYourTurn = 0
+						with turn_lock:
+							sendMessageToServer(serverSocket, '/move ' + str(temp) + '\n')
+							itsYourBid = 0
+							itsYourTurn = 0
 				elif itsYourTurn==1:
 					if mellowGUIVars.getCardUserWantsToPlay() != '':
 						with turn_lock:
-							sendMessageToServer(s, '/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
+							sendMessageToServer(serverSocket, '/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
 							mellowGUIVars.setCardUserWantsToPlayToNull()
 							playedACardInFight = 1
 							itsYourBid = 0
 							itsYourTurn = 0
-			
+		'''
+		playCardDefault(name, isHostingGame, mellowGUIVars, interact, slowdown, serverSocket)
+		#ENDTODO: PUT THIS INTO FUNCTION
+		
 			
 	except:
 		print 'ERROR: in client listener'
+		mellowGUIVars.setMessage("ERROR: in client listener")
 
-def main(mellowGUIVars):
-	if len(sys.argv) > 1:
-		name = sys.argv[1]
+#TODO:
+def playCardDefault(name, isHostingGame, mellowGUIVars, interact, slowdown, serverSocketInput):
+	global currentPlayerName
+	global players
+	
+	global turn_lock
+	global itsYourBid
+	global itsYourTurn
+	global serverSocket
+	
+	serverSocket = serverSocketInput
+	playedACardInFight = 0
+	
+	while mellowGUIVars.isStillRunning() == 1:
+		if interact == 0:
+			if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
+				playedACardInFight = 0
+			
+			if itsYourBid==1:
+				print 'Your bid'
+				with turn_lock:
+					#TODO: put this back!
+					sendMessageToServer(serverSocket, '/move 1' + '\n')
+					itsYourBid = 0
+					itsYourTurn = 0
+					print 'sent msg'
+				
+			elif itsYourTurn==1:
+				print 'Your turn'
+				with turn_lock:
+					sendMessageToServer(serverSocket, '/move 1' + '\n')
+					playedACardInFight = 1
+					itsYourBid = 0
+					itsYourTurn = 0
+				
+		elif interact == 1:
+			if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
+				playedACardInFight = 0
+				
+			if itsYourBid==1:
+				temp = mellowGUIVars.consumeBid()
+				if temp >=0:
+					with turn_lock:
+						sendMessageToServer(serverSocket, '/move ' + str(temp) + '\n')
+						itsYourBid = 0
+						itsYourTurn = 0
+			elif itsYourTurn==1:
+				if mellowGUIVars.getCardUserWantsToPlay() != '':
+					with turn_lock:
+						sendMessageToServer(serverSocket, '/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
+						mellowGUIVars.setCardUserWantsToPlayToNull()
+						playedACardInFight = 1
+						itsYourBid = 0
+						itsYourTurn = 0
+		
+
+def main(mellowGUIVars, args):
+	global serverSocket
+	print 'HELLO MELLOW CLIENT MAIN'
+	if len(args) > 1:
+		name = args[1]
 	else:
 		name = 'Michael'
 	
-	host = 0
+	#default ip and port:
+	tcpIP = '127.0.0.1'
+	tcpPort = 6789
+	
+	isHostingGame = 0
 	interact = 0
 	slowdown = 0
 	
-	for x in range (0, len(sys.argv)):
-		print str(sys.argv[x])
-		if sys.argv[x].find('host') != -1:
-			host = 1
-		elif sys.argv[x].find('meatbag') != -1 or sys.argv[x].find('interact') != -1:
+	#parse arguments:
+	for x in range (0, len(args)):
+		print str(args[x])
+		if args[x].find('host') != -1:
+			isHostingGame = 1
+		elif args[x].find('meatbag') != -1 or args[x].find('interact') != -1:
 			interact = 1
-		elif sys.argv[x].find('slow') != -1:
+		elif args[x].find('slow') != -1:
 			slowdown = 1
+		elif args[x].find('ip=') != -1:
+			tcpIP = str(args[x][len('ip='):])
+		elif args[x].find('p=') != -1:
+			tcpPort = int(args[x][len('p='):])
 	
+	print 'IP: ' + str(tcpIP)
+	print 'PORT: ' + str(tcpPort)
+	print 'name: ' + str(name)
+	
+	#Connect to server:
 	try:
-		thread.start_new_thread( serverListener, (name, host, mellowGUIVars, interact, slowdown) )
+		serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		serverSocket.connect((tcpIP, int(tcpPort)))
+	except:
+		print "ERROR: could not find server."
+		mellowGUIVars.setMessage("ERROR: could not find server.")
+		exit(1)
+	
+	#start listening t server on a seperate thread:
+	try:
+		thread.start_new_thread( serverListener, (name, isHostingGame, mellowGUIVars, interact, slowdown) )
 	except:
 		print "Error: unable to start thread 1"
+		mellowGUIVars.setMessage("Error: unable to start thread 1")
+		exit(1)
 	
-	clientListener(name, host, mellowGUIVars, interact, slowdown)
+	clientListener(name, isHostingGame, mellowGUIVars, interact, slowdown)
 
-def sendMessageToServer(s, msg):
+def sendMessageToServer(serverSocket, msg):
 	global sendMsgLock
 	with sendMsgLock:
-		s.send(str(msg))
+		serverSocket.send(str(msg))
 	
 def slowDownIfInteract(amountOfTime, gameStarted, slowdown, interact):
 	if gameStarted == 1 and (slowdown == 1 or interact == 1):
 		time.sleep(amountOfTime)
 	
 if __name__ == "__main__":
-	main('testing')
+	main('testing', sys.argv)
