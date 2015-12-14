@@ -500,41 +500,37 @@ def playCardDefault(name, isHostingGame, mellowGUIVars, interact, slowdown, serv
 	playedACardInFight = 0
 	
 	while mellowGUIVars.isStillRunning() == 1:
-		if interact == 0:
-			if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
-				playedACardInFight = 0
-			
-			if itsYourBid==1:
-				print 'Your bid'
-				with turn_lock:
-					#TODO: put this back!
+		with turn_lock:
+			if interact == 0:
+				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
+					playedACardInFight = 0
+				
+				if itsYourBid==1:
+					print 'Your bid'
 					sendMessageToServer(serverSocket, '/move 1' + '\n')
 					itsYourBid = 0
 					itsYourTurn = 0
 					print 'sent msg'
-				
-			elif itsYourTurn==1:
-				print 'Your turn'
-				with turn_lock:
+					
+				elif itsYourTurn==1:
+					print 'Your turn'
 					sendMessageToServer(serverSocket, '/move 1' + '\n')
 					playedACardInFight = 1
 					itsYourBid = 0
 					itsYourTurn = 0
-				
-		elif interact == 1:
-			if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
-				playedACardInFight = 0
-				
-			if itsYourBid==1:
-				temp = mellowGUIVars.consumeBid()
-				if temp >=0:
-					with turn_lock:
+					
+			elif interact == 1:
+				if mellowGUIVars.isNewFightStarting() and playedACardInFight == 1:
+					playedACardInFight = 0
+					
+				if itsYourBid==1:
+					temp = mellowGUIVars.consumeBid()
+					if temp >=0:
 						sendMessageToServer(serverSocket, '/move ' + str(temp) + '\n')
 						itsYourBid = 0
 						itsYourTurn = 0
-			elif itsYourTurn==1:
-				if mellowGUIVars.getCardUserWantsToPlay() != '':
-					with turn_lock:
+				elif itsYourTurn==1:
+					if mellowGUIVars.getCardUserWantsToPlay() != '':
 						sendMessageToServer(serverSocket, '/move ' + str(mellowGUIVars.getCardUserWantsToPlay()) + '\n')
 						mellowGUIVars.setCardUserWantsToPlayToNull()
 						playedACardInFight = 1

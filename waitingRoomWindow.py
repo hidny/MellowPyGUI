@@ -1,7 +1,10 @@
+#TODO: make the waiting room.
 import sys, pygame
 from pygame import _view
 from pygame.locals import *
 from sys import exit
+
+import channelRoomGUI
 
 import time
 
@@ -18,15 +21,16 @@ import createGameWindow
 
 def main(threadName, args):
 	
+	
 	if len(args) > 1:
 		connection = args[1]
+		connection.setWaitingRoomChatBox(chatBox.chatBox(24, 100 ,20, 500))
+		
 	else:
+		print 'AAAHAHAHA'
+		exit(1)
 		#TODO: put these vars in args...
 		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Doris')
-		
-		#The extremely lame chatbox.
-		#TODO: be able to initialize more variables to declare it.
-		connection.setChannelChatBox(chatBox.chatBox(24, 100 ,20, 500))
 		
 
 	pygame.init()
@@ -63,14 +67,19 @@ def main(threadName, args):
 	mouseJustPressed = 0
 	mouseHeld = 0
 	mouseJustRelease = 0
+	LEAVE_MESSAGE = 'number of game rooms:'
 	
-	joinButton = button.Button(10, 120, 100, 50, "Join", (0, 255 ,0), (255, 0 ,255))
+	joinButton = button.Button(10, 120, 100, 50, "WAITING ROOM!", (0, 255 ,0), (255, 0 ,255))
 	createButton = button.Button(10,240, 100, 50, "Create", (0, 255 ,0), (255, 0 ,255))
 	sendMessageButton = button.Button(900, 800, 300, 50, "Send Message", (0, 255 ,0), (255, 0 ,255))
+	
+	cancelButton =      button.Button(900, 700, 300, 50, "Cancel", (0, 255 ,0), (255, 0 ,255))
 	
 	colourDatBox = 0
 	
 	enterPressed = 0
+	cancelPressed = 0
+	waitingForLeaveMsg = 0
 	textBox1 = textBox.TextBox((1*screen_width)/32, (4*screen_height)/5 + 10 + 40, 800, 100, '', (255, 255, 255), (23,128,0), '')
 	
 	serverConnectionBoxes = textBoxList.TextBoxList([])
@@ -113,15 +122,11 @@ def main(threadName, args):
 			serverConnectionBoxes.handleKeyboardButtonHeldDown()
 		
 		#print the chatbox:
-		connection.getChannelChatBox().printChat(screen)
-		
+		connection.getWaitingRoomChatBox().printChat(screen)
 		
 		
 		#textBox1.drawTextBox(screen)
 		serverConnectionBoxes.drawTextBoxes(screen)
-		
-		#Paints the mouse cursor for testing:
-		#paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx, my, greendot, reddot, dot)
 		
 		if mouseJustRelease==1:
 			serverConnectionBoxes.checkClickForTextBoxes(mx, my, 1)
@@ -131,10 +136,11 @@ def main(threadName, args):
 		
 		joinPressed =  joinButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		createPressed = createButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
+		cancelPressed = cancelButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		
 		if enterPressed == 1:
 			if len(textBox1.getCurrentText()) > 0:
-				#Send whatever is in the chatbox to server:
+				#Send whatever is in the input box to server:
 				connection.sendMessageToServer(textBox1.getCurrentText()  + "\n")
 				textBox1.setCurrentTextEmpty()
 			
@@ -153,13 +159,18 @@ def main(threadName, args):
 			createGameWindow.main('', ['from channelRoomGUI.py', connection])
 		
 		#Print buttons:
+		#TODO DELETE
 		sendMessageButton.printButton(pygame, screen)
 		joinButton.printButton(pygame, screen)
 		createButton.printButton(pygame, screen)
+		cancelButton.printButton(pygame, screen)
+		
+		
 		
 		if round(time.time() * 1000)  - lastRefreshTime > USER_REFRESH_TIME:
 			connection.sendMessageToServer("/refresh" + "\n")
 			lastRefreshTime = round(time.time() * 1000)
+			print 'TESTING: ' + connection.getCurrentGameName()
 	
 		
 		temp = connection.getNextServerMessageInQueue()
@@ -179,6 +190,8 @@ def main(threadName, args):
 				temp = temp[1:]
 			
 			#Receive answer from server: (sent /refresh message)...
+			if waitingForLeaveMsg == 1 and temp.startswith(LEAVE_MESSAGE):
+				channelRoomGUI.main('', ['from waitRoomWindow.py', connection])
 			
 			if temp.startswith(REFRESH_MSG):
 				lines = temp.split('\n')
@@ -194,12 +207,30 @@ def main(threadName, args):
 						foundListOfUsers = 1
 						
 				foundListOfUsers = 0
+			
+			#TODO: make this react to the refresh message that shows the slots.
+			elif temp.startswith(REFRESH_MSG):
+				pass
+			
+			elif temp.startswith(connection.getCurrentGameName()):
+				print 'REFRESH DUDE!'
+				lines = temp.split('\n')
+				host = lines[0].split(' ')[4][0:-1]
+				print 'Host: ' + host
+				numSlots = len(lines) - 1
 				
+				for x in range(0, numSlots):
+					print 'Slot: ' + lines[1 + x].split(' ')[2]
+			
 			else:
 				lines = temp.split('\n')
 				for line in lines:
-					connection.getChannelChatBox().setNewChatMessage(line)
+					connection.getWaitingRoomChatBox().setNewChatMessage(line)
 			
+		if cancelPressed == 1:
+			connection.sendMessageToServer('/leave' + '\n')
+			waitingForLeaveMsg = 1
+		
 		
 		pygame.display.update()
 		screen.fill(0)
@@ -209,27 +240,6 @@ def main(threadName, args):
 PERIOD = 1000
 SHOWCURSONTIME = 500
 	
-
-#Template for a blinking cursor that I didn't implement:
-def shouldBlinkTextCursor():
-	partOfCycle = round(time.time() * 1000) % PERIOD
-	if partOfCycle < SHOWCURSONTIME:
-		return 1
-	else:
-		return 0
-
-
-#Paints the mouse cursor for testing.
-def paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx, my, greendot, reddot, dot):
-	#print mouse cursor:
-	if mouseJustPressed == 1 or mouseJustRelease==1:
-		screen.blit(greendot, (mx-5, my-5), (0, 0, 10, 10))
-		print 'green'
-	elif mouseHeld == 1:
-		print 'red'
-		screen.blit(reddot, (mx-5, my-5), (0, 0, 10, 10))
-	else:
-		screen.blit(dot, (mx-5, my-5), (0, 0, 10, 10))
 
 if __name__ == "__main__":
 	main('main thread', sys.argv)

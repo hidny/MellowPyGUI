@@ -1,20 +1,11 @@
-#COPIED from channelRoom.py
-#TODO: make a convincing game waiting room.
-
 import sys
 import time
 
 import random, os
 
-
 import threading
 #from threading import Thread
 import thread
-'''
-import pygame
-from pygame import _view
-from pygame.locals import *
-'''
 
 from sys import exit
 
@@ -34,7 +25,6 @@ sendMsgLock = threading.Lock()
 serverSocket = []
 gameOver = 1
 currentPlayerName = ''
-
 
 
 def endProgramCleanly():
@@ -88,7 +78,6 @@ def serverListener(name, isHostingGame, interact, slowdown, serverSocket):
 						
 						if secondLastNumber >= 0.0:
 							time.sleep(2)
-							print 'Sending: ' + str(float(lastNumber + secondLastNumber))
 							sendMessageToServer(serverSocket, str(float(lastNumber + secondLastNumber)) + '\n')
 						
 						
@@ -257,7 +246,7 @@ if __name__ == "__main__":
 #tansu
 
 #Commands I can use:
-#python channelRoom.py
-#python channelRoom.py Michael slow interact p=6789 ip=127.0.0.1
+#python channelRoomLogic.py
+#python channelRoomLogic.py Michael slow interact p=6789 ip=127.0.0.1
 
 #ctrl - > pause/break ftw!

@@ -16,6 +16,8 @@ import mellowClient
 import box
 
 
+#Warning:This is designed to be a singleton object
+
 class MellowGUI:
 	
 	pygame.init()
@@ -36,38 +38,12 @@ class MellowGUI:
 	card_height = 123
 
 
-	#TODO: make this as smooth as example 2
-
-	#if this is 1, the back is blue.
-	#if this is 0, the back is red.
-	#(I feel like this is a good way to troll people)
-	backIsBlue = 0
-
-
-	southCards = 13 * [-1]
-	westCards = 13 * [0]
-	northCards= 13 * [0]
-	eastCards = 13 * [0]
-
-	scoreForUs = 0
-	scoreForThem = 0
-
-	southBid = -1
-	westBid = -1
-	northBid = -1
-	eastBid = -1
-
-	tricks = 4*[0]
 	
-	
-	#Variable to handle the animation of thrown cards:
-	projectiles = []
+
 
 	THROW_TIME=100
 	FRAME_WAIT_TIME = 40
 	
-	#Dealers:
-	desler = ''
 	
 	WHITE = (255, 255, 255)
 
@@ -90,31 +66,12 @@ class MellowGUI:
 	green_dot_image_file = 'Image/greendot.png'
 	greendot = pygame.image.load(green_dot_image_file).convert()
 	
-	currentMsg = ''
-	
-	cardUserWantsToPlay = ''
 	
 	
-	#variable to check if there's been a crash. (Or manual close)
-	
-	lastFrameTime = int(round(time.time() * 1000))
-	
-	isAwaitingBid = 0
-	currentBid = -1
-	bidButtons = []
-	
-	southCardLock = threading.Lock()
-	westCardLock = threading.Lock()
-	northCardLock = threading.Lock()
-	eastCardLock = threading.Lock()
-
-	#TODO: put 4 locks for 4 different orientations back in.
-	#That didn't cause a bug.
-	scoreLock = threading.Lock()
-	#bidLock = threading.Lock()
 	
 	def __init__(self):
-		#boxes = []
+		self.bidButtons = []
+		
 		self.bidButtons.append(box.Box(self.width/2 - 180, self.height/2 - 90, 110, 50))
 		self.bidButtons.append(box.Box(self.width/2 - 60, self.height/2 - 90, 50, 50))
 		self.bidButtons.append(box.Box(self.width/2 - 0, self.height/2 - 90, 50, 50))
@@ -129,6 +86,57 @@ class MellowGUI:
 		self.bidButtons.append(box.Box(self.width/2 - 180, self.height/2 + 30, 110, 50))
 		self.bidButtons.append(box.Box(self.width/2 - 60, self.height/2 + 30 , 110, 50))
 		self.bidButtons.append(box.Box(self.width/2 + 60, self.height/2 + 30, 110, 50))
+		
+		self.southCardLock = threading.Lock()
+		self.westCardLock = threading.Lock()
+		self.northCardLock = threading.Lock()
+		self.eastCardLock = threading.Lock()
+
+		self.scoreLock = threading.Lock()
+		
+		
+		self.tricks = 4*[0]
+		
+		#Variable to handle the animation of thrown cards:
+		self.projectiles = []
+		
+			
+		self.southCards = 13 * [-1]
+		self.westCards = 13 * [0]
+		self.northCards= 13 * [0]
+		self.eastCards = 13 * [0]
+		
+		
+		self.currentMsg = ''
+		
+		self.cardUserWantsToPlay = ''
+		
+		
+		#variable to check if there's been a crash. (Or manual close)
+		
+		self.lastFrameTime = int(round(time.time() * 1000))
+		
+		self.isAwaitingBid = 0
+		self.currentBid = -1
+		
+		
+		#Dealers:
+		self.desler = ''
+	
+		#TODO: make this as smooth as example 2
+
+		#if this is 1, the back is blue.
+		#if this is 0, the back is red.
+		#(I feel like this is a good way to troll people)
+		self.backIsBlue = 0
+
+		self.scoreForUs = 0
+		self.scoreForThem = 0
+
+		self.southBid = -1
+		self.westBid = -1
+		self.northBid = -1
+		self.eastBid = -1
 		
 	
 	def updateLastFrameTime(self):

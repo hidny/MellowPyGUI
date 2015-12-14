@@ -12,7 +12,6 @@ import textBox
 #TODO: move connect to server button and make it work like pressing enter
 
 class TextBoxList:
-	listOfTextBoxes = []
 	selectedBoxIndex = 0
 	
 	def __init__(self, listOfTextBoxes):
@@ -64,6 +63,13 @@ class TextBoxList:
 			element.setUnFocussed()
 		
 		self.listOfTextBoxes[self.selectedBoxIndex].setFocussed()
+	
+	def shiftSelectedToIndex(self, index):
+		self.selectedBoxIndex = index % len(self.listOfTextBoxes)
+		for element in self.listOfTextBoxes:
+			element.setUnFocussed()
+		
+		self.listOfTextBoxes[index].setFocussed()
 	
 	def shiftSelectedToPrevBox(self):
 		self.selectedBoxIndex = (self.selectedBoxIndex - 1 + len(self.listOfTextBoxes) ) % len(self.listOfTextBoxes)

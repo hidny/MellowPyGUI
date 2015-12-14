@@ -5,20 +5,6 @@ from pygame.locals import *
 
 class Button:
 	
-	x = 0
-	y = 0
-	width = 0
-	heigth = 0
-	colour = (0, 0, 0)
-	
-	label = 0
-	labelColour = 0
-	
-	isFocussed = 0
-	isPressedDown = 0
-	pressTime = 0
-	
-	
 	def __init__(self, x, y, width, heigth, labelMessage, labelColour, bkColour):
 		self.x = x
 		self.y = y
@@ -28,6 +14,12 @@ class Button:
 		self.labelMessage = labelMessage
 		self.labelColour = labelColour
 		self.colour = bkColour
+		
+		self.label = 0
+		
+		self.isFocussed = 0
+		self.isPressedDown = 0
+		self.pressTime = 0
 	
 	def getTopLeftBox(self):
 		return (self.x, self.y)

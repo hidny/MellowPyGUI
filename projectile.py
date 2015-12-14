@@ -4,14 +4,6 @@ import mellowGUI
 #This class deals with the animation of cards being thrown into the middle of the table.
 
 class Projectile:
-	beingThrown=0
-	startX=0
-	startY=0
-	endX=0
-	endY=0
-	perc = 0
-	throwCardNum = -1
-	rotation = 0
 
 	def __init__(self, beingThrown, startX, startY, endX, endY, throwCardNum, rotation):
 		self.beingThrown=beingThrown
@@ -22,6 +14,7 @@ class Projectile:
 		self.throwCardNum = throwCardNum
 		self.rotation = rotation
 		
+		self.perc = 0
 		self.percStop = 100 + random.randint(0, 20)
 		
 	def printThrownCard(self, mellowVars):

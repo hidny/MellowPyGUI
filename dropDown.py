@@ -7,21 +7,7 @@ import time
 import math
 
 class DropDown:
-	title = ''
-	listOfOptions = []
 	
-	firstOptionBox = box.Box(0,0,0,0)
-	
-	width = 200
-	lengthPerCell=50
-	
-	labelColour = (0, 0, 0)
-	bkColour = 0
-	firstOptionText = ''
-	
-	isOpen = 0
-	
-	indexSelected = -1
 	
 	
 	def __init__(self, x, y, width, height, firstOptionText, labelColour, bkColour, listOfOptions):
@@ -31,6 +17,11 @@ class DropDown:
 		self.bkColour = bkColour
 		self.firstOptionText = firstOptionText
 		self.listOfOptions = listOfOptions
+		self.isOpen = 0
+		for i in range(0, len(self.listOfOptions)):
+			if self.listOfOptions[i]  == firstOptionText:
+				self.indexSelected = i
+		
 		
 	def printDropDown(self, screen):
 		if self.isOpen == 1:
@@ -90,27 +81,29 @@ class DropDown:
 	
 	def updateSelected(self, mouseX, mouseY, screen):
 		
-		
-		y = self.firstOptionBox.getY()
-		height = self.firstOptionBox.getHeight()
-		
-		tempBox = self.firstOptionBox
-		for i in range(0, len(self.listOfOptions)):
-		
-			y = y + tempBox.getHeight()
+		if self.isOpen == 1:
+			y = self.firstOptionBox.getY()
+			height = self.firstOptionBox.getHeight()
 			
-			tempBox = box.Box(tempBox.getX(), y, tempBox.getWidth(), height)
+			tempBox = self.firstOptionBox
+			for i in range(0, len(self.listOfOptions)):
 			
-			if tempBox.isWithinBox(mouseX, mouseY):
-				self.indexSelected = i
-				return
+				y = y + tempBox.getHeight()
 				
-		self.indexSelected = -1
-			
+				tempBox = box.Box(tempBox.getX(), y, tempBox.getWidth(), height)
+				
+				if tempBox.isWithinBox(mouseX, mouseY):
+					self.indexSelected = i
+					self.firstOptionText = self.listOfOptions[i]
+					return
+				
+		
 	
 	def getSelectedLabel(self):
 		if self.indexSelected >= 0:
 			return self.listOfOptions[self.indexSelected]
+		else:
+			return ''
 			
 	def getIndexSelected(self):
 		return self.indexSelected
@@ -118,14 +111,14 @@ class DropDown:
 	def updateClicked(self, mx, my, mouseReleased, screen):
 		
 		if mouseReleased == 1:
-			if self.firstOptionBox.isWithinBox(mx, my):
-				if self.isOpen == 0:
-					self.isOpen = 1
-				else:
-					self.isOpen = 0
-			
-			self.updateSelected(mx, my, screen)
-			if self.getIndexSelected() >= 0:
-				print str(self.getSelectedLabel())
-		
+			if self.firstOptionBox.isWithinBox(mx, my) and self.isOpen == 0:
+				self.isOpen = 1
+			else:
+				self.updateSelected(mx, my, screen)
+				if self.getIndexSelected() >= 0:
+					#TODO: return this so the gui class could do logic on it!
+					print str(self.getSelectedLabel())
+				
+				self.isOpen = 0
+				
 	

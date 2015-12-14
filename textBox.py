@@ -18,21 +18,6 @@ REPEAT_PERIOD = 20
 
 class TextBox:
 	
-	box = box.Box(0,0,0,0)
-	bkColour = (0, 0, 0)
-	
-	labelColour = 0
-	
-	isFocussed = 0
-	isPressedDown = 0
-	
-	currentText = ''
-	isKeyHeldDown = 0
-	isDeletingText = 0
-	numRepeatedCharacters = 0
-	timePressed = 0
-	currentKeyPressed = 0
-	
 	def __init__(self, x, y, width, height, currentText, labelColour, bkColour, text = ''):
 		self.box = box.Box(x, y, width, height)
 		
@@ -40,6 +25,16 @@ class TextBox:
 		self.labelColour = labelColour
 		self.bkColour = bkColour
 		self.currentText = text
+		
+		self.isFocussed = 0
+		self.isPressedDown = 0
+		
+		self.isKeyHeldDown = 0
+		self.isDeletingText = 0
+		self.numRepeatedCharacters = 0
+		self.timePressed = 0
+		self.currentKeyPressed = 0
+			
 	
 	def getTopLeftBox(self):
 		return self.box.getTopLeftBox(self.x, self.y)
@@ -347,6 +342,9 @@ class TextBox:
 			
 		return 0
 	
+	def setCurrentText(self, text):
+		self.currentText = text
+
 	def getCurrentText(self):
 		return self.currentText
 

@@ -7,27 +7,34 @@ EMPTY_LINE = -1
 
 class chatBox:
 
-	numLines = 30
-	listOfLines = []
-	currentIndex = 0
+	
 	
 	#TODO: add more params to customize the chat.
-	def __init__(self, numLines):
+	def __init__(self, numLines, x, y, xLimit):
+		#OMG: https://docs.python.org/2/tutorial/classes.html
+		self.listOfLines = []
 		self.numLines = numLines
 		for i in range(0, self.numLines):
 			self.listOfLines.append(EMPTY_LINE)
+		
+		self.x = x
+		self.y = y
+		self.xLimit = xLimit
+		self.currentIndex = 0
+		
 	   
 	def printChat(self, screen):
 		#pygame.draw.rect(screen, self.bkColour, self.box.getCoordBox() )
-		pygame.draw.rect(screen, (0,0,0), (0,0,500,20 + 30*self.numLines) )
+		pygame.draw.rect(screen, (0,0,0), (self.x, self.y, self.xLimit, self.y + 20 + 30*self.numLines) )
 		
 		myfont = pygame.font.SysFont("comicsansms", 25)
 		for i in range(0, len(self.listOfLines)):
 			if self.listOfLines[i] == EMPTY_LINE:
 				pass
 			else:
-				label =  myfont.render(str(str(self.listOfLines[i])), 1, (255, 255, 255))
-				screen.blit(label, (20, 20 + 30*i))
+				#TODO: undo change
+				label =  myfont.render(str(self.listOfLines[i]), 1, (255, 255, 255))
+				screen.blit(label, (self.x + 20, self.y + 20 + 30*i))
 				
 		
 	
