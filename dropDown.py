@@ -6,11 +6,12 @@ import box
 import time
 import math
 
+NOT_SELECTED = -1
+
 class DropDown:
 	
 	
-	
-	def __init__(self, x, y, width, height, firstOptionText, labelColour, bkColour, listOfOptions):
+	def __init__(self, x, y, width, height, firstOptionText, labelColour, bkColour, listOfOptions, changeTitleOnSelection=1):
 		self.firstOptionBox = box.Box(x, y, width, height)
 		
 		self.labelColour = labelColour
@@ -18,6 +19,10 @@ class DropDown:
 		self.firstOptionText = firstOptionText
 		self.listOfOptions = listOfOptions
 		self.isOpen = 0
+		self.changeTitleOnSelection = changeTitleOnSelection
+		
+		self.indexSelected = NOT_SELECTED
+		
 		for i in range(0, len(self.listOfOptions)):
 			if self.listOfOptions[i]  == firstOptionText:
 				self.indexSelected = i
@@ -82,6 +87,8 @@ class DropDown:
 	def updateSelected(self, mouseX, mouseY, screen):
 		
 		if self.isOpen == 1:
+			self.indexSelected = NOT_SELECTED
+			
 			y = self.firstOptionBox.getY()
 			height = self.firstOptionBox.getHeight()
 			
@@ -94,7 +101,8 @@ class DropDown:
 				
 				if tempBox.isWithinBox(mouseX, mouseY):
 					self.indexSelected = i
-					self.firstOptionText = self.listOfOptions[i]
+					if self.changeTitleOnSelection == 1:
+						self.firstOptionText = self.listOfOptions[i]
 					return
 				
 		
@@ -107,18 +115,54 @@ class DropDown:
 			
 	def getIndexSelected(self):
 		return self.indexSelected
+	
+	def setMainText(self, mainText):
+		self.firstOptionText = mainText
+	
+	def getMainText(self):
+		return self.firstOptionText
 		
+	def getIsOpen(self):
+		return self.isOpen
+		
+	def close(self):
+		self.isOpen = 0
+		
+	def open(self):
+		self.isOpen = 1
+	
 	def updateClicked(self, mx, my, mouseReleased, screen):
-		
 		if mouseReleased == 1:
 			if self.firstOptionBox.isWithinBox(mx, my) and self.isOpen == 0:
 				self.isOpen = 1
+				return -2
 			else:
 				self.updateSelected(mx, my, screen)
 				if self.getIndexSelected() >= 0:
 					#TODO: return this so the gui class could do logic on it!
-					print str(self.getSelectedLabel())
+					print 'In dropDown.py, you pressed: ' + str(self.getSelectedLabel())
+					return self.getIndexSelected()
 				
 				self.isOpen = 0
+		
+		return -1
 				
-	
+	def clickedOrMovedWithinDropDown(self, mx, my, screen):
+		if self.firstOptionBox.isWithinBox(mx, my) and self.isOpen == 0:
+			return 1
+		
+		if self.isOpen == 1:
+			y = self.firstOptionBox.getY()
+			height = self.firstOptionBox.getHeight()
+			
+			tempBox = self.firstOptionBox
+			for i in range(0, len(self.listOfOptions)):
+			
+				y = y + tempBox.getHeight()
+				
+				tempBox = box.Box(tempBox.getX(), y, tempBox.getWidth(), height)
+				
+				if tempBox.isWithinBox(mx, my):
+					return 1
+		
+		return 0

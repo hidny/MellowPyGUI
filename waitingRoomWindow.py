@@ -8,6 +8,7 @@ import channelRoomGUI
 
 import time
 
+import dropDown
 import textBox
 import textBoxList
 import box
@@ -24,7 +25,7 @@ def main(threadName, args):
 	
 	if len(args) > 1:
 		connection = args[1]
-		connection.setWaitingRoomChatBox(chatBox.chatBox(24, 100 ,20, 500))
+		connection.setWaitingRoomChatBox(chatBox.chatBox(24, 400 ,20, 500))
 		
 	else:
 		print 'AAAHAHAHA'
@@ -69,8 +70,8 @@ def main(threadName, args):
 	mouseJustRelease = 0
 	LEAVE_MESSAGE = 'number of game rooms:'
 	
-	joinButton = button.Button(10, 120, 100, 50, "WAITING ROOM!", (0, 255 ,0), (255, 0 ,255))
-	createButton = button.Button(10,240, 100, 50, "Create", (0, 255 ,0), (255, 0 ,255))
+	
+	gameSlots = []
 	sendMessageButton = button.Button(900, 800, 300, 50, "Send Message", (0, 255 ,0), (255, 0 ,255))
 	
 	cancelButton =      button.Button(900, 700, 300, 50, "Cancel", (0, 255 ,0), (255, 0 ,255))
@@ -86,6 +87,7 @@ def main(threadName, args):
 	
 	serverConnectionBoxes.addTextbox(textBox1)
 	
+	gameSlots = []
 	
 	while 1==1:
 		#Get mouse events:
@@ -134,8 +136,6 @@ def main(threadName, args):
 		if enterPressed == 0:
 			enterPressed = sendMessageButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		
-		joinPressed =  joinButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
-		createPressed = createButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		cancelPressed = cancelButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		
 		if enterPressed == 1:
@@ -146,23 +146,53 @@ def main(threadName, args):
 			
 			enterPressed = 0
 		
-		#Enter join window:
-		if joinPressed == 1:
-			print 'Join pressed!'
-			#TODO: save chat box.
-			joinGameWindow.main('', ['from channelRoomGUI.py', connection])
+		#Print slots:
+		#TODO: please put this into a function...
 		
 		
-		if createPressed == 1:
-			#TODO: save chat box and send to create window.'
-			print 'Create pressed!'
-			createGameWindow.main('', ['from channelRoomGUI.py', connection])
+		opened = -1
+		for i in range(0, len(gameSlots)):
+			if gameSlots[i].getIsOpen() == 1:
+				opened = i
+			elif opened >= 0:
+				gameSlots[i].close()
 		
-		#Print buttons:
-		#TODO DELETE
+		for i in range(0, len(gameSlots)):
+			if i != opened:
+				gameSlots[i].printDropDown(screen)
+		
+		if opened >= 0:
+			gameSlots[i].printDropDown(screen)
+		
+		
+		for i in range(0, len(gameSlots)):
+			playerName = gameSlots[i].getMainText()
+			
+			gameSlots[i].updateSelected(mx, my, screen)
+			
+			ret = gameSlots[i].updateClicked(mx, my, mouseJustRelease, screen)
+			
+			if ret >= 0:
+				if opened >= 0:
+					print 'AHAHA!'
+					exit(1)
+					gameSlots[opened].close()
+					gameSlots[ret].open()
+			
+			
+			gameSlots[i].setMainText(playerName)
+			
+			if ret != -1:
+				break
+			
+			#IF drop down open, close the other drop downs!
+			#TODO: Make the functions that react to client wishes here.
+			#TODO2: show the open slots first. ( don't cover the open drop downs.)
+		
+		
+		#END TODO
+		
 		sendMessageButton.printButton(pygame, screen)
-		joinButton.printButton(pygame, screen)
-		createButton.printButton(pygame, screen)
 		cancelButton.printButton(pygame, screen)
 		
 		
@@ -208,20 +238,33 @@ def main(threadName, args):
 						
 				foundListOfUsers = 0
 			
-			#TODO: make this react to the refresh message that shows the slots.
-			elif temp.startswith(REFRESH_MSG):
-				pass
 			
 			elif temp.startswith(connection.getCurrentGameName()):
 				print 'REFRESH DUDE!'
+				
 				lines = temp.split('\n')
 				host = lines[0].split(' ')[4][0:-1]
 				print 'Host: ' + host
 				numSlots = len(lines) - 1
 				
+				createSlots = 0
+				if len(gameSlots) == 0:
+					createSlots = 1
+					
+				#if game slots defined...
+				listWhatever = []
+				listWhatever.append("one")
+				listWhatever.append("two")
+				listWhatever.append("three")
 				for x in range(0, numSlots):
 					print 'Slot: ' + lines[1 + x].split(' ')[2]
-			
+					if createSlots == 1:
+						gameSlots.append(dropDown.DropDown(100, 100 + 100 * x, 300, 50, lines[1 + x].split(' ')[2], (0, 255 ,0), (255, 0 ,255),listWhatever))
+					else:
+						gameSlots[x].setMainText(lines[1 + x].split(' ')[2])
+					
+				
+				
 			else:
 				lines = temp.split('\n')
 				for line in lines:
