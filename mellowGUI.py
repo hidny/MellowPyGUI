@@ -18,6 +18,9 @@ import box
 
 #Warning:This is designed to be a singleton object
 
+	
+FIRST_ROUND = -999
+	
 class MellowGUI:
 	
 	pygame.init()
@@ -38,12 +41,8 @@ class MellowGUI:
 	card_height = 123
 
 
-	
-
-
 	THROW_TIME=100
 	FRAME_WAIT_TIME = 40
-	
 	
 	WHITE = (255, 255, 255)
 
@@ -121,7 +120,7 @@ class MellowGUI:
 		
 		
 		#Dealers:
-		self.desler = ''
+		self.dealer = ''
 	
 		#TODO: make this as smooth as example 2
 
@@ -130,6 +129,10 @@ class MellowGUI:
 		#(I feel like this is a good way to troll people)
 		self.backIsBlue = 0
 
+		self.prevScoreForUs = 0
+		self.prevScoreForThem = 0
+		self.diffScoreUs =FIRST_ROUND
+		self.diffScoreThem =FIRST_ROUND
 		self.scoreForUs = 0
 		self.scoreForThem = 0
 
@@ -151,15 +154,7 @@ class MellowGUI:
 		else:
 			print 'GAME OVER according to isStillRunning(self)'
 			return 0
-		#The below code doesn't work because the game freezes when you're dragging the screen.
-		'''
-		currentTime = int(round(time.time() * 1000))
-		if currentTime - self.lastFrameTime > 1000:
-			print 'GAME OVER according to isStillRunning(self)'
-			return 0
-		else:
-			return 1
-		'''
+	
 	#Functions called by some controller file:
 	def setupCardsForNewRound(self, southCardsInput):
 		tempArray = []
@@ -194,7 +189,7 @@ class MellowGUI:
 
 
 	def setDealer(self, name):
-		self.desler = name
+		self.dealer = name
 	
 	def bidSouth(self, bid):
 		#with self.bidLock:
@@ -237,7 +232,8 @@ class MellowGUI:
 					break
 			
 			if indexCard == -1:
-				print 'AHHH!!!!'
+				print 'AHHH!!!! IndexCard is -1 on throw card.'
+				exit(1)
 			
 			self.projectiles[0] = projectile.throwSouthCard(self, self.southCards, indexCard)
 		
@@ -283,28 +279,48 @@ class MellowGUI:
 				self.projectiles[x].endThrow(self)
 	
 	def updateScore(self, us, them):
+	
 		with self.scoreLock:
-			diffUs  =    us  - self.scoreForUs
-			diffThem =  them - self.scoreForThem
-			
-			#TODO: display score.
+			self.prevScoreForUs = self.scoreForUs
+			self.prevScoreForThem = self.scoreForThem
+		
+			self.diffScoreUs  =    us - self.prevScoreForUs
+			self.diffScoreThem =  them - self.prevScoreForThem
 			
 			self.scoreForUs = us
 			self.scoreForThem = them
 		
 	#END CONTROL FUNCTIONS
-	def printScore(self):	
+	def printScore(self):
+	
+		pygame.draw.rect(self.screen, (255, 255, 255, 0), ((1*self.width)/32, (4*self.height)/5 + 10, 300, 200))
+		#Make summation lines:
+		pygame.draw.rect(self.screen, (0, 0, 255, 0), ((1*self.width)/32, (4*self.height)/5 + 10 + 3*40, 60, 5))
+		pygame.draw.rect(self.screen, (0, 0, 255, 0), ((1*self.width)/32 + 70, (4*self.height)/5 + 10 + 3*40, 60, 5))
+		
+		#pygame.draw.rect(self.screen, (255, 0, 255, 0), (self.width/2 - 200, self.height/2 - 100, 400, 200))
+		
 		with self.scoreLock:
 			myfont = pygame.font.SysFont("comicsansms", 30)
 			
-			#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10))
-			#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 1*40))
-			#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 2*40))
-			#self.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 2*40))
 			
+			labelExample1 = myfont.render("US       THEM", 1, (0,0,255))
 			
-			labelExample4 = myfont.render(str(self.scoreForUs) + "  " + str(self.scoreForThem) + "  (" + self.desler + ")", 1, (0,0,255))
-			self.screen.blit(labelExample4, ((1*self.width)/32, (4*self.height)/5 + 10 + 2*40))
+			labelExample2 = myfont.render(str(self.prevScoreForUs) + "    " + str(self.prevScoreForThem), 1, (0,0,255))
+			
+			labelExample3 = myfont.render(" " + str(self.diffScoreUs) + "     " + str(self.diffScoreThem), 1, (0,0,255))
+			
+			labelExample4 = myfont.render(str(self.scoreForUs) + "    " + str(self.scoreForThem) + "  (" + self.dealer + ")", 1, (0,0,255))
+			
+			self.screen.blit(labelExample1, ((1*self.width)/32, (4*self.height)/5 + 10))
+			
+			if self.diffScoreThem == FIRST_ROUND:
+				#If it's the first round and don't put the previous scores up...
+				pass
+			else:
+				self.screen.blit(labelExample2, ((1*self.width)/32, (4*self.height)/5 + 10 + 1*40))
+				self.screen.blit(labelExample3, ((1*self.width)/32, (4*self.height)/5 + 10 + 2*40))
+			self.screen.blit(labelExample4, ((1*self.width)/32, (4*self.height)/5 + 10 + 3*40))
 	
 	def printTricks(self):
 		#with self.bidLock:
@@ -722,14 +738,13 @@ def main(name, arguments):
 		
 		#mellowGUI.screen.blit(labelExample, (mellowGUI.width/2, mellowGUI.height/2))
 		
-		#TODO: Score screen:
+		#TODO: Chat box:
 		pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE, [(6*mellowGUI.width)/8, (4*mellowGUI.height)/5 + 10, 300, 200])
-		#mellowGUI.screen.blit(labelExample, ((6*mellowGUI.width)/8, (4*mellowGUI.height)/5 + 10))
-		#mellowGUI.screen.blit(labelExample2, ((6*mellowGUI.width)/8, (4*mellowGUI.height)/5 + 10 + 1*40))
-		#mellowGUI.screen.blit(labelExample3, ((6*mellowGUI.width)/8, (4*mellowGUI.height)/5 + 10 + 2*40))
-		#mellowGUI.screen.blit(labelExample4, ((6*mellowGUI.width)/8, (4*mellowGUI.height)/5 + 10 + 3*40))
 		
-		pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE, [(1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10, 300, 200])
+		#TODO: score screen
+		
+		mellowGUI.printScore()
+		
 		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10))
 		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 1*40))
 		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 2*40))
@@ -754,11 +769,9 @@ def main(name, arguments):
 		else:
 			mellowGUI.screen.blit(mellowGUI.dot, (mx-5, my-5), (0, 0, 10, 10))
 		
-		mellowGUI.printScore()
 		
 		mellowGUI.printTricks()
 		
-		#mellowGUI.setMessage('Chocolate')
 		mellowGUI.displayCenterGameMsg()
 		
 		if mellowGUI.isWaitingForBid() == 1:

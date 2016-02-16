@@ -389,15 +389,16 @@ def serverListener(name, isHostingGame, mellowGUIVars, interact, slowdown):
 								print 'Scores added: '
 							else:
 								print 'Current Total:'
-							
-							if playerInTeamA == 1:
-								print 'US(team A): ' + tokens[0]
-								print 'THEM(team B): ' + tokens[len(tokens) - 1]
-								mellowGUIVars.updateScore(int(tokens[0]), int(tokens[len(tokens) - 1]))
-							else:
-								print 'THEM(team A): ' + tokens[0]
-								print 'US(team B): ' + tokens[len(tokens) - 1]
-								mellowGUIVars.updateScore(int(tokens[len(tokens) - 1]), int(tokens[0]))
+								
+								print 'Tell Mellow GUI about current total and let it figure everything else out:'
+								if playerInTeamA == 1:
+									print 'US(team A): ' + tokens[0]
+									print 'THEM(team B): ' + tokens[len(tokens) - 1]
+									mellowGUIVars.updateScore(int(tokens[0]), int(tokens[len(tokens) - 1]))
+								else:
+									print 'THEM(team A): ' + tokens[0]
+									print 'US(team B): ' + tokens[len(tokens) - 1]
+									mellowGUIVars.updateScore(int(tokens[len(tokens) - 1]), int(tokens[0]))
 			
 	except:
 		print 'ERROR: in server listener'
