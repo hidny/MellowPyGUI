@@ -23,12 +23,13 @@ def main(threadName, args):
 	else:
 		#TODO: put these vars in args...
 		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Doris')
-		
-		#The extremely lame chatbox.
-		#TODO: be able to initialize more variables to declare it.
+	
+	
+	#The extremely lame chatbox.
+	#TODO: be able to initialize more variables to declare it.
+	if connection.getChannelChatBox() == '':
 		connection.setChannelChatBox(chatBox.chatBox(24, 100 ,20, 500))
 		
-
 	pygame.init()
 	
 	screen_width = 1300
@@ -175,7 +176,7 @@ def main(threadName, args):
 			if temp.endswith('\n'):
 				temp = temp[0:-1]
 				
-			if temp.startswith('\n'):
+			while temp.startswith('\n'):
 				temp = temp[1:]
 			
 			#Receive answer from server: (sent /refresh message)...

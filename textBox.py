@@ -374,7 +374,7 @@ class TextBox:
 	
 	#TODO: make the background change if focused... or something...
 	def setFocussed(self):
-		print 'FOCUS on textbox'
+		#print 'FOCUS on textbox'
 		self.isFocussed = 1
 	
 	def setUnFocussed(self):

@@ -43,6 +43,7 @@ def main(threadName, args):
 	REFRESH_MSG = 'number of game rooms:'
 	PLAYERS_IN_CHANNEL_HEADER = 'players in channel:'
 	BADPASSWORD = 'ERROR: Bad password.'
+	ERROR = 'ERROR:'
 	
 	listOfGamesInChannel = []
 	
@@ -76,8 +77,9 @@ def main(threadName, args):
 	
 	roomNameTextBox = textBox.TextBox((21*screen_width)/32, (1*screen_height)/5, 350, 50, '', (255, 255, 255), (23,128,0), '')
 	passwordTextBox = textBox.TextBox((21*screen_width)/32, (2*screen_height)/5, 350, 50, '', (255, 255, 255), (23,128,0), '')
-	askForPasswordStartTime = 0
+	errorMessageDisplayStart = 0
 	printAskForPassword = 0
+	printError = 0
 	
 	serverConnectionBoxes = textBoxList.TextBoxList([])
 	
@@ -88,7 +90,8 @@ def main(threadName, args):
 	tryingToJoinRoom = ''
 	
 	while 1==1:
-		#Get mouse events:
+		
+		#React to user events:
 		mouseJustPressed = 0
 		mouseJustRelease = 0
 		frameHasKeyboardEvent = 0
@@ -106,9 +109,7 @@ def main(threadName, args):
 					mouseHeld = 0
 					mouseJustRelease = 1
 			
-		#TODO: get the textbox that's focused on if possible, then update it!
 			elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-				#textBox1.dealWithKeyboard(event)
 				serverConnectionBoxes.dealWithKeyboard(event)
 				frameHasKeyboardEvent = 1
 				
@@ -121,23 +122,38 @@ def main(threadName, args):
 		if frameHasKeyboardEvent == 0:
 			serverConnectionBoxes.handleKeyboardButtonHeldDown()
 		
-		serverConnectionBoxes.drawTextBoxes(screen)
 		
 		if mouseJustRelease==1:
 			serverConnectionBoxes.checkClickForTextBoxes(mx, my, 1)
 		
-		#Print buttons:
+		serverConnectionBoxes.drawTextBoxes(screen)
+		
+		
 		if enterPressed == 0:
 			enterPressed = joinButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		
+		if enterPressed == 1:
+			tryingToJoinRoom = roomNameTextBox.getCurrentText()
+			connection.sendMessageToServer('/join ' + tryingToJoinRoom + ' ' + passwordTextBox.getCurrentText() + '\n')
+			enterPressed = 0
+			tryingToJoin = 1
+		
+		
 		cancelPressed = cancelButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
+		
+		if cancelPressed == 1:
+			channelRoomGUI.main('', ['from joinGameWindow.py', connection])
+			cancelPressed = 0
+		
+		
+		#END React to user events:
+		
+		#Print Stuff:
 		
 		joinButton.printButton(pygame, screen)
 		cancelButton.printButton(pygame, screen)
 		
-		if round(time.time() * 1000)  - lastRefreshTime > USER_REFRESH_TIME:
-			connection.sendMessageToServer("/refresh" + "\n")
-			lastRefreshTime = round(time.time() * 1000)
+		
 	
 		#Print gamename/password labels:
 		myfont = pygame.font.SysFont("comicsansms", 25)
@@ -149,14 +165,42 @@ def main(threadName, args):
 		
 		#PRINT ERROR MSG:
 		if printAskForPassword == 1:
-			if round(time.time() * 1000) < askForPasswordStartTime + USER_PASSWORD_MSG_TIME:
+			if round(time.time() * 1000) < errorMessageDisplayStart + USER_PASSWORD_MSG_TIME:
 				myfont = pygame.font.SysFont("comicsansms", 25)
 				label =  myfont.render("Please Enter Password!", 1, (255, 0, 0))
 				screen.blit(label, ((21*screen_width)/32, (1*screen_height)/5 - 150))
 			else:
 				printAskForPassword = 0
+		elif printError == 1:
+			if round(time.time() * 1000) < errorMessageDisplayStart + USER_PASSWORD_MSG_TIME:
+				myfont = pygame.font.SysFont("comicsansms", 25)
+				label =  myfont.render("Error trying to join the game.", 1, (255, 0, 0))
+				screen.blit(label, ((21*screen_width)/32, (1*screen_height)/5 - 150))
+			else:
+				printError = 0
 		#END PRINT ERR MSG
 		
+		
+		#Print open games in channel:
+		for i in range(0, len(listOfGamesInChannel)):
+			myfont = pygame.font.SysFont("comicsansms", 25)
+			label =  myfont.render(listOfGamesInChannel[i], 1, (255, 255, 255))
+			screen.blit(label, (100, 30 + 30*i))
+		
+			if i > 0:
+				if mouseJustRelease == 1:
+					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:
+						print 'BUTTON pressed: ' + str(i)
+						roomNameTextBox.setCurrentText(listOfGamesInChannel[i].split(' ')[1] )
+						connection.sendMessageToServer('/join ' + roomNameTextBox.getCurrentText() + ' ' + passwordTextBox.getCurrentText() + '\n')
+			else:
+				if mouseJustRelease == 1:
+					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:
+						print 'Pressed number of games message.'
+		
+		#End print stuff.
+		
+		#React to server messages:
 		temp = connection.getNextServerMessageInQueue()
 		
 		if temp != '':
@@ -180,7 +224,14 @@ def main(threadName, args):
 			if temp.startswith(BADPASSWORD):
 				serverConnectionBoxes.shiftSelectedToIndex(1)
 				printAskForPassword = 1
-				askForPasswordStartTime = round(time.time() * 1000)
+				printError = 0
+				errorMessageDisplayStart = round(time.time() * 1000)
+				tryingToJoin = 0
+			
+			elif temp.startswith(ERROR):
+				printError = 1
+				printAskForPassword = 0
+				errorMessageDisplayStart = round(time.time() * 1000)
 				tryingToJoin = 0
 				
 			elif temp.startswith(REFRESH_MSG):
@@ -207,37 +258,20 @@ def main(threadName, args):
 				foundListOfUsers = 0
 			
 			else:
-				lines = temp.split('\n')
-				for line in lines:
-					connection.getChannelChatBox().setNewChatMessage(line)
-			
-		#Print open games in channel:
-		for i in range(0, len(listOfGamesInChannel)):
-			myfont = pygame.font.SysFont("comicsansms", 25)
-			label =  myfont.render(listOfGamesInChannel[i], 1, (255, 255, 255))
-			screen.blit(label, (100, 30 + 30*i))
-		
-			if i > 0:
-				if mouseJustRelease == 1:
-					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:
-						print 'BUTTON pressed: ' + str(i)
-						roomNameTextBox.setCurrentText(listOfGamesInChannel[i].split(' ')[1] )
-						connection.sendMessageToServer('/join ' + roomNameTextBox.getCurrentText() + ' ' + passwordTextBox.getCurrentText() + '\n')
-			else:
-				if mouseJustRelease == 1:
-					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:
-						print 'Pressed number of games message.'
-		
-		if enterPressed == 1:
-			tryingToJoinRoom = roomNameTextBox.getCurrentText()
-			connection.sendMessageToServer('/join ' + tryingToJoinRoom + ' ' + passwordTextBox.getCurrentText() + '\n')
-			enterPressed = 0
-			tryingToJoin = 1
+				print 'DEBUG: ' + temp
+				#lines = temp.split('\n')
+				#for line in lines:
+				#	connection.getChannelChatBox().setNewChatMessage(line)
 			
 		
-		if cancelPressed == 1:
-			channelRoomGUI.main('', ['from joinGameWindow.py', connection])
-			cancelPressed = 0
+		#End React to server messages
+		
+		
+		#Ask server for a periodic update.
+		if round(time.time() * 1000)  - lastRefreshTime > USER_REFRESH_TIME:
+			connection.sendMessageToServer("/refresh" + "\n")
+			lastRefreshTime = round(time.time() * 1000)
+		#end ask server for a periodic update.
 		
 		pygame.display.update()
 		screen.fill(0)
