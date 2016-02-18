@@ -40,6 +40,9 @@ class ClientContext:
 		self.currentGameName = ''
 		self.isHost = 0
 		
+		self.interact = 1
+		self.slowdown = 1
+		
 		try:
 			self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.serverSocket.connect((self.tcpIP, int(self.tcpPort)))
@@ -92,6 +95,11 @@ class ClientContext:
 				ret = self.messageFromServerQueue[0]
 				del self.messageFromServerQueue[0]
 				return ret
+	
+	def reinsertMessageAtFrontOfQueue(self, message):
+		with self.recvMsgLock:
+			self.messageFromServerQueue.insert(0, message + '\n')
+			
 	
 	#get messages from server and produce them on queue:
 	def getServerMessages(self):
@@ -148,3 +156,20 @@ class ClientContext:
 	def isHosting(self):
 		return self.isHost
 	
+	
+	def setInteract(self, interact):
+		self.interact = interact
+	
+	def getInteract(self):
+		return self.interact
+	
+	
+	def setSlowdown(self, slowdown):
+		self.slowdown = slowdown
+	
+	def getSlowdown(self):
+		return self.interact
+	
+	def getCurrentPlayerName(self):
+		return self.currentPlayerName
+		

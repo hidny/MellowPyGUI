@@ -15,6 +15,7 @@ import clientContext
 
 import joinGameWindow
 import createGameWindow
+import start
 
 def main(threadName, args):
 	
@@ -22,7 +23,7 @@ def main(threadName, args):
 		connection = args[1]
 	else:
 		#TODO: put these vars in args...
-		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Doris')
+		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Barney')
 	
 	
 	#The extremely lame chatbox.
@@ -38,6 +39,7 @@ def main(threadName, args):
 	lastRefreshTime = round(time.time() * 1000) - USER_REFRESH_TIME
 	REFRESH_MSG = 'number of game rooms:'
 	PLAYERS_IN_CHANNEL_HEADER = 'players in channel:'
+	DISCONNECT = 'Goodbye!'
 	
 	listOfPlayerInChannel = []
 	
@@ -68,6 +70,8 @@ def main(threadName, args):
 	joinButton = button.Button(10, 120, 100, 50, "Join", (0, 255 ,0), (255, 0 ,255))
 	createButton = button.Button(10,240, 100, 50, "Create", (0, 255 ,0), (255, 0 ,255))
 	sendMessageButton = button.Button(900, 800, 300, 50, "Send Message", (0, 255 ,0), (255, 0 ,255))
+	disconnectButton=   button.Button(900, 700, 300, 50, "Disconnect", (0, 255 ,0), (255, 0 ,255))
+	disconnectPressed = 0
 	
 	colourDatBox = 0
 	
@@ -133,6 +137,9 @@ def main(threadName, args):
 		joinPressed =  joinButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		createPressed = createButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		
+		if disconnectPressed == 0:
+			disconnectPressed = disconnectButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
+		
 		if enterPressed == 1:
 			if len(textBox1.getCurrentText()) > 0:
 				#Send whatever is in the chatbox to server:
@@ -153,10 +160,15 @@ def main(threadName, args):
 			print 'Create pressed!'
 			createGameWindow.main('', ['from channelRoomGUI.py', connection])
 		
+		if disconnectPressed == 1:
+			connection.sendMessageToServer("/disc" + "\n")
+			
+		
 		#Print buttons:
 		sendMessageButton.printButton(pygame, screen)
 		joinButton.printButton(pygame, screen)
 		createButton.printButton(pygame, screen)
+		disconnectButton.printButton(pygame, screen)
 		
 		if round(time.time() * 1000)  - lastRefreshTime > USER_REFRESH_TIME:
 			connection.sendMessageToServer("/refresh" + "\n")
@@ -195,7 +207,9 @@ def main(threadName, args):
 						foundListOfUsers = 1
 						
 				foundListOfUsers = 0
-				
+			
+			elif temp.startswith(DISCONNECT) and disconnectPressed == 1:
+				start.main('From channel room', ['start.py'])
 			else:
 				lines = temp.split('\n')
 				for line in lines:

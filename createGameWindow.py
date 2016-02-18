@@ -28,7 +28,7 @@ def main(threadName, args):
 		connection = args[1]
 	else:
 		#TODO: put these vars in args...
-		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Doris')
+		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Lenny')
 
 	pygame.init()
 	

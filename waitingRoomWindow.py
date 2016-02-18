@@ -13,8 +13,6 @@ import button
 import mellowGUI
 import chatBox
 
-import joinGameWindow
-import createGameWindow
 #End for testing.
 
 from pygame import _view
@@ -24,10 +22,6 @@ import dropDown
 
 import clientContext
 import channelRoomGUI
-#import pygame
-#import box
-#import time
-#import math
 
 
 NOT_SELECTED = -1
@@ -133,11 +127,6 @@ class WaitingRoomPlayerList:
 					self.gameSlots[self.indexSelected].close()
 					self.indexSelected = NOT_SELECTED
 					
-					#TODO: Make the client talk to the server to service the commands!
-					#TODO: some options don't make sense like moving into closed slot
-					#Or reopeing slot.
-					
-					#DO IT HERE!
 					return
 			
 			
@@ -165,7 +154,7 @@ def main(threadName, args):
 		connection = args[1]
 	else:
 		#TODO: put these vars in args...
-		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Doris')
+		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Josh')
 		
 		#The extremely lame chatbox.
 		#TODO: be able to initialize more variables to declare it.
@@ -189,7 +178,7 @@ def main(threadName, args):
 	waitingForLeaveMsg = 0
 	waitingForGameMessage = 0
 	LEAVE_MESSAGE = 'number of game rooms:'
-	
+	GAME_ROOM_MESSAGE = 'From Game(public):'
 	
 	
 	
@@ -300,7 +289,11 @@ def main(threadName, args):
 			
 			if waitingForLeaveMsg == 1 and temp.startswith(LEAVE_MESSAGE):
 				channelRoomGUI.main('', ['from waitRoomPWindow.py', connection])
-				
+			
+			elif waitingForGameMessage == 1 and temp.startswith(GAME_ROOM_MESSAGE):
+				connection.reinsertMessageAtFrontOfQueue(temp)
+				mellowGUI.main(connection)
+			
 			#Receive answer from server: (sent /refresh message)...
 			elif temp.startswith(FIRST_MSG_TO_IGNORE):
 				print 'Skip it!'

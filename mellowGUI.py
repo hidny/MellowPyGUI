@@ -14,6 +14,7 @@ import projectile
 import starterTest
 import mellowClient
 import box
+import clientContext
 
 
 #Warning:This is designed to be a singleton object
@@ -233,7 +234,7 @@ class MellowGUI:
 			
 			if indexCard == -1:
 				print 'AHHH!!!! IndexCard is -1 on throw card.'
-				exit(1)
+				#exit(1)
 			
 			self.projectiles[0] = projectile.throwSouthCard(self, self.southCards, indexCard)
 		
@@ -420,7 +421,7 @@ class MellowGUI:
 	
 		
 
-	def printWestCards(self, mx, my):
+	def printWestCards(self):
 		firstY = self.screen_height/2
 		if len(self.westCards) % 2 == 0:
 			firstY = firstY + self.card_width/4
@@ -433,7 +434,7 @@ class MellowGUI:
 			currentY = currentY + (self.card_width/2)
 		
 		
-	def printNorthCards(self, mx, my):
+	def printNorthCards(self):
 		
 		firstX = self.getXCordFirstCardNorthSouth(self.northCards)
 		currentX = firstX
@@ -442,7 +443,7 @@ class MellowGUI:
 			self.printcardFromCenter(currentX, self.off_the_edgeY, -1, 0)
 			currentX = currentX + (self.card_width/2)
 		
-	def printEastCards(self, mx, my):
+	def printEastCards(self):
 		firstY = self.screen_height/2
 		if len(self.eastCards) % 2 == 0:
 			firstY = firstY + self.card_width/4
@@ -657,7 +658,7 @@ def convertCardStringToNum(card):
 	return 13*row + column
 
 
-def main(name, arguments):
+def main(arguments):
 	mellowGUI = MellowGUI()
 	#keep track of the last frame/heartbeat. 
 	#if the last frame/heartbeat was too long ago, we could assume this program has crashed.
@@ -666,7 +667,7 @@ def main(name, arguments):
 	print 'Inside Mellow GUI main!'
 	
 	try:
-		t = Thread(name = 'Testing', target=mellowClient.main, args=(mellowGUI, arguments))
+		t = Thread(name = 'Testing', target=mellowClient.main, args=(mellowGUI, ['MellowGUI.py', arguments]))
 		t.start()
 	except:
 		print "Error: unable to start thread"
@@ -678,13 +679,6 @@ def main(name, arguments):
 	
 	#texting adding 
 	myfont = pygame.font.SysFont("comicsansms", 30)
-
-	# render text
-	labelExample = myfont.render("Do not renege!", 1, (0,0,255))
-	labelExample = myfont.render("  US        THEM", 1, (0,0,255))
-	labelExample2 = myfont.render("     0        0 (SOUTH)", 1, (0,0,255))
-	labelExample3 = myfont.render(" 1 4      1 5 ", 1, (0,0,255))
-	labelExample4 = myfont.render(" 1 4 0    1 5 0 (WEST)", 1, (0,0,255))
 	
 	clock = pygame.time.Clock()
 	
@@ -711,6 +705,7 @@ def main(name, arguments):
 	
 	while 1:
 		
+		#React to user events:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				mellowGUI.gameOver = 1
@@ -725,73 +720,129 @@ def main(name, arguments):
 					mouseHeld = 0
 					mouseJustRelease = 1
 		
-		ballrect = ballrect.move(ballspeed)
-		if ballrect.left < 0 or ballrect.right > mellowGUI.width:
-			ballspeed[0] = -ballspeed[0]
-		if ballrect.top < 0 or ballrect.bottom > mellowGUI.height:
-			ballspeed[1] = -ballspeed[1]
-
+		mx,my = pygame.mouse.get_pos()
+		
+		cardHeldIndex = mellowGUI.reorgSouthCards(mx, my, mouseJustPressed, mouseHeld, mouseJustRelease, cardHeldIndex)
+		
+		
+		#END React to user events:
+		
+		#Print Stuff:
+		
 		mellowGUI.fill_background()
 		
 		mellowGUI.screen.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
 		mellowGUI.screen.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
 		
-		#mellowGUI.screen.blit(labelExample, (mellowGUI.width/2, mellowGUI.height/2))
 		
 		#TODO: Chat box:
 		pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE, [(6*mellowGUI.width)/8, (4*mellowGUI.height)/5 + 10, 300, 200])
 		
-		#TODO: score screen
-		
 		mellowGUI.printScore()
 		
-		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10))
-		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 1*40))
-		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 2*40))
-		#mellowGUI.screen.blit(labelExample, ((1*mellowGUI.width)/32, (4*mellowGUI.height)/5 + 10 + 3*40))
+		#Pring sanity test ball:
+		'''
+		ballrect = ballrect.move(ballspeed)
+		if ballrect.left < 0 or ballrect.right > mellowGUI.width:
+			ballspeed[0] = -ballspeed[0]
+		if ballrect.top < 0 or ballrect.bottom > mellowGUI.height:
+			ballspeed[1] = -ballspeed[1]
 		
 		mellowGUI.screen.blit(ball, ballrect)
-		mx,my = pygame.mouse.get_pos()
+		'''
+		#End print sanity test ball.
 		
-		cardHeldIndex = mellowGUI.reorgSouthCards(mx, my, mouseJustPressed, mouseHeld, mouseJustRelease, cardHeldIndex)
 		
 		mellowGUI.printSouthCards(mx, my)
-		mellowGUI.printWestCards(mx, my)
-		mellowGUI.printNorthCards(mx, my)
-		mellowGUI.printEastCards(mx, my)
+		mellowGUI.printWestCards()
+		mellowGUI.printNorthCards()
+		mellowGUI.printEastCards()
 
 		mellowGUI.printThrownCards()
 		
+		mellowGUI.printTricks()
+		
+		mellowGUI.displayCenterGameMsg()
+		
+		#Print colour of cursor depending on what user does:
 		if mouseJustPressed == 1 or mouseJustRelease==1:
 			mellowGUI.screen.blit(mellowGUI.greendot, (mx-5, my-5), (0, 0, 10, 10))
 		elif mouseHeld == 1:
 			mellowGUI.screen.blit(mellowGUI.reddot, (mx-5, my-5), (0, 0, 10, 10))
 		else:
 			mellowGUI.screen.blit(mellowGUI.dot, (mx-5, my-5), (0, 0, 10, 10))
+		#end print colour of cursor.
 		
-		
-		mellowGUI.printTricks()
-		
-		mellowGUI.displayCenterGameMsg()
 		
 		if mellowGUI.isWaitingForBid() == 1:
 			mellowGUI.displayBidChoices()
 		
 		pygame.display.update()
+		
+		
 		mouseJustPressed = 0
 		mouseJustRelease = 0
 		
+		#End print stuff.
 		
-		#print 'Done frame'
+		#Update to next frame:
+		
 		mellowGUI.updateLastFrameTime()
-		
 		clock.tick(1000/MellowGUI.FRAME_WAIT_TIME)
 	
-	print 'HELLO'
+	
 	mellowGUI.gameOver = 1
 
 if __name__ == "__main__":
-	main('hello world', sys.argv)
+#TODO: insert logic to quickly start the game here.
+	
+	
+	#TODO: connect to the client
+	#TODO2: put these vars in context object.
+	#And join/create the correct game in MellowGUI
+	
+	args = sys.argv
+	if len(args) > 1:
+		name = args[1]
+	else:
+		name = 'Michael'
+	
+	#default ip and port:
+	tcpIP = '127.0.0.1'
+	tcpPort = 6789
+	
+	isHostingGame = 0
+	interact = 0
+	slowdown = 0
+	
+	#parse arguments:
+	for x in range (0, len(args)):
+		print str(args[x])
+		if args[x].find('host') != -1:
+			isHostingGame = 1
+		elif args[x].find('meatbag') != -1 or args[x].find('interact') != -1:
+			interact = 1
+		elif args[x].find('slow') != -1:
+			slowdown = 1
+		elif args[x].find('ip=') != -1:
+			tcpIP = str(args[x][len('ip='):])
+		elif args[x].find('p=') != -1:
+			tcpPort = int(args[x][len('p='):])
+	
+	print 'IP: ' + str(tcpIP)
+	print 'PORT: ' + str(tcpPort)
+	print 'name: ' + str(name)
+	
+	connection = clientContext.ClientContext(tcpIP, tcpPort, name)
+	
+	if isHostingGame ==1:
+		connection.setHost()
+	else:
+		connection.setJoiner()
+	
+	connection.setInteract(interact)
+	connection.setSlowdown(slowdown)
+	main(connection)
 	
 '''
 cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI

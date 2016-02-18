@@ -10,11 +10,10 @@ import textBoxList
 import box
 import button
 
-import mellowGUI
 import sys
 
-#TODO: maybe this is redundant? MT: who cares?
-import socket
+import clientContext
+import channelRoomGUI
 
 #TODO (optional): make  a config file for server name, port and desired name.
 
@@ -24,7 +23,7 @@ def main(name, args):
 	#default values:
 	tcpIP = '127.0.0.1'
 	tcpPort = 6789
-	name = 'Michael'
+	name = 'David'
 	
 	numArgsSet = 0
 	
@@ -180,7 +179,12 @@ def main(name, args):
 			#pygame.display.quit()
 			#pygame.quit()
 			
-			mellowGUI.main('hello', ['start.py', name, 'slow', 'interact', str('ip=' + tcpIP), str('p=' + str(tcpPort)), 'host'])
+			connection = clientContext.ClientContext(tcpIP, tcpPort, name)
+			
+			channelRoomGUI.main('', ['from start.py', connection])
+			
+			
+			#mellowGUI.main('hello', ['start.py', name, 'slow', 'interact', str('ip=' + tcpIP), str('p=' + str(tcpPort)), 'host'])
 			
 		
 		'''
