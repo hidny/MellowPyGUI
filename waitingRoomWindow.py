@@ -1,4 +1,4 @@
-#For testing:
+
 import sys, pygame
 from pygame import _view
 from pygame.locals import *
@@ -13,7 +13,6 @@ import button
 import mellowGUI
 import chatBox
 
-#End for testing.
 
 from pygame import _view
 from pygame.locals import *
@@ -40,9 +39,7 @@ class WaitingRoomPlayerList:
 			self.listPlayerSlot = []
 			
 			#TODO: change the server to allow the host to swap players.
-			
 			if connection.isHosting() == 1:
-			#TODO: make a convincing list of options that are also available to the command line interface.
 				self.listEmptySlot.append("Open")
 				self.listEmptySlot.append("Close")
 				self.listPlayerSlot.append("Open")
@@ -66,7 +63,7 @@ class WaitingRoomPlayerList:
 				self.gameSlots[self.indexSelected].updateSelected(mx, my, screen)
 			
 			for x in range(0, len(self.gameSlots)):
-				#go backwards so the the dropdowns won't cover each other in the wrong way:
+				#This loop goes backwards so the the dropdowns won't cover each other in the wrong way:
 				self.gameSlots[len(self.gameSlots) - 1 - x].printDropDown(screen)
 		
 		#pre: len(players) == len(self.gameSlots)
@@ -94,20 +91,18 @@ class WaitingRoomPlayerList:
 			
 			if self.indexSelected != NOT_SELECTED:
 				temp = self.gameSlots[self.indexSelected].updateClicked(mx, my, 1, screen)
+				
 				#reopen the slot So I could close it later. (outside updateClicked)
 				if self.gameSlots[self.indexSelected].getIsOpen() == 0:
 					self.gameSlots[self.indexSelected].open()
 				
 				if temp >=0:
-					#print 'Pressed something!'
-					#print self.gameSlots[self.indexSelected].listOfOptions[temp]
 					textPressed = self.gameSlots[self.indexSelected].listOfOptions[temp]
 					if textPressed == 'Open':
 						if self.gameSlots[self.indexSelected].getMainText() == 'Closed' or self.gameSlots[self.indexSelected].getMainText() == 'Open' :
 							self.connection.sendMessageToServer("/open " + str(self.indexSelected + 1) + "\n")
 						else:
 							self.connection.sendMessageToServer("/kick " + self.gameSlots[self.indexSelected].getMainText() + "\n")
-							#TODO: Warning: my server might not be able to handle 2 messages at once:
 							self.connection.sendMessageToServer("/open " + str(self.indexSelected + 1)  + "\n")
 					
 					if textPressed == 'Close':
@@ -115,7 +110,6 @@ class WaitingRoomPlayerList:
 							self.connection.sendMessageToServer("/close " + str(self.indexSelected + 1) + "\n")
 						else:
 							self.connection.sendMessageToServer("/kick " + self.gameSlots[self.indexSelected].getMainText() + "\n")
-							#TODO: Warning: my server might not be able to handle 2 messages at once:
 							self.connection.sendMessageToServer("/close " + str(self.indexSelected + 1)  + "\n")
 					
 					if textPressed == 'Whisper':
@@ -134,7 +128,6 @@ class WaitingRoomPlayerList:
 				tempBox =  box.Box(200, 100 + 100 * x, 300, 50)
 				
 				if tempBox.isWithinBox(mx, my):
-					#print 'You clicked a box!'
 					
 					for y in range(0, len(self.gameSlots)):
 						if x != y:
@@ -153,11 +146,8 @@ def main(threadName, args):
 	if len(args) > 1:
 		connection = args[1]
 	else:
-		#TODO: put these vars in args...
 		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Josh')
 		
-		#The extremely lame chatbox.
-		#TODO: be able to initialize more variables to declare it.
 		connection.sendMessageToServer("/create mellow test" + "\n")
 		connection.setCurrentGameName("mellow")
 		connection.setHost()
@@ -235,7 +225,6 @@ def main(threadName, args):
 		
 		if enterPressed == 1:
 			if len(textBox1.getCurrentText()) > 0:
-				#Send whatever is in the chatbox to server:
 				connection.sendMessageToServer(textBox1.getCurrentText()  + "\n")
 				textBox1.setCurrentTextEmpty()
 			
@@ -276,8 +265,7 @@ def main(threadName, args):
 		#End print stuff.
 		
 		#React to server messages:
-		#Copied from channel Room GUI:
-		#Code to get response from server:
+		
 		temp = connection.getNextServerMessageInQueue()
 		
 		if temp != '':

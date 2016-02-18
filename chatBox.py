@@ -32,7 +32,6 @@ class chatBox:
 			if self.listOfLines[i] == EMPTY_LINE:
 				pass
 			else:
-				#TODO: undo change
 				label =  myfont.render(str(self.listOfLines[i]), 1, (255, 255, 255))
 				screen.blit(label, (self.x + 20, self.y + 20 + 30*i))
 				

@@ -9,18 +9,12 @@ import mellowGUI
 import projectile
 import clientContext
 
-#October 22, 2015: It's static because I only want one mellow client for the whole execution.
-
-#TODO:
-# DONE! 1) update scores
-# DONE! 2) Sanity check tricks.
-# 3) Send useful updates to a middleman that will then send variable to AI or GUI.
-#		Or just implement the AI or replayer from scratch and then refactor
+#It's static because I only want one mellow client for the whole execution.
 
 #Mellow specific constants:
-START_MSG = 'Starting Mellow!'
-YOUR_BID = 'Game(private): What\'s your bid?'
-YOUR_TURN = 'Game(private): Play a card!'
+START_MSG = 'From Game(public): Starting Mellow!'
+YOUR_BID = 'From Game(private): What\'s your bid?'
+YOUR_TURN = 'From Game(private): Play a card!'
 PRIVATE_MSG = 'From Game(private):'
 PUBLIC_MSG = 'From Game(public): '
 #first dealer:
@@ -68,8 +62,7 @@ def shiftArrayByOne(array):
 	array[len(array) - 1] = temp
 	return array
 
-#TODO: use starts with instead of find to avoid hacking.
-#aString.startswith("hello")
+
 def serverListener(connection, mellowGUIVars):
 
 	global gameStarted
@@ -96,7 +89,7 @@ def serverListener(connection, mellowGUIVars):
 					print '*****************************'
 					print "received message: " + str(currentLine)
 					
-				if currentLine.find(START_MSG) != -1:
+				if currentLine.startswith(START_MSG):
 					gameStarted = 1
 					#Starting Mellow! Michael & Dick vs Dad & Mom
 					#team A
@@ -115,7 +108,7 @@ def serverListener(connection, mellowGUIVars):
 							playerInTeamA = 0
 					
 					
-				elif currentLine.find(YOUR_BID) != -1:
+				elif currentLine.startswith(YOUR_BID):
 					currentLine = currentLine[currentLine.index(YOUR_BID) + len(YOUR_BID):]
 					with turn_lock:
 						itsYourBid=1
@@ -124,12 +117,12 @@ def serverListener(connection, mellowGUIVars):
 							mellowGUIVars.askUserForBid()
 					
 				
-				elif currentLine.find(YOUR_TURN) != -1:
+				elif currentLine.startswith(YOUR_TURN):
 					currentLine = currentLine[currentLine.index(YOUR_TURN) + len(YOUR_TURN):]
 					with turn_lock:
 						itsYourTurn=1
 				
-				elif currentLine.find(PUBLIC_SERVER_MSG) != -1:
+				elif currentLine.startswith(PUBLIC_SERVER_MSG):
 					if currentLine.find(PLAYING_CARD) != -1:
 						#From Game(public): Michael playing: 9S
 						player = currentLine.split(' ')[2]
@@ -157,7 +150,6 @@ def serverListener(connection, mellowGUIVars):
 						else:
 							print 'ERROR: unknown player plays card!'
 							sys.exit(1)
-						#TODO: send this fact to some AI or GUI program so it could think.
 						
 						#get relative player direction
 						#make it print: west plays x
@@ -199,10 +191,8 @@ def serverListener(connection, mellowGUIVars):
 								else:
 									print 'ERROR: unknown player bids'
 									sys.exit(1)
-					#TODO: send this fact to some AI or GUI program so it could think.
 						
-					
-				if currentLine.find(PRIVATE_MSG) != -1:
+				if currentLine.startswith(PRIVATE_MSG):
 					currentLine = currentLine[currentLine.index(PRIVATE_MSG) + len(PRIVATE_MSG):]
 					currentLine = currentLine.strip()
 					cardsTemp = currentLine.split(' ')
@@ -216,8 +206,9 @@ def serverListener(connection, mellowGUIVars):
 						for card in cardsTemp:
 							print card
 						print 'Done printing cards'
-			
-				if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(DEALER_MSG) != -1:
+				
+				
+				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(DEALER_MSG) != -1:
 					#From Game(public): First dealer is Mom
 					#From Game(public): Dealer: Michael
 					dealer = message.split(' ')[len(message.split(' ')) - 1]
@@ -245,11 +236,11 @@ def serverListener(connection, mellowGUIVars):
 						print 'ERROR: unknown dealer'
 						sys.exit(1)
 				
-				if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(FIGHT_SUMMARY_MSG) != -1:
+				
+				if currentLine.startswith(FIGHT_SUMMARY_MSG):
 					slowDownIfInteract(connection, 1, gameStarted)
 					mellowGUIVars.remove_Projectiles()
 					
-					#copy of dealer logic:
 					fightWinner = message.split(' ')[len(message.split(' ')) - 1]
 					while fightWinner[len(fightWinner) -1] == '\n':
 						fightWinner = fightWinner[0:-1]
@@ -257,38 +248,31 @@ def serverListener(connection, mellowGUIVars):
 					if players[0]  == fightWinner:
 						mellowGUIVars.addTrickSouth()
 						print 'Fight Winner is South(' + fightWinner + ')'
-						#mellowGUIVars.setMessage('Fight Winner is South(' + fightWinner + ')')
 						
 					elif players[1] == fightWinner:
 						mellowGUIVars.addTrickWest()
 						print 'Fight Winner is West(' + fightWinner + ')'
-						#mellowGUIVars.setMessage('Fight Winner is West(' + fightWinner + ')')
 						
 					elif players[2] == fightWinner:
 						mellowGUIVars.addTrickNorth()
 						print 'Fight Winner is North(' + fightWinner + ')'
-						#mellowGUIVars.setMessage('Fight Winner is North(' + fightWinner + ')')
 						
 					elif players[3] == fightWinner:
 						mellowGUIVars.addTrickEast()
 						print 'Fight Winner is East(' + fightWinner + ')'
-						#mellowGUIVars.setMessage('Fight Winner is East(' + fightWinner + ')')
 						
 					else:
 						print 'current fightWinner: ' + fightWinner
 						print 'ERROR: unknown fight winner'
 						sys.exit(1)
-					#End copy
 				
-				if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(WIN) != -1:
+				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(WIN) != -1:
 					print message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):]
-					#TODO: make a better msg.
 				
-				if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(TRICKS) != -1:
+				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(TRICKS) != -1:
 					#From Game(public): ALL: Mom got 4 trick(s).
 					slowDownIfInteract(connection, 1, gameStarted)
 					
-					#TODO: send this update somewhere.
 					#Trying to send: From Game(public): ALL: Michael got 1 trick(s).
 					player = message.split(' ')[3]
 					number = message.split(' ')[5]
@@ -306,24 +290,18 @@ def serverListener(connection, mellowGUIVars):
 						print 'ERROR: unknown player has tricks.'
 						sys.exit(1)
 				
-					#End copy
-				#TODO:
-				#At round end, update score
-				#and sanity check tricks.
 				
-				if currentLine.find(PUBLIC_MSG) != -1 and currentLine.find(END_OF_ROUND) != -1:
+				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(END_OF_ROUND) != -1:
 					endOfRoundIndex = 0
 				
-				if currentLine.find(PUBLIC_MSG) != -1:# and endOfRoundIndex < 3:
-					
+				
+				if currentLine.startswith(PUBLIC_MSG):
 					currentScores = currentLine[currentLine.find(PUBLIC_MSG) + len(PUBLIC_MSG):]
 					currentScores = currentScores.strip()
 					tokens = currentScores.split(' ')
 					if len(tokens) > 1 and isNumber(tokens[0]) == 1 and isNumber(tokens[len(tokens) - 1]) == 1:
 						endOfRoundIndex = endOfRoundIndex + 1
-						print '***'
-						print '**TESTING: in getting current Score if cond'
-						print '**'
+						
 						if endOfRoundIndex == 1:
 							print 'previous scores: '
 						elif endOfRoundIndex == 2:
@@ -343,6 +321,7 @@ def serverListener(connection, mellowGUIVars):
 			
 	except:
 		print 'ERROR: in server listener'
+		print 'ERROR: ' + currentLine
 		mellowGUIVars.setMessage("ERROR: in server listener")
 
 def clientListener(connection, mellowGUIVars):

@@ -28,7 +28,6 @@ def main(threadName, args):
 	if len(args) > 1:
 		connection = args[1]
 	else:
-		#TODO: put these vars in args...
 		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Moe')
 
 	pygame.init()
@@ -214,7 +213,7 @@ def main(threadName, args):
 			
 			#check if you're in game!
 			if tryingToJoin == 1 and temp.startswith('Game joined:'):
-				#TODO: move to game room as joiner
+				#Move to game room as joiner:
 				connection.setJoiner()
 				
 				connection.setCurrentGameName(roomToGameDict[tryingToJoinRoom])
@@ -240,7 +239,6 @@ def main(threadName, args):
 				
 				roomToGameDict = {};
 				
-				#print 'Getting game room waiting for players:'
 				listOfGamesInChannel = []
 				
 				for line in lines:
@@ -259,9 +257,6 @@ def main(threadName, args):
 			
 			else:
 				print 'DEBUG: ' + temp
-				#lines = temp.split('\n')
-				#for line in lines:
-				#	connection.getChannelChatBox().setNewChatMessage(line)
 			
 		
 		#End React to server messages

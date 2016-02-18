@@ -22,12 +22,8 @@ def main(threadName, args):
 	if len(args) > 1:
 		connection = args[1]
 	else:
-		#TODO: put these vars in args...
 		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Barney')
 	
-	
-	#The extremely lame chatbox.
-	#TODO: be able to initialize more variables to declare it.
 	if connection.getChannelChatBox() == '':
 		connection.setChannelChatBox(chatBox.chatBox(24, 100 ,20, 500))
 		
@@ -102,7 +98,6 @@ def main(threadName, args):
 					mouseHeld = 0
 					mouseJustRelease = 1
 			
-		#TODO: get the textbox that's focused on if possible, then update it!
 			elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
 				serverConnectionBoxes.dealWithKeyboard(event)
 				frameHasKeyboardEvent = 1
@@ -124,9 +119,6 @@ def main(threadName, args):
 		
 		#textBox1.drawTextBox(screen)
 		serverConnectionBoxes.drawTextBoxes(screen)
-		
-		#Paints the mouse cursor for testing:
-		#paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx, my, greendot, reddot, dot)
 		
 		if mouseJustRelease==1:
 			serverConnectionBoxes.checkClickForTextBoxes(mx, my, 1)
@@ -151,12 +143,10 @@ def main(threadName, args):
 		#Enter join window:
 		if joinPressed == 1:
 			print 'Join pressed!'
-			#TODO: save chat box.
 			joinGameWindow.main('', ['from channelRoomGUI.py', connection])
 		
 		
 		if createPressed == 1:
-			#TODO: save chat box and send to create window.'
 			print 'Create pressed!'
 			createGameWindow.main('', ['from channelRoomGUI.py', connection])
 		
@@ -233,18 +223,6 @@ def shouldBlinkTextCursor():
 	else:
 		return 0
 
-
-#Paints the mouse cursor for testing.
-def paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx, my, greendot, reddot, dot):
-	#print mouse cursor:
-	if mouseJustPressed == 1 or mouseJustRelease==1:
-		screen.blit(greendot, (mx-5, my-5), (0, 0, 10, 10))
-		print 'green'
-	elif mouseHeld == 1:
-		print 'red'
-		screen.blit(reddot, (mx-5, my-5), (0, 0, 10, 10))
-	else:
-		screen.blit(dot, (mx-5, my-5), (0, 0, 10, 10))
 
 if __name__ == "__main__":
 	main('main thread', sys.argv)

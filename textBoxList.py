@@ -7,9 +7,7 @@ import time
 import math
 import textBox
 
-#TODO: note down if shift is pressed or not and act accordingly.
 #FIXME: if you hold tab, the repeat typed logic goes on...
-#TODO: move connect to server button and make it work like pressing enter
 
 class TextBoxList:
 	selectedBoxIndex = 0
@@ -78,7 +76,6 @@ class TextBoxList:
 		
 		self.listOfTextBoxes[self.selectedBoxIndex].setFocussed()
 	
-	#TODO: test these
 	def handleKeyboardButtonHeldDown(self):
 		self.listOfTextBoxes[self.selectedBoxIndex].handleKeyboardButtonHeldDown()
 	

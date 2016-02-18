@@ -17,7 +17,7 @@ import box
 import clientContext
 
 
-#Warning:This is designed to be a singleton object
+#This is designed to be a singleton object
 
 	
 FIRST_ROUND = -999
@@ -112,8 +112,6 @@ class MellowGUI:
 		self.cardUserWantsToPlay = ''
 		
 		
-		#variable to check if there's been a crash. (Or manual close)
-		
 		self.lastFrameTime = int(round(time.time() * 1000))
 		
 		self.isAwaitingBid = 0
@@ -122,8 +120,6 @@ class MellowGUI:
 		
 		#Dealers:
 		self.dealer = ''
-	
-		#TODO: make this as smooth as example 2
 
 		#if this is 1, the back is blue.
 		#if this is 0, the back is red.
@@ -146,10 +142,7 @@ class MellowGUI:
 	def updateLastFrameTime(self):
 		self.lastFrameTime = int(round(time.time() * 1000))
 	
-	#If there's a deadlock, then the frametime will be delayed compared to the real time...
-	#and that's how we know there's a crash!
 	def isStillRunning(self):
-		#TODO: mellowGUI should probably have a boolean that says it is dead somehow.
 		if self.gameOver == 0:
 			return 1
 		else:
@@ -160,12 +153,8 @@ class MellowGUI:
 	def setupCardsForNewRound(self, southCardsInput):
 		tempArray = []
 		
-		print 'todo: setup cards for new round'
-		print 'card indexes:'
-		#TODO: make sure these are numbers.
 		for index in range(0, len(southCardsInput)):
 			tempArray.append(convertCardStringToNum(southCardsInput[index]))
-			#print int(convertCardStringToNum(southCardsInput[index]))
 		
 		
 		tempArray.sort()
@@ -257,11 +246,7 @@ class MellowGUI:
 		for x in range(0, 4):
 			self.projectiles[x].printThrownCard(self)
 	
-	#hack to see if the current player is leading.
-	#pre: we're assuming it's his turn to play.
 	def isNewFightStarting(self):
-		#TODO: is this the best way to lock it?
-		#Do I have to lock it to do a read?
 		temp = 0
 		with self.southCardLock:
 			with self.westCardLock:
@@ -299,7 +284,6 @@ class MellowGUI:
 		pygame.draw.rect(self.screen, (0, 0, 255, 0), ((1*self.width)/32, (4*self.height)/5 + 10 + 3*40, 60, 5))
 		pygame.draw.rect(self.screen, (0, 0, 255, 0), ((1*self.width)/32 + 70, (4*self.height)/5 + 10 + 3*40, 60, 5))
 		
-		#pygame.draw.rect(self.screen, (255, 0, 255, 0), (self.width/2 - 200, self.height/2 - 100, 400, 200))
 		
 		with self.scoreLock:
 			myfont = pygame.font.SysFont("comicsansms", 30)
@@ -324,8 +308,6 @@ class MellowGUI:
 			self.screen.blit(labelExample4, ((1*self.width)/32, (4*self.height)/5 + 10 + 3*40))
 	
 	def printTricks(self):
-		#with self.bidLock:
-		#print 'TEST2: print tricks.'
 		myfont = pygame.font.SysFont("comicsansms", 30)
 		
 		labelTricksSouth = myfont.render(str(self.tricks[0]) + "/" + str(self.southBid), 1, (0,0,255))
@@ -344,11 +326,9 @@ class MellowGUI:
 		
 		if self.southBid >= 0:
 			self.screen.blit(labelTricksSouth, (self.width/2, self.height - 90))
-		#print 'TEST3: print tricks.'
 	
 	def printcard(self, x, y, num, rotate90):
 		if num >= 52:
-			#crash
 			print 'ERROR: card num is greater than 52!'
 			num = 0
 			sys.exit(1)
@@ -520,7 +500,6 @@ class MellowGUI:
 			
 			
 			if mouseJustRelease == 1:
-				#TODO: bid:
 				if self.isWaitingForBid() == 1:
 					self.checkIfUserBidAfterClick(mx, my)
 				
@@ -538,7 +517,6 @@ class MellowGUI:
 						shiftAmount = cardHeldIndex - indexOfMouseOnCard
 						self.southCards = self.shiftSouthCards(cardHeldIndex, 1, shiftAmount)
 						cardHeldIndex = indexOfMouseOnCard
-						#print southCards[0]
 						
 					elif cardHeldIndex < indexOfMouseOnCard:
 						shiftAmount = indexOfMouseOnCard - cardHeldIndex
@@ -556,8 +534,6 @@ class MellowGUI:
 		labelExample = myfont.render(str(self.currentMsg), 1, (0,0,255))
 		self.screen.blit(labelExample, (self.width/2 - 10 * xOffset, self.height/2 - 50))
 	
-	#TODO: bid placement.
-	#bidButtonPlacement = []
 	def displayBidChoices(self):
 		
 		pygame.draw.rect(self.screen, (255, 0, 255, 0), (self.width/2 - 200, self.height/2 - 100, 400, 200))
@@ -740,19 +716,6 @@ def main(arguments):
 		
 		mellowGUI.printScore()
 		
-		#Pring sanity test ball:
-		'''
-		ballrect = ballrect.move(ballspeed)
-		if ballrect.left < 0 or ballrect.right > mellowGUI.width:
-			ballspeed[0] = -ballspeed[0]
-		if ballrect.top < 0 or ballrect.bottom > mellowGUI.height:
-			ballspeed[1] = -ballspeed[1]
-		
-		mellowGUI.screen.blit(ball, ballrect)
-		'''
-		#End print sanity test ball.
-		
-		
 		mellowGUI.printSouthCards(mx, my)
 		mellowGUI.printWestCards()
 		mellowGUI.printNorthCards()
@@ -794,13 +757,6 @@ def main(arguments):
 	mellowGUI.gameOver = 1
 
 if __name__ == "__main__":
-#TODO: insert logic to quickly start the game here.
-	
-	
-	#TODO: connect to the client
-	#TODO2: put these vars in context object.
-	#And join/create the correct game in MellowGUI
-	
 	args = sys.argv
 	if len(args) > 1:
 		name = args[1]
@@ -854,7 +810,6 @@ python mellowGUI.py Phil
 python mellowGUI.py Richard
 python mellowGUI.py Doris
 
-TODO: make the argument handling part better!
 For game played by user:
 python mellowGUI.py Michael host slow interact > output1.txt
 python mellowGUI.py Phil slow

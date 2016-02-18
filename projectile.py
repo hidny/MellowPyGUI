@@ -15,7 +15,8 @@ class Projectile:
 		self.rotation = rotation
 		
 		self.perc = 0
-		self.percStop = 100 + random.randint(0, 20)
+		#Controls the randomness of where the card lands. This should make it seem more real...
+		self.percStop = 100 + random.randint(0, 10)
 		
 	def printThrownCard(self, mellowVars):
 		
@@ -28,8 +29,7 @@ class Projectile:
 			if self.perc < self.percStop:
 				jump = (100*mellowVars.FRAME_WAIT_TIME)/mellowVars.THROW_TIME
 				self.perc = self.perc + jump
-				#make it boring:
-				#TODO: take this line away to get cooler projectiles.
+				
 				if self.perc > self.percStop:
 					self.perc = self.percStop
 	
@@ -54,7 +54,7 @@ def throwSouthCard(mellowVars, southCards, cardHeldIndex):
 		
 		southCards.pop(cardHeldIndex)
 		
-		#beingThrown, startX, startY, endX, endY, throwCardNum)
+		#params: (self, beingThrown, startX, startY, endX, endY, throwCardNum, rotation)
 		return Projectile(1, southStartX, southStartY, southEndX, southEndY, southThrowCardNum, 0)
 	else:
 		return Projectile(0, 0, 0, 0, 0, 0, 0)

@@ -9,11 +9,10 @@ import math
 #For now: the deletion rate = repeating rate.
 #I hope I don't have to change that.
 
-# ?? don't appear. Why not?
+# FIXME: ?? don't appear. Why not?
 
 #wait REPEAT_DELAY_TIME to start repeating the same character.
 REPEAT_DELAY_TIME = 500
-#wait REPEAT_PERIOD between 
 REPEAT_PERIOD = 20
 
 class TextBox:
@@ -45,7 +44,6 @@ class TextBox:
 	def isWithinBox(self, x, y):
 		return self.box.isWithinBox(x, y)
 	
-	#TODO: have a variable for the currently selected textbox.
 	def shouldFocusBasedOnMouse(self, x, y, mouseJustPressed):
 		if mouseJustPressed == 1:
 			if self.isWithinBox(x, y) == 1:
@@ -352,29 +350,22 @@ class TextBox:
 		self.currentText = ''
 	
 	
-	#TODO: get rid of screen_width and screen height params.
+	#TODO: make this customizable.
 	def drawTextBox(self, screen):
-		#TODO: make this customizable.
 		myfont = pygame.font.SysFont("comicsansms", 30)
 	
 		labelExample3 = myfont.render(str(self.currentText), 1, self.labelColour)
-		#pygame.draw.rect()
-		#draw a rectangle shape
-		#pygame.draw.rect(screen, (23,128,0), ((1*screen_width)/32, (4*screen_height)/5 + 10 + 3*40, 1000, 100 ))
 		
 		if self.isFocussed == 1:
 			pygame.draw.rect(screen, (255,255,255), self.box.getCoordBoxOffset(10) )
-		else: #TODO: don't assume  a black background.
+		else:
 			pygame.draw.rect(screen, (0,0,0), self.box.getCoordBoxOffset(10) )
 			
 		pygame.draw.rect(screen, self.bkColour, self.box.getCoordBox() )
 		
-		#TODO: use X offset and y offset.
 		screen.blit(labelExample3, (self.box.x + 10, self.box.y + 10))
 	
-	#TODO: make the background change if focused... or something...
 	def setFocussed(self):
-		#print 'FOCUS on textbox'
 		self.isFocussed = 1
 	
 	def setUnFocussed(self):

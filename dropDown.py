@@ -35,30 +35,24 @@ class DropDown:
 			self.printClosed(screen)
 	
 	def printClosed(self, screen):
-		#TODO: make this customizable.
 		myfont = pygame.font.SysFont("comicsansms", 30)
 		
 		labelExample3 = myfont.render(str(self.firstOptionText), 1, self.labelColour)
 		
 		pygame.draw.rect(screen, (255,0,255), self.firstOptionBox.getCoordBox() )
 		
-		#TODO: draw triangle.
-		
 		pygame.draw.rect(screen, self.bkColour, self.firstOptionBox.getCoordBox() )
 		
-		#TODO: use X offset and y offset.
 		screen.blit(labelExample3, (self.firstOptionBox.x, self.firstOptionBox.y))
 		
 		
 	def printOpen(self, screen):
-		#TODO: make this customizable.
 		myfont = pygame.font.SysFont("comicsansms", 30)
 		
 		labelExample3 = myfont.render(str(self.firstOptionText), 1, self.labelColour)
 		
 		pygame.draw.rect(screen, (255,0,255), self.firstOptionBox.getCoordBox() )
 		
-		#TODO: use X offset and y offset ?? (REDO the logic)
 		screen.blit(labelExample3, (self.firstOptionBox.getX(), self.firstOptionBox.getY()))
 		
 		y = self.firstOptionBox.getY()
@@ -79,9 +73,6 @@ class DropDown:
 			
 			screen.blit(labelExample3, (tempBox.getX(), tempBox.getY()))
 			
-		
-		#TODO: draw triangle.
-		
 		
 	
 	def updateSelected(self, mouseX, mouseY, screen):
@@ -139,7 +130,6 @@ class DropDown:
 			else:
 				self.updateSelected(mx, my, screen)
 				if self.getIndexSelected() >= 0:
-					#TODO: return this so the gui class could do logic on it!
 					print 'In dropDown.py, you pressed: ' + str(self.getSelectedLabel())
 					return self.getIndexSelected()
 				

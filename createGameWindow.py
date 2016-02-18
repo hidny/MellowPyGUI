@@ -27,7 +27,6 @@ def main(threadName, args):
 	if len(args) > 1:
 		connection = args[1]
 	else:
-		#TODO: put these vars in args...
 		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Lenny')
 
 	pygame.init()
@@ -116,7 +115,6 @@ def main(threadName, args):
 					mouseHeld = 0
 					mouseJustRelease = 1
 			
-		#TODO: get the textbox that's focused on if possible, then update it!
 			elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
 				#textBox1.dealWithKeyboard(event)
 				serverConnectionBoxes.dealWithKeyboard(event)
@@ -190,9 +188,9 @@ def main(threadName, args):
 			
 			#Receive answer from server: (sent /refresh message)...
 			
-			#TODO: check if you're in game!
+			#Check if you're in game!
 			if tryingToCreate == 1 and temp.startswith('Game created:'):
-				#TODO: move to game room as host.
+				#Move to game room as host.
 				#AND go in as host.
 				connection.setHost()
 				connection.setCurrentGameName(gameChoices.getSelectedLabel())
@@ -214,7 +212,6 @@ def main(threadName, args):
 				for line in lines:
 					connection.getChannelChatBox().setNewChatMessage(line)
 			
-		#TODO: put a game dropdown list here!
 		
 		
 		if enterPressed == 1:
@@ -223,7 +220,6 @@ def main(threadName, args):
 				
 				tryingToCreate = 1
 			else:
-				#TODO: print error msg?
 				pass
 			enterPressed = 0
 		

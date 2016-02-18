@@ -12,7 +12,9 @@ import time
 END_OF_TRANSMISSION = '**end of transmission**'
 BUFFER_SIZE = 1024
 
-#Warning:This is designed to be a singleton object
+#This is designed to be a singleton object
+#This class holds all info the client should know about
+#it's relationship with the server.
 
 class ClientContext:
 	
@@ -25,7 +27,6 @@ class ClientContext:
 		self.currentPlayerName = currentPlayerName
 		self.currentPlayerLocation = ''
 		
-		#TODO: steal from channelRoom to get the serverSocket to work.
 		self.serverSocket = []
 		self.sendMsgLock = threading.Lock()
 	
@@ -36,7 +37,6 @@ class ClientContext:
 		self.channelChatBox = ''
 		self.waitingRoomChatBox = ''
 		
-		#TODO:
 		self.currentGameName = ''
 		self.isHost = 0
 		
@@ -86,8 +86,6 @@ class ClientContext:
 	
 	#consume messages from queue:
 	def getNextServerMessageInQueue(self):
-		#Put lock on the outside to defend against multiple calls of
-		#this function:
 		with self.recvMsgLock:
 			if len(self.messageFromServerQueue) == 0:
 				return ''

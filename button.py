@@ -58,7 +58,6 @@ class Button:
 		else:
 			pygame.draw.rect(screen, self.colour, self.getCoordBox())
 		
-		#TODO: center the label:
 		BUTTON_FONT = pygame.font.SysFont("comicsansms", 30)
 		labelExample = BUTTON_FONT.render(self.labelMessage, 1, self.labelColour)
 		screen.blit(labelExample, self.getTopLeftBox())

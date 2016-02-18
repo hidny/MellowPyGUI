@@ -16,7 +16,6 @@ import clientContext
 import channelRoomGUI
 
 #TODO (optional): make  a config file for server name, port and desired name.
-
 #TODO: add a title and put your name on it.
 	
 def main(name, args):
@@ -33,12 +32,7 @@ def main(name, args):
 	
 	for x in range (0, len(args)):
 		print str(args[x])
-		#if args.find('host') != -1:
-		#	isHostingGame = 1
-		#elif args.find('meatbag') != -1 or args.find('interact') != -1:
-		#	interact = 1
-		#elif args.find('slow') != -1:
-		#	slowdown = 1
+		
 		if args[x].find('ip=') != -1:
 			tcpIP = str(args[x][len('ip='):])
 			numArgsSet = numArgsSet+1
@@ -86,9 +80,7 @@ def main(name, args):
 	
 	onScreenText = ''
 	
-	# initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
-	#myfont2 = pygame.font.SysFont("monospace", 15)
-
+	
 	# render text
 	labelHost = myfont.render("Host:", 1, (255,255,0))
 	labelPort = myfont.render("Port:", 1, (255,255,0))
@@ -126,9 +118,7 @@ def main(name, args):
 					mouseHeld = 0
 					mouseJustRelease = 1
 			
-		#TODO: get the textbox that's focused on if possible, then update it!
 			elif event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
-				#textBox1.dealWithKeyboard(event)
 				serverConnectionBoxes.dealWithKeyboard(event)
 				frameHasKeyboardEvent = 1
 				
@@ -138,26 +128,13 @@ def main(name, args):
 		mx,my = pygame.mouse.get_pos()
 		
 		if frameHasKeyboardEvent == 0:
-			#textBox1.handleKeyboardButtonHeldDown()
 			serverConnectionBoxes.handleKeyboardButtonHeldDown()
 		
-		#textBox1.drawTextBox(screen)
 		serverConnectionBoxes.drawTextBoxes(screen)
-		
-		#paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx, my, greendot, reddot, dot)
 		
 		if mouseJustRelease==1:
 			serverConnectionBoxes.checkClickForTextBoxes(mx, my, 1)
-		#print str(mx) + ' ' + str(my)
 		
-		'''
-		#Print ugly Mellow label
-		labelExample = myfont.render("Mellow", 1, (0,255,0))
-		goToServer = box.Box(100, 200, 250, 50)
-		pygame.draw.rect(screen, (255, 0 ,255), goToServer.getCoordBox())
-		screen.blit(dot, goToServer.getTopLeftBox(), goToServer.getCoordBox())
-		screen.blit(labelExample, goToServer.getTopLeftBox())
-		'''
 		
 		if enterPressed == 0:
 			enterPressed = startServer.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
@@ -170,39 +147,16 @@ def main(name, args):
 			print str(textBox1.getCurrentText())
 			print str(textBox2.getCurrentText())
 			print str(textBox3.getCurrentText())
-			print 'TODO: actually have something done'
+			
 			tcpIP = str(textBox1.getCurrentText())
 			tcpPort = str(textBox2.getCurrentText())
 			NAME = str(textBox3.getCurrentText())
-			print 'starting main'
-			
-			#pygame.display.quit()
-			#pygame.quit()
+			print 'Starting main'
 			
 			connection = clientContext.ClientContext(tcpIP, tcpPort, name)
 			
 			channelRoomGUI.main('', ['from start.py', connection])
 			
-			
-			#mellowGUI.main('hello', ['start.py', name, 'slow', 'interact', str('ip=' + tcpIP), str('p=' + str(tcpPort)), 'host'])
-			
-		
-		'''
-		#Sample interactions:
-		#Button reaction:
-		if colourDatBox % 2 == 1:
-			screen.blit(dot, (50, 50), (0, 0, 10, 10))
-		else:
-			pygame.draw.rect(screen, (0, 0 ,0), (50, 50, 10, 10))
-		
-		#Blinking:
-		if shouldBlinkTextCursor() == 1:
-			#TODO: make this a nice vertical line.
-			screen.blit(dot, (100, 50), (0, 0, 10, 10))
-		else:
-			screen.blit(reddot, (100, 50), (0, 0, 10, 10))
-		'''
-		#pygame.draw.rect()
 		
 		pygame.display.update()
 		clock.tick(40)
@@ -221,7 +175,6 @@ def shouldBlinkTextCursor():
 		return 0
 
 def paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx, my, greendot, reddot, dot):
-	#print mouse cursor:
 	if mouseJustPressed == 1 or mouseJustRelease==1:
 		screen.blit(greendot, (mx-5, my-5), (0, 0, 10, 10))
 		print 'green'
