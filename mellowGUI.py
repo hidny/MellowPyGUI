@@ -634,16 +634,15 @@ def convertCardStringToNum(card):
 	return 13*row + column
 
 
-def main(arguments):
+def main(connection):
 	mellowGUI = MellowGUI()
-	#keep track of the last frame/heartbeat. 
-	#if the last frame/heartbeat was too long ago, we could assume this program has crashed.
+	#keep track of the last frame/heartbeat so we can throw projectiles smoothly.
 	mellowGUI.updateLastFrameTime()
 	
 	print 'Inside Mellow GUI main!'
 	
 	try:
-		t = Thread(name = 'Testing', target=mellowClient.main, args=(mellowGUI, ['MellowGUI.py', arguments]))
+		t = Thread(name = 'Testing', target=mellowClient.main, args=(mellowGUI, ['MellowGUI.py', connection]))
 		t.start()
 	except:
 		print "Error: unable to start thread"

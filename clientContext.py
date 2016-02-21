@@ -18,8 +18,6 @@ BUFFER_SIZE = 1024
 
 class ClientContext:
 	
-	
-	
 	def __init__(self, tcpIP, tcpPort, currentPlayerName):
 		self.data = ''
 		self.tcpIP = tcpIP
@@ -49,7 +47,6 @@ class ClientContext:
 			print 'Connected'
 			
 			print currentPlayerName
-			
 			
 			#Sending name:
 			self.sendMessageToServer(currentPlayerName + '\n')

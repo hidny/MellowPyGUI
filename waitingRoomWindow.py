@@ -21,13 +21,14 @@ import dropDown
 
 import clientContext
 import channelRoomGUI
+import connect4GUI
 
 
 NOT_SELECTED = -1
 
 class WaitingRoomPlayerList:
 	
-		def __init__(self, players, textbox, connection):
+		def __init__(self, textbox, connection):
 			
 			self.connection = connection
 			
@@ -48,33 +49,40 @@ class WaitingRoomPlayerList:
 			self.listEmptySlot.append("Move")
 			self.listPlayerSlot.append("Whisper")
 			
+			self.gameSlotsCreated = 0
+			self.selected = -1
+		
+		def createGameSlots(self, players):
 			for x in range(0, len(players)):
 				if players[x] == 'Open' or players[x] == 'Close':
 					listToUse = self.listEmptySlot
 				else:
 					listToUse = self.listPlayerSlot
 				self.gameSlots.append(dropDown.DropDown(200, 100 + 100 * x, 300, 50, players[x], (0, 255 ,0), (255, 0 ,255), listToUse, 0))
+			self.gameSlotsCreated = 1
 				
-			self.selected = -1
+			
 		
 		def printGameSlots(self, mx, my, screen):
-			
-			if self.indexSelected != NOT_SELECTED:
-				self.gameSlots[self.indexSelected].updateSelected(mx, my, screen)
-			
-			for x in range(0, len(self.gameSlots)):
-				#This loop goes backwards so the the dropdowns won't cover each other in the wrong way:
-				self.gameSlots[len(self.gameSlots) - 1 - x].printDropDown(screen)
+			if self.gameSlotsCreated == 1:
+				if self.indexSelected != NOT_SELECTED:
+					self.gameSlots[self.indexSelected].updateSelected(mx, my, screen)
+				
+				for x in range(0, len(self.gameSlots)):
+					#This loop goes backwards so the the dropdowns won't cover each other in the wrong way:
+					self.gameSlots[len(self.gameSlots) - 1 - x].printDropDown(screen)
 		
 		#pre: len(players) == len(self.gameSlots)
 		def updatePlayerList(self, players):
-		
+			
+			if self.gameSlotsCreated == 0:
+				self.createGameSlots(players)
+			
 			if len(players) != len(self.gameSlots):
 				print 'ERROR: number of slots is inconsistant!'
 				print str(len(players)) + ' vs ' + str(len(self.gameSlots))
 				exit(1)
 			
-				
 			if players[self.indexSelected] != self.gameSlots[self.indexSelected].getMainText():
 				self.indexSelected = NOT_SELECTED
 			
@@ -89,57 +97,58 @@ class WaitingRoomPlayerList:
 			
 		def clickEvent(self, mx, my, screen):
 			
-			if self.indexSelected != NOT_SELECTED:
-				temp = self.gameSlots[self.indexSelected].updateClicked(mx, my, 1, screen)
-				
-				#reopen the slot So I could close it later. (outside updateClicked)
-				if self.gameSlots[self.indexSelected].getIsOpen() == 0:
-					self.gameSlots[self.indexSelected].open()
-				
-				if temp >=0:
-					textPressed = self.gameSlots[self.indexSelected].listOfOptions[temp]
-					if textPressed == 'Open':
-						if self.gameSlots[self.indexSelected].getMainText() == 'Closed' or self.gameSlots[self.indexSelected].getMainText() == 'Open' :
-							self.connection.sendMessageToServer("/open " + str(self.indexSelected + 1) + "\n")
-						else:
-							self.connection.sendMessageToServer("/kick " + self.gameSlots[self.indexSelected].getMainText() + "\n")
-							self.connection.sendMessageToServer("/open " + str(self.indexSelected + 1)  + "\n")
+			if self.gameSlotsCreated == 1:
+				if self.indexSelected != NOT_SELECTED:
+					temp = self.gameSlots[self.indexSelected].updateClicked(mx, my, 1, screen)
 					
-					if textPressed == 'Close':
-						if self.gameSlots[self.indexSelected].getMainText() == 'Closed' or self.gameSlots[self.indexSelected].getMainText() == 'Open' :
-							self.connection.sendMessageToServer("/close " + str(self.indexSelected + 1) + "\n")
-						else:
-							self.connection.sendMessageToServer("/kick " + self.gameSlots[self.indexSelected].getMainText() + "\n")
-							self.connection.sendMessageToServer("/close " + str(self.indexSelected + 1)  + "\n")
+					#reopen the slot So I could close it later. (outside updateClicked)
+					if self.gameSlots[self.indexSelected].getIsOpen() == 0:
+						self.gameSlots[self.indexSelected].open()
 					
-					if textPressed == 'Whisper':
-						self.textbox.setCurrentText("/m " + self.gameSlots[self.indexSelected].getMainText() + " ")
-					
-					if textPressed == 'Move':
-						self.connection.sendMessageToServer("/move " + str(self.indexSelected + 1) + "\n")
-					
-					self.gameSlots[self.indexSelected].close()
-					self.indexSelected = NOT_SELECTED
-					
-					return
-			
-			
-			for x in range(0, len(self.gameSlots)):
-				tempBox =  box.Box(200, 100 + 100 * x, 300, 50)
-				
-				if tempBox.isWithinBox(mx, my):
-					
-					for y in range(0, len(self.gameSlots)):
-						if x != y:
-							self.gameSlots[y].close()
+					if temp >=0:
+						textPressed = self.gameSlots[self.indexSelected].listOfOptions[temp]
+						if textPressed == 'Open':
+							if self.gameSlots[self.indexSelected].getMainText() == 'Closed' or self.gameSlots[self.indexSelected].getMainText() == 'Open' :
+								self.connection.sendMessageToServer("/open " + str(self.indexSelected + 1) + "\n")
+							else:
+								self.connection.sendMessageToServer("/kick " + self.gameSlots[self.indexSelected].getMainText() + "\n")
+								self.connection.sendMessageToServer("/open " + str(self.indexSelected + 1)  + "\n")
 						
-					if self.gameSlots[x].getIsOpen() == 1:
-						self.gameSlots[x].close()
+						if textPressed == 'Close':
+							if self.gameSlots[self.indexSelected].getMainText() == 'Closed' or self.gameSlots[self.indexSelected].getMainText() == 'Open' :
+								self.connection.sendMessageToServer("/close " + str(self.indexSelected + 1) + "\n")
+							else:
+								self.connection.sendMessageToServer("/kick " + self.gameSlots[self.indexSelected].getMainText() + "\n")
+								self.connection.sendMessageToServer("/close " + str(self.indexSelected + 1)  + "\n")
+						
+						if textPressed == 'Whisper':
+							self.textbox.setCurrentText("/m " + self.gameSlots[self.indexSelected].getMainText() + " ")
+						
+						if textPressed == 'Move':
+							self.connection.sendMessageToServer("/move " + str(self.indexSelected + 1) + "\n")
+						
+						self.gameSlots[self.indexSelected].close()
 						self.indexSelected = NOT_SELECTED
-					else:
-						self.gameSlots[x].open()
-						self.indexSelected = x
 						
+						return
+				
+				
+				for x in range(0, len(self.gameSlots)):
+					tempBox =  box.Box(200, 100 + 100 * x, 300, 50)
+					
+					if tempBox.isWithinBox(mx, my):
+						
+						for y in range(0, len(self.gameSlots)):
+							if x != y:
+								self.gameSlots[y].close()
+							
+						if self.gameSlots[x].getIsOpen() == 1:
+							self.gameSlots[x].close()
+							self.indexSelected = NOT_SELECTED
+						else:
+							self.gameSlots[x].open()
+							self.indexSelected = x
+							
 						
 def main(threadName, args):
 	
@@ -166,9 +175,13 @@ def main(threadName, args):
 	FIRST_MSG_TO_IGNORE = 'Game created:'
 	BANNED_MSG = 'You have been banned from the game.'
 	waitingForLeaveMsg = 0
-	waitingForGameMessage = 0
+	
 	LEAVE_MESSAGE = 'number of game rooms:'
 	GAME_ROOM_MESSAGE = 'From Game(public):'
+	CONNECT_FOUR_MESSAGE = 'From connect 4:'
+	
+	STARTING_GAME_IN = 'Starting game in:'
+	stopRefreshing = 0
 	
 	
 	
@@ -181,7 +194,7 @@ def main(threadName, args):
 	cancelButton =      button.Button(900, 700, 300, 50, "Cancel", (0, 255 ,0), (255, 0 ,255))
 	startButton =       button.Button(900, 600, 300, 50, "Start", (0, 255 ,0), (255, 0 ,255))
 	
-	waitingList = WaitingRoomPlayerList( ["Michael", "Richard", "Open", "Open"], textBox1, connection)
+	waitingList = WaitingRoomPlayerList(textBox1, connection)
 	
 	serverConnectionBoxes = textBoxList.TextBoxList([])
 	serverConnectionBoxes.addTextbox(textBox1)
@@ -243,7 +256,6 @@ def main(threadName, args):
 		
 		if connection.isHosting() == 1 and startPressed == 1:
 			connection.sendMessageToServer('/start' + '\n')
-			waitingForGameMessage = 1
 		#END React to user events:
 		
 		#Print Stuff:
@@ -278,9 +290,14 @@ def main(threadName, args):
 			if waitingForLeaveMsg == 1 and temp.startswith(LEAVE_MESSAGE):
 				channelRoomGUI.main('', ['from waitRoomPWindow.py', connection])
 			
-			elif waitingForGameMessage == 1 and temp.startswith(GAME_ROOM_MESSAGE):
+			elif temp.startswith(GAME_ROOM_MESSAGE) or temp.startswith(CONNECT_FOUR_MESSAGE):
 				connection.reinsertMessageAtFrontOfQueue(temp)
-				mellowGUI.main(connection)
+				if connection.getCurrentGameName() == "mellow":
+					mellowGUI.main(connection)
+				elif connection.getCurrentGameName() == "connect_four":
+					connect4GUI.main(connection)
+				else:
+					print 'ERROR: unknown game!'
 			
 			#Receive answer from server: (sent /refresh message)...
 			elif temp.startswith(FIRST_MSG_TO_IGNORE):
@@ -304,9 +321,13 @@ def main(threadName, args):
 				
 				#Call waiting list to update list of players waiting:
 				waitingList.updatePlayerList(listOfPlayers)
-				
+			
+			
 				
 			else:
+				if temp.startswith(STARTING_GAME_IN):
+					stopRefreshing = 1
+				
 				lines = temp.split('\n')
 				for line in lines:
 					connection.getWaitingRoomChatBox().setNewChatMessage(line)
@@ -315,7 +336,7 @@ def main(threadName, args):
 		#End React to server messages
 		
 		#Ask server for a periodic update.
-		if round(time.time() * 1000)  - lastRefreshTime > USER_REFRESH_TIME:
+		if stopRefreshing ==0 and round(time.time() * 1000)  - lastRefreshTime > USER_REFRESH_TIME:
 			connection.sendMessageToServer("/refresh" + "\n")
 			lastRefreshTime = round(time.time() * 1000)
 		#end ask server for a periodic update.

@@ -52,7 +52,6 @@ class Button:
 			return 0
 		
 	def printButton(self, pygame, screen):
-		
 		if self.isPressedDown == 1:
 			pygame.draw.rect(screen, (0, 0, 0), self.getCoordBox())
 		else:

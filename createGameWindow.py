@@ -86,10 +86,10 @@ def main(threadName, args):
 	
 	
 	#List of game choices:
-	#TODO: implement mellow, connectfour, and chess.
+	#TODO: implement mellow, connect_four, and chess.
 	list = []
 	list.append("chess")
-	list.append("connectfour")
+	list.append("connect_four")
 	list.append("mellow")
 	
 	
@@ -197,7 +197,7 @@ def main(threadName, args):
 				
 				waitingRoomWindow.main('', ['from createGameWindow.py', connection])
 			
-			elif temp.startswith(BADROOMNAME1) and BADROOMNAME2 in temp:
+			elif temp.startswith(BADROOMNAME1) or temp.find(BADROOMNAME2) != -1:
 				serverConnectionBoxes.shiftSelectedToIndex(0)
 				printAskForOtherRoomName = 1
 				askForOtherNameStartTime = round(time.time() * 1000)

@@ -129,13 +129,12 @@ class DropDown:
 				return -2
 			else:
 				self.updateSelected(mx, my, screen)
+				self.isOpen = 0
 				if self.getIndexSelected() >= 0:
-					print 'In dropDown.py, you pressed: ' + str(self.getSelectedLabel())
 					return self.getIndexSelected()
 				
-				self.isOpen = 0
-		
 		return -1
+		
 				
 	def clickedOrMovedWithinDropDown(self, mx, my, screen):
 		if self.firstOptionBox.isWithinBox(mx, my) and self.isOpen == 0:

@@ -217,8 +217,7 @@ def main(threadName, args):
 				connection.setJoiner()
 				
 				connection.setCurrentGameName(roomToGameDict[tryingToJoinRoom])
-				
-				waitingRoomWindow.main('', ['from createGameWindow.py', connection])
+				waitingRoomWindow.main('', ['from joinGameWindow.py', connection])
 				
 			if temp.startswith(BADPASSWORD):
 				serverConnectionBoxes.shiftSelectedToIndex(1)

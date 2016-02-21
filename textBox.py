@@ -59,7 +59,6 @@ class TextBox:
 				self.setUnFocussed()
 			
 	
-	#TODO: autoprint and auto delete when button is held.
 	def dealWithKeyboard(self, event):
 		
 		#Check if a button was pressed down for the first time:

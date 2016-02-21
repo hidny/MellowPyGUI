@@ -150,7 +150,7 @@ def main(name, args):
 			
 			tcpIP = str(textBox1.getCurrentText())
 			tcpPort = str(textBox2.getCurrentText())
-			NAME = str(textBox3.getCurrentText())
+			name = str(textBox3.getCurrentText())
 			print 'Starting main'
 			
 			connection = clientContext.ClientContext(tcpIP, tcpPort, name)

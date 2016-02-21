@@ -80,6 +80,7 @@ def main(threadName, args):
 	
 	
 	while 1==1:
+		
 		#Get mouse events:
 		mouseJustPressed = 0
 		mouseJustRelease = 0
