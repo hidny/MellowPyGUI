@@ -657,11 +657,6 @@ def main(connection):
 	
 	clock = pygame.time.Clock()
 	
-	ballspeed = [2, 2]
-	ball = pygame.image.load("ball.png").convert()
-	transColor = ball.get_at((0,0))
-	ball.set_colorkey(transColor)
-	ballrect = ball.get_rect()
 	
 	mellowLogo = pygame.image.load("MellowLogo.png").convert()
 	transColor = mellowLogo.get_at((0,0))

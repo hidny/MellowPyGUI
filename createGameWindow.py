@@ -91,6 +91,7 @@ def main(threadName, args):
 	list.append("chess")
 	list.append("connect_four")
 	list.append("mellow")
+	list.append("reversi")
 	
 	
 	gameChoices = dropDown.DropDown(100, 300, 300, 50, "mellow", (0, 255 ,0), (255, 0 ,255),list)

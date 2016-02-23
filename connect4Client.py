@@ -13,7 +13,7 @@ import random
 
 #It's static because I only want one mellow client for the whole execution.
 
-#Mellow specific constants:
+#Connect4 specific constants:
 START_MSG = 'From connect 4:'
 YOUR_TURN = '0 or 1 or 2 or 3 or 4 or 5 or 6?'
 
@@ -29,7 +29,7 @@ MISPLAYED = 'Play properly!'
 
 OUT_OF_GAME_MSG = 'number of game rooms:'
 
-#End Mellow specific constants
+#End Connect4 specific constants
 
 #Game specific variables:
 gameStarted = 0
@@ -56,8 +56,6 @@ def serverListener(connection, connect4GUI):
 	
 	isRedsTurn = 1
 	endOfRoundIndex = 0
-	
-	rowToInsert = 0
 		
 	#Red player is player one.
 	redPlayer = ''
@@ -83,11 +81,8 @@ def serverListener(connection, connect4GUI):
 				if gameStarted ==1:
 					if currentLine.startswith(YOUR_TURN):
 						with turn_lock:
-							connect4GUI.setCardUserWantsToMakeToNull()
+							connect4GUI.setMoveUserWantsToMakeToNull()
 							itsYourTurn=1
-					
-					elif currentLine.startswith(BOARD_INIT):
-						rowToInsert = rowToInsert + 1
 					
 					elif currentLine.startswith(PUBLIC_SERVER_MSG):
 						if currentLine.find(TO_PLAY) != -1:
@@ -185,7 +180,7 @@ def playMoveDefault(connection, connect4GUI):
 				if itsYourTurn==1:
 					if connect4GUI.getMoveUserWantsToMake() != -1:
 						connection.sendMessageToServer('/move ' + str(connect4GUI.getMoveUserWantsToMake()) + '\n')
-						connect4GUI.setCardUserWantsToMakeToNull()
+						connect4GUI.setMoveUserWantsToMakeToNull()
 						itsYourTurn = 0
 		
 

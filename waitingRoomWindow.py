@@ -322,8 +322,6 @@ def main(threadName, args):
 				#Call waiting list to update list of players waiting:
 				waitingList.updatePlayerList(listOfPlayers)
 			
-			
-				
 			else:
 				if temp.startswith(STARTING_GAME_IN):
 					stopRefreshing = 1

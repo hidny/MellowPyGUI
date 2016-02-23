@@ -123,7 +123,7 @@ class Connect4GUI:
 	def setMoveUserWantsToMake(self, moveIndex):
 		self.moveUserWantsToMake = moveIndex
 	
-	def setCardUserWantsToMakeToNull(self):
+	def setMoveUserWantsToMakeToNull(self):
 		self.moveUserWantsToMake = -1
 	
 	def getMoveUserWantsToMake(self):
@@ -176,11 +176,6 @@ def main(connection):
 	
 	clock = pygame.time.Clock()
 	
-	ballspeed = [2, 2]
-	ball = pygame.image.load("ball.png").convert()
-	transColor = ball.get_at((0,0))
-	ball.set_colorkey(transColor)
-	ballrect = ball.get_rect()
 	
 	#Uses Bauhaus 93 font.
 	connect4Logo = pygame.image.load("Connect4Logo.png").convert()

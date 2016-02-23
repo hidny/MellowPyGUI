@@ -1,0 +1,5 @@
+
+#This file holds variables applicable to how the client connects to the server
+#and will be used in almost every client python file.
+
+class clientContext:
