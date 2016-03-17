@@ -22,6 +22,7 @@ import dropDown
 import clientContext
 import channelRoomGUI
 import connect4GUI
+import reversiGUI
 
 
 NOT_SELECTED = -1
@@ -179,6 +180,7 @@ def main(threadName, args):
 	LEAVE_MESSAGE = 'number of game rooms:'
 	GAME_ROOM_MESSAGE = 'From Game(public):'
 	CONNECT_FOUR_MESSAGE = 'From connect 4:'
+	REVERSI_MESSAGE = 'From Reversi(public):'
 	
 	STARTING_GAME_IN = 'Starting game in:'
 	stopRefreshing = 0
@@ -290,12 +292,14 @@ def main(threadName, args):
 			if waitingForLeaveMsg == 1 and temp.startswith(LEAVE_MESSAGE):
 				channelRoomGUI.main('', ['from waitRoomPWindow.py', connection])
 			
-			elif temp.startswith(GAME_ROOM_MESSAGE) or temp.startswith(CONNECT_FOUR_MESSAGE):
+			elif temp.startswith(GAME_ROOM_MESSAGE) or temp.startswith(CONNECT_FOUR_MESSAGE) or temp.startswith(REVERSI_MESSAGE) :
 				connection.reinsertMessageAtFrontOfQueue(temp)
 				if connection.getCurrentGameName() == "mellow":
 					mellowGUI.main(connection)
 				elif connection.getCurrentGameName() == "connect_four":
 					connect4GUI.main(connection)
+				elif connection.getCurrentGameName() == "reversi":
+					reversiGUI.main(connection)
 				else:
 					print 'ERROR: unknown game!'
 			

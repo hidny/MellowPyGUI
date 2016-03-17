@@ -83,6 +83,8 @@ def serverListener(connection, connect4GUI):
 						with turn_lock:
 							connect4GUI.setMoveUserWantsToMakeToNull()
 							itsYourTurn=1
+							if connection.getInteract() == 1:
+								connect4GUI.setMessage('Your turn')
 					
 					elif currentLine.startswith(PUBLIC_SERVER_MSG):
 						if currentLine.find(TO_PLAY) != -1:
@@ -126,6 +128,8 @@ def serverListener(connection, connect4GUI):
 							
 						if currentLine.find(MISPLAYED) != -1:
 							itsYourTurn=1
+							if connection.getInteract() == 1:
+								connect4GUI.setMessage('Your turn')
 			
 			
 	except:
@@ -182,6 +186,7 @@ def playMoveDefault(connection, connect4GUI):
 						connection.sendMessageToServer('/move ' + str(connect4GUI.getMoveUserWantsToMake()) + '\n')
 						connect4GUI.setMoveUserWantsToMakeToNull()
 						itsYourTurn = 0
+						connect4GUI.setMessage('')
 		
 
 #Pre: this should only get called from MellowGUI

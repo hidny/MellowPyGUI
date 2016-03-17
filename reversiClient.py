@@ -134,21 +134,22 @@ def serverListener(connection, reversiGUIObject):
 							break
 		
 		
+		isDone = 0
 		#This loop is here to get rid of 'From Reversi(public): 56 - 3'
-		while 1==1:
+		while isDone == 0:
 			message = connection.getNextServerMessageInQueue()
 			currentLines = message.split('\n')
 			
 			for currentLine in currentLines:
 				if currentLine.startswith(PUBLIC_SERVER_MSG):
 					if currentLine.find(' - ') != -1:
-						break
+						isDone = 1
 						
 				
 	except:
 		print 'ERROR: in server listener'
 		print 'ERROR: ' + currentLine
-		reversiGUIObject.setMessage("ERROR: in server listener")
+		reversiGUIObject.setMessage("ERROR: in reversi server listener")
 
 def getBoardInfoFromLine(reversiGUIObject, line, rowNumber):
 	for i in range(0, reversiGUI.BOARD_LENGTH):
@@ -186,7 +187,7 @@ def clientListener(connection, reversiGUIObject):
 		
 	except:
 		print 'ERROR: in client listener'
-		reversiGUIObject.setMessage("ERROR: in client listener")
+		reversiGUIObject.setMessage("ERROR: in reversi client listener")
 
 def playMoveDefault(connection, reversiGUIObject):
 	global turn_lock
