@@ -1,7 +1,7 @@
 #Made from a copy from channelRoomGUI:
 
 import sys, pygame
-from pygame import _view
+#from pygame import _view
 from pygame.locals import *
 from sys import exit
 

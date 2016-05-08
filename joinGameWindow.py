@@ -1,7 +1,7 @@
 #Made from a copy from channelRoomGUI:
 
 import sys, pygame
-from pygame import _view
+#from pygame import _view
 from pygame.locals import *
 from sys import exit
 
@@ -191,7 +191,6 @@ def main(threadName, args):
 					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:
 						print 'BUTTON pressed: ' + str(i)
 						roomNameTextBox.setCurrentText(listOfGamesInChannel[i].split(' ')[1] )
-						connection.sendMessageToServer('/join ' + roomNameTextBox.getCurrentText() + ' ' + passwordTextBox.getCurrentText() + '\n')
 			else:
 				if mouseJustRelease == 1:
 					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:

@@ -6,7 +6,7 @@ import pygame
 from threading import Thread
 import threading
 
-from pygame import _view
+#from pygame import _view
 from pygame.locals import *
 from sys import exit
 
