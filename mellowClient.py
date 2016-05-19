@@ -22,6 +22,8 @@ FIRST_DEALER = 'From Game(public): First dealer is '
 DEALER_MSG = 'dealer is '
 FIGHT_SUMMARY_MSG = 'From Game(public): Fight Winner:'
 #From Game(private): 7C KS 9C AC AH 2S 4D KC KH 2D 7H 9S 7S 
+STARTING_HAND_LENGTH = 13
+
 TRICKS = 'trick(s).'
 
 PLAYING_CARD = 'playing:'
@@ -199,7 +201,7 @@ def serverListener(connection, mellowGUIVars):
 					
 					
 					if len(cardsTemp) > 0 and isACard(cardsTemp[0]) == 1:
-						if len(cardsTemp) == 13:
+						if len(cardsTemp) == STARTING_HAND_LENGTH:
 							mellowGUIVars.setupCardsForNewRound(cardsTemp)
 						
 						print 'Printing cards:'
@@ -268,6 +270,7 @@ def serverListener(connection, mellowGUIVars):
 				
 				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(WIN) != -1:
 					print message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):]
+					mellowGUIVars.setMessage(message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):-1])
 				
 				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(TRICKS) != -1:
 					#From Game(public): ALL: Mom got 4 trick(s).

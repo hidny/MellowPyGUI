@@ -86,10 +86,11 @@ def main(threadName, args):
 	
 	
 	#List of game choices:
-	#TODO: implement mellow, connect_four, and chess.
+	#TODO: implement euchre, mellow, connect_four, and chess.
 	list = []
 	list.append("chess")
 	list.append("connect_four")
+	list.append("euchre")
 	list.append("mellow")
 	list.append("reversi")
 	

@@ -10,7 +10,6 @@ import textBox
 import textBoxList
 import box
 import button
-import mellowGUI
 import chatBox
 
 
@@ -22,6 +21,8 @@ import clientContext
 import channelRoomGUI
 import connect4GUI
 import reversiGUI
+import mellowGUI
+import euchreGUI
 
 
 NOT_SELECTED = -1
@@ -299,6 +300,8 @@ def main(threadName, args):
 					connect4GUI.main(connection)
 				elif connection.getCurrentGameName() == "reversi":
 					reversiGUI.main(connection)
+				elif connection.getCurrentGameName() == "euchre":
+					euchreGUI.main(connection)
 				else:
 					print 'ERROR: unknown game!'
 			

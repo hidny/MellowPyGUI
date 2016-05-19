@@ -107,7 +107,7 @@ class ClientContext:
 					message = self.data[0: self.data.index(END_OF_TRANSMISSION)]
 					self.data = self.data[self.data.index(END_OF_TRANSMISSION) + len(END_OF_TRANSMISSION):]
 					
-					print 'Received: ' + message
+					#print 'Received in clientContext: ' + message
 					with self.recvMsgLock:
 						self.messageFromServerQueue.append(message)
 						
@@ -121,7 +121,7 @@ class ClientContext:
 					else:
 						self.data = self.data + self.serverSocket.recv(BUFFER_SIZE)
 		except:
-			print 'ERROR: in server listener'
+			print 'ERROR: in server listener (ClientContext.py)'
 	
 	def setChannelChatBox(self, channelChatBox):
 		self.channelChatBox = channelChatBox
