@@ -317,7 +317,7 @@ def main(connection):
 		
 		reversiGUI.gameOver = 1
 	except:
-		print 'ERROR: in reversi gui'
+		#print 'ERROR: in reversi gui'
 		reversiGUI.setMessage("ERROR: in server listener")
 		exit(1)
 

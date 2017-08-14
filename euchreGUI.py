@@ -870,7 +870,7 @@ class EuchreGUI:
 		if self.biddingRound == 1:
 			for i in range(0, len(self.bidButtonsRound1)):
 				if self.bidButtonsRound1[i].isWithinBox(x, y):
-					print 'Clicked on ' + str(i)
+					#print 'Clicked on ' + str(i)
 					if i == 0:
 						self.currentBid = 'P'
 					elif i == 1:
@@ -878,12 +878,12 @@ class EuchreGUI:
 					elif i == 2:
 						self.currentBid = str(self.trumpCard[1:]) + ' a'
 					
-					print 'Bid ' + str(self.currentBid)
+					#print 'Bid ' + str(self.currentBid)
 		
 		elif self.biddingRound == 2:
 			for i in range(0, len(self.bidButtonsRound2)):
 				if self.bidButtonsRound2[i].isWithinBox(x, y):
-					print 'Clicked on ' + str(i)
+					#print 'Clicked on ' + str(i)
 					if i == 0:
 						self.currentBid = 'P'
 					elif i%5 == 1:
@@ -899,7 +899,7 @@ class EuchreGUI:
 					if i>5:
 						self.currentBid = self.currentBid + ' a'
 					
-					print 'Bid ' + str(self.currentBid)
+					#print 'Bid ' + str(self.currentBid)
 	
 	#returns the bid if the user bid. Returns -1 otherwise.
 	def consumeBid(self):

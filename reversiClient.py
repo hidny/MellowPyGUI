@@ -77,8 +77,9 @@ def serverListener(connection, reversiGUIObject):
 			
 			for currentLine in currentLines:
 				if len(currentLine) > 1:
-					print '*****************************'
-					print "received message: " + str(currentLine)
+					#print '*****************************'
+					#print "received message: " + str(currentLine)
+					pass
 				else:
 					continue
 				
@@ -210,7 +211,7 @@ def playMoveDefault(connection, reversiGUIObject):
 						reversiGUIObject.setMoveUserWantsToMakeToNull()
 						itsYourTurn = 0
 						reversiGUIObject.setMessage('')
-		
+		time.sleep(0.2)
 
 #Pre: this should only get called from MellowGUI
 def main(reversiGUIObject, args):

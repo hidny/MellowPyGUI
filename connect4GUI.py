@@ -211,7 +211,7 @@ def main(connection):
 			mx,my = pygame.mouse.get_pos()
 			
 			if mouseJustRelease == 1:
-				print str(mx) + ',' +  str(my)
+				#print str(mx) + ',' +  str(my)
 				
 				#Find the slot the player clicked on:
 				if my > connect4GUI.TOP_LEFT_HOLEY - connect4GUI.RADIUS and my < connect4GUI.TOP_LEFT_HOLEY + connect4GUI.Y_DIST_BETWEEN_HOLES * (len(connect4GUI.board)-1) + connect4GUI.RADIUS:
@@ -271,7 +271,7 @@ def main(connection):
 		connect4GUI.gameOver = 1
 	except:
 		print 'ERROR: in connect4 gui'
-		connect4GUI.setMessage("ERROR: in server listener")
+		connect4GUI.setMessage("ERROR: in server listener2")
 		exit(1)
 
 #WARNING: Below is copied from mellow GUI.
@@ -333,8 +333,6 @@ python connect4GUI.py Doris
 For game played by user:
 python connect4GUI.py Michael host slow interact > output1.txt
 python connect4GUI.py Phil slow
-python connect4GUI.py Richard slow
-python connect4GUI.py Doris slow
 
 
 python connect4GUI.py Michael host slow interact p=6789 ip=127.0.0.1

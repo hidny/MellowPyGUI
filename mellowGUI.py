@@ -222,8 +222,8 @@ class MellowGUI:
 					break
 			
 			if indexCard == -1:
-				print 'AHHH!!!! IndexCard is -1 on throw card.'
-				#exit(1)
+				#print 'AHHH!!!! IndexCard is -1 on throw card.'
+				sys.exit(1)
 			
 			self.projectiles[0] = self.createSouthCardProjectile(self.southCards, indexCard)
 		
@@ -408,7 +408,7 @@ class MellowGUI:
 	
 	def printcard(self, x, y, num, rotate90):
 		if num >= 52:
-			print 'ERROR: card num is greater than 52!'
+			#print 'ERROR: card num is greater than 52!'
 			num = 0
 			sys.exit(1)
 		
@@ -590,7 +590,7 @@ class MellowGUI:
 				if my < self.screen_height - self.off_the_edgeY - self.card_height/2:
 					if cardHeldIndex >= 0:
 						if cardHeldIndex >=0 and cardHeldIndex < len(self.southCards):
-							print 'Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
+							#print 'Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
 							self.setCardUserWantsToPlay(convertCardNumToString(self.southCards[cardHeldIndex]))
 							cardHeldIndex = self.NOINDEX
 							
@@ -642,7 +642,7 @@ class MellowGUI:
 	def checkIfUserBidAfterClick(self, x, y):
 		for i in range(0, len(self.bidButtons)):
 			if self.bidButtons[i].isWithinBox(x, y):
-				print 'Clicked on ' + str(i)
+				#print 'Clicked on ' + str(i)
 				self.currentBid = i
 		return -1
 	
@@ -669,6 +669,7 @@ def convertCardNumToString(num):
 		suit = 'S'
 	else:
 		print 'ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)'
+		sys.exit(1)
 	
 	CardNumber = -1
 	if num % 13 == 0:
@@ -701,6 +702,7 @@ def convertCardStringToNum(card):
 		print card
 		print str(len(card))
 		print 'ERROR: unknown suit!'
+		sys.exit(1)
 
 	if card[:1].find('A') != -1:
 		column = 0

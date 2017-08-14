@@ -102,7 +102,7 @@ def serverListener(connection, euchreGUIVars):
 	try:
 	
 		#Sanity testing:
-		print 'Card height in server Listener: ' + str(euchreGUIVars.card_height)
+		#print 'Card height in server Listener: ' + str(euchreGUIVars.card_height)
 		
 		while euchreGUIVars.isGameOver() == 0:
 			message = connection.getNextServerMessageInQueue()
@@ -111,9 +111,9 @@ def serverListener(connection, euchreGUIVars):
 			
 			for currentLine in currentLines:
 				if len(currentLine) > 1:
-					print '*****************************'
-					print "received message2: " + str(currentLine)
-					
+					#print '*****************************'
+					#print "received message2: " + str(currentLine)
+					pass
 				
 				
 				if currentLine.startswith(PUBLIC_MSG):
@@ -135,7 +135,7 @@ def serverListener(connection, euchreGUIVars):
 							else:
 								playerInTeamA = 0
 						
-						print 'Euchre Client test: game starting'
+						#print 'Euchre Client test: game starting'
 					
 					elif currentLine.find(VARIATION) != -1:
 						euchreGUIVars.setVariation(currentLine.split(' ')[3])
@@ -147,11 +147,11 @@ def serverListener(connection, euchreGUIVars):
 					
 					
 					elif currentLine.find(CALLING_ROUND1) != -1:
-						print 'Setting bidding round to 1'
+						#print 'Setting bidding round to 1'
 						euchreGUIVars.setBiddingRound(1)
 						
 					elif currentLine.find(CALLING_ROUND2) != -1:
-						print 'Setting bidding round to 2'
+						#print 'Setting bidding round to 2'
 						euchreGUIVars.setBiddingRound(2)
 						
 					elif currentLine.find(PLAYING_CARD) != -1:
@@ -160,26 +160,26 @@ def serverListener(connection, euchreGUIVars):
 						card = currentLine.split(' ')[4]
 						
 						if isACard(card) == 0:
-							print 'UH OH! Could not find card: ' + str(card)
+							#print 'UH OH! Could not find card: ' + str(card)
 							sys.exit(1)
 						
 						if players[0] != player:
 							slowDownIfInteract(connection, 0.25, gameStarted)
 						
 						if players[0] == player:
-							print 'South(' + player + ') plays ' + card
+							#print 'South(' + player + ') plays ' + card
 							euchreGUIVars.throwSouthCard(card)
 						elif players[1] == player:
-							print 'West(' + player + ') plays ' + card
+							#print 'West(' + player + ') plays ' + card
 							euchreGUIVars.throwWestCard(card)
 						elif players[2] == player:
-							print 'North(' + player + ') plays ' + card
+							#print 'North(' + player + ') plays ' + card
 							euchreGUIVars.throwNorthCard(card)
 						elif players[3] == player:
-							print 'East(' + player + ') plays ' + card
+							#print 'East(' + player + ') plays ' + card
 							euchreGUIVars.throwEastCard(card)
 						else:
-							print 'ERROR: unknown player plays card!'
+							#print 'ERROR: unknown player plays card!'
 							sys.exit(1)
 						
 						#get relative player direction
@@ -196,24 +196,24 @@ def serverListener(connection, euchreGUIVars):
 							dealer = dealer[0:-1]
 						
 						if players[0]  == dealer:
-							print 'Dealer is South(' + dealer + ')'
+							#print 'Dealer is South(' + dealer + ')'
 							euchreGUIVars.setDealerString("South(" + dealer + ")")
 							
 						elif players[1] == dealer:
-							print 'Dealer is West(' + dealer + ')'
+							#print 'Dealer is West(' + dealer + ')'
 							euchreGUIVars.setDealerString("West(" + dealer + ")")
 							
 						elif players[2] == dealer:
-							print 'Dealer is North(' + dealer + ')'
+							#print 'Dealer is North(' + dealer + ')'
 							euchreGUIVars.setDealerString("North(" + dealer + ")")
 							
 						elif players[3] == dealer:
-							print 'Dealer is East(' + dealer + ')'
+							#print 'Dealer is East(' + dealer + ')'
 							euchreGUIVars.setDealerString("East(" + dealer + ")")
 							
 						else:
-							print 'current dealer: ' + dealer
-							print 'ERROR: unknown dealer'
+							#print 'current dealer: ' + dealer
+							#print 'ERROR: unknown dealer'
 							sys.exit(1)
 						
 					
@@ -228,27 +228,27 @@ def serverListener(connection, euchreGUIVars):
 						
 						if players[0]  == fightWinner:
 							euchreGUIVars.addTrickSouth()
-							print 'Fight Winner is South(' + fightWinner + ')'
+							#print 'Fight Winner is South(' + fightWinner + ')'
 							
 						elif players[1] == fightWinner:
 							euchreGUIVars.addTrickWest()
-							print 'Fight Winner is West(' + fightWinner + ')'
+							#print 'Fight Winner is West(' + fightWinner + ')'
 							
 						elif players[2] == fightWinner:
 							euchreGUIVars.addTrickNorth()
-							print 'Fight Winner is North(' + fightWinner + ')'
+							#print 'Fight Winner is North(' + fightWinner + ')'
 							
 						elif players[3] == fightWinner:
 							euchreGUIVars.addTrickEast()
-							print 'Fight Winner is East(' + fightWinner + ')'
+							#print 'Fight Winner is East(' + fightWinner + ')'
 							
 						else:
-							print 'current fightWinner: ' + fightWinner
-							print 'ERROR: unknown fight winner'
+							#print 'current fightWinner: ' + fightWinner
+							#print 'ERROR: unknown fight winner'
 							sys.exit(1)
 				
 					elif currentLine.find(WIN) != -1:
-						print message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):]
+						#print message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):]
 						euchreGUIVars.setMessage(message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):-1])
 						euchreGUIVars.setGameOver()
 				
@@ -260,18 +260,18 @@ def serverListener(connection, euchreGUIVars):
 						player = message.split(' ')[3]
 						number = message.split(' ')[5]
 						
-						if players[0]  == player:
-							print 'python South(' + player + ') has ' + number + ' trick(s).'
-						elif players[1] == player:
-							print 'West(' + player + ') has ' + number + ' trick(s).'
-						elif players[2] == player:
-							print 'North(' + player + ') has ' + number + ' trick(s).'
-						elif players[3] == player:
-							print 'East(' + player + ') has ' + number + ' trick(s).'
-						else:
-							print 'current player: ' + player
-							print 'ERROR: unknown player has tricks.'
-							sys.exit(1)
+						#if players[0]  == player:
+							#print 'python South(' + player + ') has ' + number + ' trick(s).'
+						#elif players[1] == player:
+							#print 'West(' + player + ') has ' + number + ' trick(s).'
+						#elif players[2] == player:
+							#print 'North(' + player + ') has ' + number + ' trick(s).'
+						#elif players[3] == player:
+							#print 'East(' + player + ') has ' + number + ' trick(s).'
+						#else:
+							#print 'current player: ' + player
+							#print 'ERROR: unknown player has tricks.'
+						#	sys.exit(1)
 				
 				
 					elif currentLine.find(END_OF_ROUND) != -1 or currentLine.find(END_OF_ROUND2) != -1:
@@ -313,7 +313,7 @@ def serverListener(connection, euchreGUIVars):
 								#bid = 'declares diamonds'
 								bid = 'diamonds'
 							else:
-								print 'ERROR: unknown trump! CurrentLine:' + currentLine
+								#print 'ERROR: unknown trump! CurrentLine:' + currentLine
 								sys.exit(1)
 						
 						if currentLine.find(ALONE) != -1:
@@ -331,22 +331,22 @@ def serverListener(connection, euchreGUIVars):
 						
 						if players[0]  == bidder:
 							euchreGUIVars.bidSouth(bid)
-							print 'South(' + bidder + ') bids :' + bid
+							#print 'South(' + bidder + ') bids :' + bid
 						
 						elif players[1] == bidder:
 							euchreGUIVars.bidWest(bid)
-							print 'West(' + bidder + ') bids :' + bid
+							#print 'West(' + bidder + ') bids :' + bid
 						
 						elif players[2] == bidder:
 							euchreGUIVars.bidNorth(bid)
-							print 'North(' + bidder + ') bids :' + bid
+							#print 'North(' + bidder + ') bids :' + bid
 						
 						elif players[3] == bidder:
 							euchreGUIVars.bidEast(bid)
-							print 'East(' + bidder + ') bids :' + bid
+							#print 'East(' + bidder + ') bids :' + bid
 						
 						else:
-							print 'ERROR: unknown player bids'
+							#print 'ERROR: unknown player bids'
 							sys.exit(1)
 				
 					
@@ -358,16 +358,16 @@ def serverListener(connection, euchreGUIVars):
 						tokens = currentScores.split(' ')
 						if len(tokens) > 1 and isNumber(tokens[0]) == 1 and isNumber(tokens[len(tokens) - 1]) == 1 and isRoundSetup == 0:
 							
-							print 'Current Total:'
+							#print 'Current Total:'
 							
-							print 'Tell Euchre GUI about current total and let it figure everything else out:'
+							#print 'Tell Euchre GUI about current total and let it figure everything else out:'
 							if playerInTeamA == 1:
-								print 'US(team A): ' + tokens[0]
-								print 'THEM(team B): ' + tokens[len(tokens) - 1]
+								#print 'US(team A): ' + tokens[0]
+								#print 'THEM(team B): ' + tokens[len(tokens) - 1]
 								euchreGUIVars.updateScore(int(tokens[0]), int(tokens[len(tokens) - 1]))
 							else:
-								print 'THEM(team A): ' + tokens[0]
-								print 'US(team B): ' + tokens[len(tokens) - 1]
+								#print 'THEM(team A): ' + tokens[0]
+								#print 'US(team B): ' + tokens[len(tokens) - 1]
 								euchreGUIVars.updateScore(int(tokens[len(tokens) - 1]), int(tokens[0]))
 					
 						
@@ -384,7 +384,7 @@ def serverListener(connection, euchreGUIVars):
 						currentLine = currentLine[currentLine.index(YOUR_CALL) + len(YOUR_CALL):]
 						with turn_lock:
 							itsYourBid=1
-							print 'Its my bid!'
+							#print 'Its my bid!'
 							if connection.getInteract() == 1:
 								euchreGUIVars.askUserForBid()
 						
@@ -404,20 +404,20 @@ def serverListener(connection, euchreGUIVars):
 						cardsTemp = currentLine.split(' ')
 						euchreGUIVars.letDealerExchangeCard(cardsTemp)
 						
-						print 'Printing cards:'
-						for card in cardsTemp:
-							print card
-						print 'Done printing cards'
+						#print 'Printing cards:'
+						#for card in cardsTemp:
+						#	print card
+						#print 'Done printing cards'
 					
 					elif isACard(cardsTemp[0]) == 1:
 						if len(cardsTemp) == STARTING_HAND_LENGTH and isRoundSetup ==0:
 							euchreGUIVars.setupCardsForNewRound(cardsTemp)
 							isRoundSetup = 1
 						
-						print 'Printing cards:'
-						for card in cardsTemp:
-							print card
-						print 'Done printing cards'
+						#print 'Printing cards:'
+						#for card in cardsTemp:
+						#	print card
+						#print 'Done printing cards'
 				
 				
 				#Done private message handling
@@ -426,8 +426,8 @@ def serverListener(connection, euchreGUIVars):
 				
 			
 	except:
-		print 'ERROR: in server listener'
-		print 'ERROR: ' + currentLine
+		#print 'ERROR: in server listener'
+		#print 'ERROR: ' + currentLine
 		euchreGUIVars.setMessage("ERROR: in server listener")
 
 def clientListener(connection, euchreGUIVars):
@@ -506,7 +506,7 @@ def playCardDefault(connection, euchreGUIVars):
 						playedACardInFight = 1
 						itsYourBid = 0
 						itsYourTurn = 0
-		
+		time.sleep(0.2)
 
 #Pre: this should only get called from EuchreGUI
 def main(euchreGUIVars, args):

@@ -66,15 +66,19 @@ def serverListener(connection, connect4GUI):
 		print 'connect4 client in server Listener: '
 		
 		while connect4GUI.isGameOver() == 0:
+			connect4GUI.setMessage('Getting new message ')
+			time.sleep(0.5)
 			message = connection.getNextServerMessageInQueue()
+			if message is None:
+				continue
 			
 			currentLines = message.split('\n')
 			
 			for currentLine in currentLines:
-				if len(currentLine) > 1:
-					print '*****************************'
-					print "received message: " + str(currentLine)
-					
+				#if len(currentLine) > 1:
+				#	print '*****************************'
+				#	print "received message: " + str(currentLine)
+				
 				if currentLine.startswith(START_MSG):
 					gameStarted = 1
 				
@@ -99,43 +103,45 @@ def serverListener(connection, connect4GUI):
 							else:
 								redPlayer  = currentLine.split(" ")[3]
 							
-							print 'HEY! ' + currentLine.split(" ")[6]
+							#print 'HEY! ' + currentLine.split(" ")[6]
 							slotNum = int(currentLine.split(" ")[6])
 							
-							print 'Dropping ' + str(slotNum)
+							#print 'Dropping ' + str(slotNum)
 							if isRedsTurn == 0:
 								connect4GUI.dropPeg(slotNum, connect4GUI.YELLOW)
 							else:
 								connect4GUI.dropPeg(slotNum, connect4GUI.RED)
 							
 						
-						if currentLine.find(WIN) != -1:
-							if isRedsTurn == 1:
-								connect4GUI.setMessage('Red(' + redPlayer + ') wins!')
-							else:
-								connect4GUI.setMessage('Yellow(' + blackPlayer + ') wins!')
+						#if currentLine.find(WIN) != -1:
+						#	if isRedsTurn == 1:
+						#		connect4GUI.setMessage('Red(' + redPlayer + ') wins!')
+						#	else:
+						#		connect4GUI.setMessage('Yellow(' + blackPlayer + ') wins!')
 							
-							#TODO: highlight the 4 line(s)
-							connection.setInteract(1)
-							connect4GUI.setGameOver()
-							break
+						#	#TODO: highlight the 4 line(s)
+						#	connection.setInteract(1)
+						#	connect4GUI.setGameOver()
+						#	break
 							
-						if currentLine.find(DRAW) != -1:
-							connect4GUI.setMessage('It\'s a draw')
-							connection.setInteract(1)
-							connect4GUI.setGameOver()
-							break
-							
-						if currentLine.find(MISPLAYED) != -1:
-							itsYourTurn=1
-							if connection.getInteract() == 1:
-								connect4GUI.setMessage('Your turn')
+						#if currentLine.find(DRAW) != -1:
+						#	connect4GUI.setMessage('It\'s a draw')
+						#	connection.setInteract(1)
+						#	connect4GUI.setGameOver()
+						#	break
+						#
+						#if currentLine.find(MISPLAYED) != -1:
+						#	with turn_lock:
+						#		connect4GUI.setMoveUserWantsToMakeToNull()
+						#		itsYourTurn=1
+						#		if connection.getInteract() == 1:
+						#			connect4GUI.setMessage('Your turn')
 			
 			
 	except:
 		print 'ERROR: in server listener'
 		print 'ERROR: ' + currentLine
-		connect4GUI.setMessage("ERROR: in server listener")
+		connect4GUI.setMessage("ERROR: in server listener ERROR: " + currentLine)
 
 def clientListener(connection, connect4GUI):
 	global gameStarted
@@ -144,6 +150,8 @@ def clientListener(connection, connect4GUI):
 		print 'Client Listener'
 		
 		connection.sendMessageToServer(connection.getCurrentPlayerName() + '\n')
+
+		#TODO: this will send a message even if the user is already in the game room. Fix it!
 		if connection.isHosting() == 1:
 			connection.sendMessageToServer('/create connect_four connect4py' + '\n')
 		else:
@@ -187,7 +195,7 @@ def playMoveDefault(connection, connect4GUI):
 						connect4GUI.setMoveUserWantsToMakeToNull()
 						itsYourTurn = 0
 						connect4GUI.setMessage('')
-		
+		time.sleep(0.2)
 
 #Pre: this should only get called from MellowGUI
 def main(connect4GUI, args):

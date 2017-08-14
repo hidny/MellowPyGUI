@@ -1,7 +1,0 @@
-mellowGUI.py
-Michael
-host
-IP: 127.0.0.1
-PORT: 6789
-name: Michael
-ERROR: could not find server. tcpIP: 127.0.0.1 tcpPort: 6789
