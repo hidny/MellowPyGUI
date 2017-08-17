@@ -16,4 +16,4 @@ cx_Freeze.setup(
 # I don't know why that was a problem
 #https://stackoverflow.com/questions/3029816/how-do-i-get-a-thread-safe-print-in-python-2-6
 
-#I think you could delete scipy to make more room
+#You could delete scipy to make more room

@@ -77,10 +77,7 @@ def serverListener(connection, mellowGUIVars):
 	endOfRoundIndex = 0
 	
 	try:
-	
-		#Sanity testing:
-		#print 'Card height in server Listener: ' + str(mellowGUIVars.card_height)
-		
+
 		while mellowGUIVars.isStillRunning() == 1:
 			message = connection.getNextServerMessageInQueue()
 			
@@ -306,28 +303,21 @@ def serverListener(connection, mellowGUIVars):
 						endOfRoundIndex = endOfRoundIndex + 1
 						
 						if endOfRoundIndex == 1:
-						#	print 'previous scores: '
+							#'previous scores received: '
 							pass
 						elif endOfRoundIndex == 2:
-						#	print 'Scores added: '
+							#'Scores added received: '
 							pass
-						#else:
-						#	print 'Current Total:'
-							
-						#	print 'Tell Mellow GUI about current total and let it figure everything else out:'
+						else:
+							#Current score:
 							if playerInTeamA == 1:
-								#print 'US(team A): ' + tokens[0]
-								#print 'THEM(team B): ' + tokens[len(tokens) - 1]
 								mellowGUIVars.updateScore(int(tokens[0]), int(tokens[len(tokens) - 1]))
 							else:
-								#print 'THEM(team A): ' + tokens[0]
-								#print 'US(team B): ' + tokens[len(tokens) - 1]
 								mellowGUIVars.updateScore(int(tokens[len(tokens) - 1]), int(tokens[0]))
 			
 	except:
-		#print 'ERROR: in server listener'
-		#print 'ERROR: ' + currentLine
-		mellowGUIVars.setMessage("ERROR: in server listener")
+		time.sleep (3)
+		mellowGUIVars.setMessage("ERROR: in server listener (" + currentLine + ")")
 
 def clientListener(connection, mellowGUIVars):
 	global gameStarted
@@ -335,9 +325,7 @@ def clientListener(connection, mellowGUIVars):
 	
 	
 	try:
-		#Sanity testing:
-		print 'Card height in client Listener2: ' + str(mellowGUIVars.card_height)
-	
+
 		connection.sendMessageToServer(connection.getCurrentPlayerName() + '\n')
 		if connection.isHosting() == 1:
 			connection.sendMessageToServer('/create mellow mellowpy' + '\n')
@@ -348,7 +336,6 @@ def clientListener(connection, mellowGUIVars):
 			if connection.isHosting() == 1 and gameStarted == 0:
 				time.sleep(0.2)
 				connection.sendMessageToServer('/start' + '\n')
-				print 'sent start msg'
 			elif gameStarted == 1:
 				break
 		
@@ -374,14 +361,14 @@ def playCardDefault(connection, mellowGUIVars):
 					playedACardInFight = 0
 				
 				if itsYourBid==1:
-					print 'Your bid'
+					#print 'Your bid'
 					connection.sendMessageToServer('/move 1' + '\n')
 					itsYourBid = 0
 					itsYourTurn = 0
-					print 'sent msg'
+					#print 'sent msg'
 					
 				elif itsYourTurn==1:
-					print 'Your turn'
+					#print 'Your turn'
 					connection.sendMessageToServer('/move 1' + '\n')
 					playedACardInFight = 1
 					itsYourBid = 0

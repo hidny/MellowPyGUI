@@ -49,6 +49,7 @@ class WaitingRoomPlayerList:
 			
 			self.listEmptySlot.append("Move")
 			self.listPlayerSlot.append("Whisper")
+			self.listPlayerSlot.append("Swap")
 			
 			self.gameSlotsCreated = 0
 			self.selected = -1
@@ -128,6 +129,10 @@ class WaitingRoomPlayerList:
 						if textPressed == 'Move':
 							self.connection.sendMessageToServer("/move " + str(self.indexSelected + 1) + "\n")
 						
+						if textPressed == 'Swap':
+								self.connection.sendMessageToServer("/swap " + self.gameSlots[self.indexSelected].getMainText() + "\n")
+
+
 						self.gameSlots[self.indexSelected].close()
 						self.indexSelected = NOT_SELECTED
 						

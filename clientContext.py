@@ -76,7 +76,7 @@ class ClientContext:
 	def sendMessageToServer(self, msg):
 		with self.sendMsgLock:
 			self.serverSocket.send(str(msg))
-			print 'Sent: ' + str(msg)
+			#print 'Sent: ' + str(msg)
 	
 	
 	messageFromServerQueue = []

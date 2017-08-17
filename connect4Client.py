@@ -66,11 +66,7 @@ def serverListener(connection, connect4GUI):
 		print 'connect4 client in server Listener: '
 		
 		while connect4GUI.isGameOver() == 0:
-			connect4GUI.setMessage('Getting new message ')
-			time.sleep(0.5)
 			message = connection.getNextServerMessageInQueue()
-			if message is None:
-				continue
 			
 			currentLines = message.split('\n')
 			

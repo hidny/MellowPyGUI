@@ -156,8 +156,7 @@ class MellowGUI:
 		for index in range(0, len(southCardsInput)):
 			tempArray.append(convertCardStringToNum(southCardsInput[index]))
 		
-		
-		tempArray.sort()
+		tempArray = sortCards(tempArray)
 		
 		#if the south cards haven't been set yet, setup the 4 players cards and reset the bids:
 		if len(self.southCards)  < 13 or self.southCards[0] == -1:
@@ -222,7 +221,7 @@ class MellowGUI:
 					break
 			
 			if indexCard == -1:
-				#print 'AHHH!!!! IndexCard is -1 on throw card.'
+				print 'AHHH!!!! IndexCard is -1 on throw card.'
 				sys.exit(1)
 			
 			self.projectiles[0] = self.createSouthCardProjectile(self.southCards, indexCard)
@@ -408,7 +407,7 @@ class MellowGUI:
 	
 	def printcard(self, x, y, num, rotate90):
 		if num >= 52:
-			#print 'ERROR: card num is greater than 52!'
+			print 'ERROR: card num is greater than 52!'
 			num = 0
 			sys.exit(1)
 		
@@ -642,7 +641,7 @@ class MellowGUI:
 	def checkIfUserBidAfterClick(self, x, y):
 		for i in range(0, len(self.bidButtons)):
 			if self.bidButtons[i].isWithinBox(x, y):
-				#print 'Clicked on ' + str(i)
+				print 'Clicked on ' + str(i)
 				self.currentBid = i
 		return -1
 	
@@ -718,6 +717,23 @@ def convertCardStringToNum(card):
 		column = int(card[0]) - 1
 	
 	return 13*row + column
+
+
+def sortCards(tempArray):
+
+	#Ace values should increase so they can be properly sorted.
+	for x in range(0, len(tempArray)):
+		if tempArray[x] % 13 == 0:
+			tempArray[x] = tempArray[x] + 13
+
+	tempArray.sort()
+
+	#put the ace values back to the way they were
+	for x in range(0, len(tempArray)):
+		if tempArray[x] % 13 == 0:
+			tempArray[x] = tempArray[x] - 13
+
+	return tempArray
 
 
 def main(connection):
