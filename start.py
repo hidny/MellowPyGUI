@@ -189,9 +189,10 @@ def paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx,
 if __name__ == "__main__":
 	main('hello world', sys.argv)
 
-#start server
-#python start.py michael host
+#start client:
+#python start.py
 #then click start.
+
 #python mellowGUI.py Phil
 #python mellowGUI.py Richard
 #python mellowGUI.py Doris
