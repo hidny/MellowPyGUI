@@ -1,12 +1,9 @@
 #!/usr/bin/env python
-import sys
 import time
 
 import threading
 import _thread
 
-import mellowGUI
-import projectile
 import clientContext
 
 import random

@@ -1,7 +1,5 @@
 
 import sys, pygame
-#from pygame import _view
-from pygame.locals import *
 from sys import exit
 
 import time
@@ -357,7 +355,3 @@ def main(threadName, args):
 
 if __name__ == "__main__":
 	main('main thread', sys.argv)
-
-		
-	
-	

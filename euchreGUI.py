@@ -1,14 +1,13 @@
-import sys, pygame
+import math
+import sys
 import time
 
-import random, os
+import random
 import pygame
 from threading import Thread
 import threading
 
-#from pygame import _view
 from pygame.locals import *
-from sys import exit
 
 import projectile
 import euchreClient
@@ -21,7 +20,73 @@ import channelRoomGUI
 
 #This is designed to be a singleton object
 
-	
+
+def convertCardNumToString(num):
+	if num < 0:
+		return '??'
+
+	suit = ''
+	if 0 <= num < 13:
+		suit = 'C'
+	elif 13 <= num < 26:
+		suit = 'D'
+	elif 26 <= num < 39:
+		suit = 'H'
+	elif 39 <= num < 52:
+		suit = 'S'
+	else:
+		print('ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)')
+
+	CardNumber = -1
+	if num % 13 == 0:
+		CardNumber = 'A'
+	elif num % 13 == 9:
+		CardNumber = 'T'
+	elif num % 13 == 10:
+		CardNumber = 'J'
+	elif num % 13 == 11:
+		CardNumber = 'Q'
+	elif num % 13 == 12:
+		CardNumber = 'K'
+	else:
+		CardNumber = str((num % 13) + 1)
+
+	return str(CardNumber) + suit
+
+
+# FUNCTIONS THAT OUTSIDE CLASSES SHOULD USE:
+def convertCardStringToNum(card):
+	row = 0
+	if card[1:].find('C') != -1:
+		row = 0
+	elif card[1:].find('D') != -1:
+		row = 1
+	elif card[1:].find('H') != -1:
+		row = 2
+	elif card[1:].find('S') != -1:
+		row = 3
+	else:
+		print(card)
+		print(str(len(card)))
+		print('ERROR: unknown suit!')
+
+	if card[:1].find('A') != -1:
+		column = 0
+	elif card[:1].find('T') != -1:
+		column = 9
+	elif card[:1].find('J') != -1:
+		column = 10
+	elif card[:1].find('Q') != -1:
+		column = 11
+	elif card[:1].find('K') != -1:
+		column = 12
+	else:
+		column = int(card[0]) - 1
+
+	return 13 * row + column
+
+
+
 FIRST_ROUND = -999
 	
 class EuchreGUI:
@@ -536,10 +601,10 @@ class EuchreGUI:
 				self.screen.blit(temp, (x, y), (0, self.backIsBlue * self.card_width, self.card_height, self.card_width))
 		else:
 			if rotate90 ==0:
-				self.screen.blit(self.cardz, (x, y), ((num%13) * self.card_width, (num/13) * self.card_height, self.card_width, self.card_height))
+				self.screen.blit(self.cardz, (x, y), ((num%13) * self.card_width, math.floor(num/13) * self.card_height, self.card_width, self.card_height))
 			else:
 				temp = pygame.transform.rotate(self.cardz, 270)
-				self.screen.blit(temp, (x, y), (((4-1) - num/13) * self.card_height, (num%13) * self.card_width, self.card_height, self.card_width))
+				self.screen.blit(temp, (x, y), ((4-1) - math.floor(num/13) * self.card_height, (num%13) * self.card_width, self.card_height, self.card_width))
 
 	#Implements If you want to use projectiles, this function must be there.
 	def printProjectile(self, x, y, idNum, rotation):
@@ -576,8 +641,8 @@ class EuchreGUI:
 						return 1
 		return 0
 
-	def printcardSuitNum(self, x, y, suit, num):
-		printcard(x, y, 13*suit + num, 1)
+	def printCardSuitNum(self, x, y, suit, num):
+		self.printcard(x, y, 13 * suit + num, 1)
 
 	def fill_background(self):
 		for y in range(0, self.screen_height, self.background.get_height()):
@@ -729,9 +794,9 @@ class EuchreGUI:
 		self.currentMsg = message
 	
 	def displayCenterGameMsg(self):
-		myfont = pygame.font.SysFont("comicsansms", 30)
+		myFont = pygame.font.SysFont("comicsansms", 30)
 		xOffset = len(self.currentMsg)
-		labelExample = myfont.render(str(self.currentMsg), 1, (0,0,255))
+		labelExample = myFont.render(str(self.currentMsg), 1, (0,0,255))
 		self.screen.blit(labelExample, (self.width/2 - 10 * xOffset, self.height/2 - 50))
 	
 	#This could be 1 or 2. (because there are 2 bidding rounds in Euchre.)
@@ -906,69 +971,6 @@ class EuchreGUI:
 		temp = self.currentBid
 		self.currentBid = ''
 		return temp
-	
-def convertCardNumToString(num):
-	if num < 0:
-		return '??'
-	
-	suit = ''
-	if num >=0 and num <13:
-		suit = 'C'
-	elif num >=13 and num <26:
-		suit = 'D'
-	elif num >=26 and num <39:
-		suit = 'H'
-	elif num >=39 and num <52:
-		suit = 'S'
-	else:
-		print('ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)')
-	
-	CardNumber = -1
-	if num % 13 == 0:
-		CardNumber = 'A'
-	elif num % 13 == 9:
-		CardNumber = 'T'
-	elif num % 13 == 10:
-		CardNumber = 'J'
-	elif num % 13 == 11:
-		CardNumber = 'Q'
-	elif num % 13 == 12:
-		CardNumber = 'K'
-	else:
-		CardNumber = str((num % 13) + 1)
-	
-	return str(CardNumber) + suit
-	
-#FUNCTIONS THAT OUTSIDE CLASSES SHOULD USE:
-def convertCardStringToNum(card):
-	row = 0
-	if card[1:].find('C') != -1:
-		row = 0
-	elif card[1:].find('D') != -1:
-		row = 1
-	elif card[1:].find('H') != -1:
-		row = 2
-	elif card[1:].find('S') != -1:
-		row = 3
-	else:
-		print(card)
-		print(str(len(card)))
-		print('ERROR: unknown suit!')
-
-	if card[:1].find('A') != -1:
-		column = 0
-	elif card[:1].find('T') != -1:
-		column = 9
-	elif card[:1].find('J') != -1:
-		column = 10
-	elif card[:1].find('Q') != -1:
-		column = 11
-	elif card[:1].find('K') != -1:
-		column = 12
-	else:
-		column = int(card[0]) - 1
-	
-	return 13*row + column
 
 
 def main(connection):
@@ -1098,9 +1100,6 @@ def main(connection):
 		
 		euchreGUI.updateLastFrameTime()
 		clock.tick(1000/euchreGUI.FRAME_WAIT_TIME)
-	
-	
-	euchreGUI.gameOver = 1
 
 if __name__ == "__main__":
 	args = sys.argv

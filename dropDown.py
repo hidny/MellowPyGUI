@@ -1,10 +1,5 @@
-#from pygame import _view
-from pygame.locals import *
-
 import pygame
 import box
-import time
-import math
 
 NOT_SELECTED = -1
 

@@ -1,7 +1,6 @@
-import sys, pygame
+import sys
 import time
 
-import random, os
 import pygame
 from threading import Thread
 import threading
@@ -10,8 +9,6 @@ import threading
 from pygame.locals import *
 from sys import exit
 
-import mellowClient
-import box
 import clientContext
 
 import reversiClient
@@ -41,7 +38,6 @@ class ReversiGUI:
 	off_the_edgeY = 150
 
 
-	THROW_TIME=100
 	FRAME_WAIT_TIME = 40
 	
 	WHITE = (255, 255, 255)
@@ -312,11 +308,8 @@ def main(connection):
 			
 			reversiGUI.updateLastFrameTime()
 			clock.tick(1000/reversiGUI.FRAME_WAIT_TIME)
-		
-		
-		reversiGUI.gameOver = 1
+
 	except:
-		#print('ERROR: in reversi gui')
 		reversiGUI.setMessage("ERROR: in server listener")
 		exit(1)
 

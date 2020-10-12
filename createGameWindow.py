@@ -9,14 +9,11 @@ import time
 
 import textBox
 import textBoxList
-import box
 import button
 import dropDown
 
-import mellowGUI
 import sys
 
-import chatBox
 import clientContext
 import channelRoomGUI
 

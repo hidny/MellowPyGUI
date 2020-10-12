@@ -1,7 +1,3 @@
-#from pygame import _view
-from pygame.locals import *
-
-
 
 class Button:
 	
