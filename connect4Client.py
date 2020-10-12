@@ -3,7 +3,7 @@ import sys
 import time
 
 import threading
-import thread
+import _thread
 
 import mellowGUI
 import projectile
@@ -63,7 +63,7 @@ def serverListener(connection, connect4GUI):
 	
 	try:
 		#Sanity testing:
-		print 'connect4 client in server Listener: '
+		print('connect4 client in server Listener: ')
 		
 		while connect4GUI.isGameOver() == 0:
 			message = connection.getNextServerMessageInQueue()
@@ -72,8 +72,8 @@ def serverListener(connection, connect4GUI):
 			
 			for currentLine in currentLines:
 				#if len(currentLine) > 1:
-				#	print '*****************************'
-				#	print "received message: " + str(currentLine)
+				#	print('*****************************')
+				#	print("received message: " + str(currentLine))
 				
 				if currentLine.startswith(START_MSG):
 					gameStarted = 1
@@ -99,10 +99,10 @@ def serverListener(connection, connect4GUI):
 							else:
 								redPlayer  = currentLine.split(" ")[3]
 							
-							#print 'HEY! ' + currentLine.split(" ")[6]
+							#print('HEY! ' + currentLine.split(" ")[6])
 							slotNum = int(currentLine.split(" ")[6])
 							
-							#print 'Dropping ' + str(slotNum)
+							#print('Dropping ' + str(slotNum))
 							if isRedsTurn == 0:
 								connect4GUI.dropPeg(slotNum, connect4GUI.YELLOW)
 							else:
@@ -135,15 +135,15 @@ def serverListener(connection, connect4GUI):
 			
 			
 	except:
-		print 'ERROR: in server listener'
-		print 'ERROR: ' + currentLine
+		print('ERROR: in server listener')
+		print('ERROR: ' + currentLine)
 		connect4GUI.setMessage("ERROR: in server listener ERROR: " + currentLine)
 
 def clientListener(connection, connect4GUI):
 	global gameStarted
 	
 	try:
-		print 'Client Listener'
+		print('Client Listener')
 		
 		connection.sendMessageToServer(connection.getCurrentPlayerName() + '\n')
 
@@ -157,7 +157,7 @@ def clientListener(connection, connect4GUI):
 			if connection.isHosting() == 1 and gameStarted == 0:
 				time.sleep(0.2)
 				connection.sendMessageToServer('/start' + '\n')
-				print 'sent start msg'
+				print('sent start msg')
 			elif gameStarted == 1:
 				break
 			else:
@@ -167,7 +167,7 @@ def clientListener(connection, connect4GUI):
 		
 		
 	except:
-		print 'ERROR: in client listener'
+		print('ERROR: in client listener')
 		connect4GUI.setMessage("ERROR: in client listener")
 
 def playMoveDefault(connection, connect4GUI):
@@ -206,9 +206,9 @@ def main(connect4GUI, args):
 	
 	#start listening t server on a seperate thread:
 	try:
-		thread.start_new_thread( serverListener, (connection, connect4GUI) )
+		_thread.start_new_thread( serverListener, (connection, connect4GUI) )
 	except:
-		print "Error: unable to start thread 1"
+		print("Error: unable to start thread 1")
 		connect4GUI.setMessage("Error: unable to start thread 1")
 		exit(1)
 	
@@ -221,5 +221,5 @@ def slowDownIfInteract(connection, amountOfTime, gameStarted):
 #You have to start it from mellowGUI because pygame has to be the main 
 #thread.
 if __name__ == "__main__":
-	print 'Please use python connect4GUI.py to start.'
+	print('Please use python connect4GUI.py to start.')
 	exit(1)

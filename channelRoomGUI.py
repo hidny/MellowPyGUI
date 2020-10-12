@@ -143,19 +143,19 @@ def main(threadName, args):
 		
 		#Enter join window:
 		if joinPressed == 1:
-			print 'Join pressed!'
+			print('Join pressed!')
 			joinGameWindow.main('', ['from channelRoomGUI.py', connection])
 		
 		
 		if createPressed == 1:
-			print 'Create pressed!'
+			print('Create pressed!')
 			createGameWindow.main('', ['from channelRoomGUI.py', connection])
 		
 		if disconnectPressed == 1:
 			connection.sendMessageToServer("/disc" + "\n")
 			
 		
-		#Print buttons:
+		#print buttons:
 		sendMessageButton.printButton(pygame, screen)
 		joinButton.printButton(pygame, screen)
 		createButton.printButton(pygame, screen)
@@ -169,7 +169,7 @@ def main(threadName, args):
 		temp = connection.getNextServerMessageInQueue()
 		
 		
-		#Print players in channel:
+		#printplayers in channel:
 		for i in range(0, len(listOfPlayerInChannel)):
 			myfont = pygame.font.SysFont("comicsansms", 25)
 			label =  myfont.render(listOfPlayerInChannel[i], 1, (255, 255, 255))
@@ -188,7 +188,7 @@ def main(threadName, args):
 				lines = temp.split('\n')
 				foundListOfUsers = 0
 				
-				print 'Getting users:'
+				print('Getting users:')
 				listOfPlayerInChannel = []
 				for line in lines:
 					if foundListOfUsers == 1:

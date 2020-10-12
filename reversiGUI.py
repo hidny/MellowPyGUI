@@ -10,7 +10,6 @@ import threading
 from pygame.locals import *
 from sys import exit
 
-import starterTest
 import mellowClient
 import box
 import clientContext
@@ -200,14 +199,14 @@ def main(connection):
 	
 	reversiGUI.updateLastFrameTime()
 	
-	print 'Inside Connect 4 GUI main!'
+	print('Inside Reversi GUI main!')
 	
 	
 	try:
 		t = Thread(name = 'Testing', target=reversiClient.main, args=(reversiGUI, ['ReversiGUI.py', connection]))
 		t.start()
 	except:
-		print "Error: unable to start thread"
+		print("Error: unable to start thread")
 	
 	
 	#texting adding 
@@ -269,7 +268,7 @@ def main(connection):
 			
 			#END React to user events:
 			
-			#Print Stuff:
+			#print Stuff:
 			
 			reversiGUI.fill_background()
 			
@@ -284,7 +283,7 @@ def main(connection):
 			
 			reversiGUI.displayGameMsg()
 			
-			#Print colour of cursor depending on what user does:
+			#print colour of cursor depending on what user does:
 			if mouseJustPressed == 1 or mouseJustRelease==1:
 				reversiGUI.screen.blit(reversiGUI.greendot, (mx-5, my-5), (0, 0, 10, 10))
 			elif mouseHeld == 1:
@@ -317,7 +316,7 @@ def main(connection):
 		
 		reversiGUI.gameOver = 1
 	except:
-		#print 'ERROR: in reversi gui'
+		#print('ERROR: in reversi gui')
 		reversiGUI.setMessage("ERROR: in server listener")
 		exit(1)
 
@@ -340,7 +339,7 @@ if __name__ == "__main__":
 	
 	#parse arguments:
 	for x in range (0, len(args)):
-		print str(args[x])
+		print(str(args[x]))
 		if args[x].find('host') != -1:
 			isHostingGame = 1
 		elif args[x].find('meatbag') != -1 or args[x].find('interact') != -1:
@@ -352,9 +351,9 @@ if __name__ == "__main__":
 		elif args[x].find('p=') != -1:
 			tcpPort = int(args[x][len('p='):])
 	
-	print 'IP: ' + str(tcpIP)
-	print 'PORT: ' + str(tcpPort)
-	print 'name: ' + str(name)
+	print('IP: ' + str(tcpIP))
+	print('PORT: ' + str(tcpPort))
+	print('name: ' + str(name))
 	
 	connection = clientContext.ClientContext(tcpIP, tcpPort, name)
 	
@@ -366,23 +365,23 @@ if __name__ == "__main__":
 	connection.setInteract(interact)
 	connection.setSlowdown(slowdown)
 	main(connection)
-	
-'''
-cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
+		
 
-cd desktop\cardGamePython\pythoninternet
-For autogame:
-python reversiGUI.py Michael host > output1.txt
-python reversiGUI.py Phil
-python reversiGUI.py Richard
-python reversiGUI.py Doris
+#cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
 
-For game played by user:
-python reversiGUI.py Michael host slow interact > output1.txt
-python reversiGUI.py Phil slow
-python reversiGUI.py Richard slow
-python reversiGUI.py Doris slow
+#cd desktop\cardGamePython\pythoninternet
+
+#For autogame:
+# python reversiGUI.py Michael host > output1.txt
+# python reversiGUI.py Phil
+# python reversiGUI.py Richard
+# python reversiGUI.py Doris
+
+#For game played by user:
+# python reversiGUI.py Michael host slow interact > output1.txt
+# python reversiGUI.py Phil slow
+# python reversiGUI.py Richard slow
+# python reversiGUI.py Doris slow
 
 
-python reversiGUI.py Michael host slow interact p=6789 ip=127.0.0.1
-'''
+# python reversiGUI.py Michael host slow interact p=6789 ip=127.0.0.1

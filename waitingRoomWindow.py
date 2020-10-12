@@ -81,8 +81,8 @@ class WaitingRoomPlayerList:
 				self.createGameSlots(players)
 			
 			if len(players) != len(self.gameSlots):
-				print 'ERROR: number of slots is inconsistant!'
-				print str(len(players)) + ' vs ' + str(len(self.gameSlots))
+				print('ERROR: number of slots is inconsistant!')
+				print(str(len(players)) + ' vs ' + str(len(self.gameSlots)))
 				exit(1)
 			
 			if players[self.indexSelected] != self.gameSlots[self.indexSelected].getMainText():
@@ -265,7 +265,7 @@ def main(threadName, args):
 			connection.sendMessageToServer('/start' + '\n')
 		#END React to user events:
 		
-		#Print Stuff:
+		#print Stuff:
 		connection.getWaitingRoomChatBox().printChat(screen)
 		
 		serverConnectionBoxes.drawTextBoxes(screen)
@@ -308,22 +308,22 @@ def main(threadName, args):
 				elif connection.getCurrentGameName() == "euchre":
 					euchreGUI.main(connection)
 				else:
-					print 'ERROR: unknown game!'
+					print('ERROR: unknown game!')
 			
 			#Receive answer from server: (sent /refresh message)...
 			elif temp.startswith(FIRST_MSG_TO_IGNORE):
-				print 'Skip it!'
+				print('Skip it!')
 			
 			elif temp.startswith(BANNED_MSG):
 				waitingForLeaveMsg = 1
 				
 			elif temp.startswith(connection.getCurrentGameName()):
-				print 'REFRESH DUDE!'
+				print('REFRESH DUDE!')
 				
 				#Parse refresh message to get info about who's waiting and who's host:
 				lines = temp.split('\n')
 				host = lines[0].split(' ')[4][0:-1]
-				print 'Host: ' + host
+				print('Host: ' + host)
 				numSlots = len(lines) - 1
 				
 				listOfPlayers = []

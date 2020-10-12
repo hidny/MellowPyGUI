@@ -38,13 +38,13 @@ class chatBox:
 		
 	
 	def printChatConsole(self):
-		print '*************************'
+		print('*************************')
 		for i in range(0, len(self.listOfLines)):
 			if self.listOfLines[i] == EMPTY_LINE:
-				print ''
+				print()
 			else:
-				print '' + str(self.listOfLines[i])
-		print '*************************'
+				print(str(self.listOfLines[i]))
+		print('*************************')
 	
 	def setNewChatMessage(self, msg):
 		if(self.currentIndex >= self.numLines):
@@ -52,19 +52,19 @@ class chatBox:
 				self.listOfLines[i - 1] = self.listOfLines[i]
 			self.listOfLines[self.numLines - 1] = msg
 		else:
-			#print str(self.currentIndex)
-			#print str(self.listOfLines)
+			#print(str(self.currentIndex))
+			#print(str(self.listOfLines))
 			
 			self.listOfLines[self.currentIndex] = msg
 			self.currentIndex = self.currentIndex + 1
 	
 	
 def main(args):
-	print 'What is up!'
+	print('What is up!')
 	myBox = chatBox(30)
-	print '1'
+	print('1')
 	myBox.printChatConsole()
-	print '2'
+	print('2')
 	myBox.setNewChatMessage('hello')
 	myBox.printChatConsole()
 	myBox.setNewChatMessage('world')

@@ -11,7 +11,6 @@ from pygame.locals import *
 from sys import exit
 
 import projectile
-import starterTest
 import euchreClient
 import box
 import clientContext
@@ -222,7 +221,6 @@ class EuchreGUI:
 	
 	
 	def bidSouth(self, bid):
-		#print it.
 		self.southBid = bid
 		
 	def bidWest(self, bid):
@@ -242,7 +240,7 @@ class EuchreGUI:
 		
 		printall = 0
 		
-		#print all:
+		#printall:
 		if (self.southBid == '' or self.southBid == 'p') and (self.westBid == '' or self.westBid == 'p') and (self.northBid == '' or self.northBid == 'p') and (self.eastBid == '' or self.eastBid == 'p'):
 			printall = 1
 			
@@ -291,7 +289,7 @@ class EuchreGUI:
 					break
 			
 			if indexCard == -1:
-				print 'AHHH!!!! IndexCard is -1 on throw card.'
+				print('AHHH!!!! IndexCard is -1 on throw card.')
 				#exit(1)
 			
 			self.projectiles[0] = self.createSouthCardProjectile(self.southCards, indexCard)
@@ -526,7 +524,7 @@ class EuchreGUI:
 	
 	def printcard(self, x, y, num, rotate90):
 		if num >= 52:
-			print 'ERROR: card num is greater than 52!'
+			print('ERROR: card num is greater than 52!')
 			num = 0
 			sys.exit(1)
 		
@@ -708,7 +706,7 @@ class EuchreGUI:
 				if my < self.screen_height - self.off_the_edgeY - self.card_height/2:
 					if cardHeldIndex >= 0:
 						if cardHeldIndex >=0 and cardHeldIndex < len(self.southCards):
-							print 'Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
+							print('Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex])))
 							self.setCardUserWantsToPlay(convertCardNumToString(self.southCards[cardHeldIndex]))
 							cardHeldIndex = self.NOINDEX
 							
@@ -870,7 +868,7 @@ class EuchreGUI:
 		if self.biddingRound == 1:
 			for i in range(0, len(self.bidButtonsRound1)):
 				if self.bidButtonsRound1[i].isWithinBox(x, y):
-					#print 'Clicked on ' + str(i)
+					#print('Clicked on ' + str(i))
 					if i == 0:
 						self.currentBid = 'P'
 					elif i == 1:
@@ -878,12 +876,12 @@ class EuchreGUI:
 					elif i == 2:
 						self.currentBid = str(self.trumpCard[1:]) + ' a'
 					
-					#print 'Bid ' + str(self.currentBid)
+					#print('Bid ' + str(self.currentBid))
 		
 		elif self.biddingRound == 2:
 			for i in range(0, len(self.bidButtonsRound2)):
 				if self.bidButtonsRound2[i].isWithinBox(x, y):
-					#print 'Clicked on ' + str(i)
+					#print('Clicked on ' + str(i))
 					if i == 0:
 						self.currentBid = 'P'
 					elif i%5 == 1:
@@ -899,7 +897,7 @@ class EuchreGUI:
 					if i>5:
 						self.currentBid = self.currentBid + ' a'
 					
-					#print 'Bid ' + str(self.currentBid)
+					#print('Bid ' + str(self.currentBid))
 	
 	#returns the bid if the user bid. Returns -1 otherwise.
 	def consumeBid(self):
@@ -923,7 +921,7 @@ def convertCardNumToString(num):
 	elif num >=39 and num <52:
 		suit = 'S'
 	else:
-		print 'ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)'
+		print('ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)')
 	
 	CardNumber = -1
 	if num % 13 == 0:
@@ -953,9 +951,9 @@ def convertCardStringToNum(card):
 	elif card[1:].find('S') != -1:
 		row = 3
 	else:
-		print card
-		print str(len(card))
-		print 'ERROR: unknown suit!'
+		print(card)
+		print(str(len(card)))
+		print('ERROR: unknown suit!')
 
 	if card[:1].find('A') != -1:
 		column = 0
@@ -978,13 +976,13 @@ def main(connection):
 	#keep track of the last frame/heartbeat so we can throw projectiles smoothly.
 	euchreGUI.updateLastFrameTime()
 	
-	print 'Inside Euchre GUI main!'
+	print('Inside Euchre GUI main!')
 	
 	try:
 		t = Thread(name = 'Testing', target=euchreClient.main, args=(euchreGUI, ['euchreGUI.py', connection]))
 		t.start()
 	except:
-		print "Error: unable to start thread"
+		print("Error: unable to start thread")
 	
 	
 	for x in range(0, 4):#euchreGUI.projectiles.
@@ -1040,7 +1038,7 @@ def main(connection):
 		
 		#END React to user events:
 		
-		#Print Stuff:
+		#printStuff:
 		
 		euchreGUI.fill_background()
 		
@@ -1067,7 +1065,7 @@ def main(connection):
 		euchreGUI.displayCenterGameMsg()
 		
 		
-		#Print colour of cursor depending on what user does:
+		#print colour of cursor depending on what user does:
 		if mouseJustPressed == 1 or mouseJustRelease==1:
 			euchreGUI.screen.blit(euchreGUI.greendot, (mx-5, my-5), (0, 0, 10, 10))
 		elif mouseHeld == 1:
@@ -1121,7 +1119,7 @@ if __name__ == "__main__":
 	
 	#parse arguments:
 	for x in range (0, len(args)):
-		print str(args[x])
+		print(str(args[x]))
 		if args[x].find('host') != -1:
 			isHostingGame = 1
 		elif args[x].find('meatbag') != -1 or args[x].find('interact') != -1:
@@ -1133,9 +1131,9 @@ if __name__ == "__main__":
 		elif args[x].find('p=') != -1:
 			tcpPort = int(args[x][len('p='):])
 	
-	print 'IP: ' + str(tcpIP)
-	print 'PORT: ' + str(tcpPort)
-	print 'name: ' + str(name)
+	print('IP: ' + str(tcpIP))
+	print('PORT: ' + str(tcpPort))
+	print('name: ' + str(name))
 	
 	connection = clientContext.ClientContext(tcpIP, tcpPort, name)
 	
@@ -1148,21 +1146,20 @@ if __name__ == "__main__":
 	connection.setSlowdown(slowdown)
 	main(connection)
 	
-'''
-cd C:\Users\Michael\Desktop\cardGamePython\euchreGUI
 
-cd desktop\cardGamePython\pythoninternet
-For autogame:
-python euchreGUI.py Michael host > output1.txt
-python euchreGUI.py Phil
-python euchreGUI.py Richard
-python euchreGUI.py Doris
+#cd C:\Users\Michael\Desktop\cardGamePython\euchreGUI
 
-For game played by user:
-python euchreGUI.py Michael host slow interact > output1.txt
-python euchreGUI.py Phil slow
-python euchreGUI.py Richard slow
-python euchreGUI.py Doris slow
+#cd desktop\cardGamePython\pythoninternet
 
+#For autogame:
+# python euchreGUI.py Michael host > output1.txt
+# python euchreGUI.py Phil
+# python euchreGUI.py Richard
+# python euchreGUI.py Doris
 
-'''
+#For game played by user:
+# python euchreGUI.py Michael host slow interact > output1.txt
+# python euchreGUI.py Phil slow
+# python euchreGUI.py Richard slow
+# python euchreGUI.py Doris slow
+

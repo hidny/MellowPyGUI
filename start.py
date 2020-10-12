@@ -19,12 +19,32 @@ import channelRoomGUI
 
 #TODO (optional): make  a config file for server name, port and desired name.
 #TODO: add a title and put your name on it.
-	
+
 def main(name, args):
+
+
 	#default values:
 	tcpIP = '127.0.0.1'
 	tcpPort = 6789
 	name = 'David'
+	
+	#Get values in config file
+	fname = 'startSettings.cfg'
+	try:
+		f = open(fname, 'rb')
+		
+		for line in f:
+			line = line.decode("utf-8").strip()
+			print(line)
+			if line.lower().startswith('host'):
+				tcpIP = line.split('=')[1]
+			elif line.lower().startswith('port'):
+				tcpPort = line.split('=')[1]
+
+	except FileNotFoundError:
+		print("file {} does not exist".format(fname))
+	#End Get values in config file
+	
 	
 	numArgsSet = 0
 	
@@ -33,7 +53,7 @@ def main(name, args):
 		numArgsSet = numArgsSet+1
 	
 	for x in range (0, len(args)):
-		print str(args[x])
+		print(str(args[x]))
 		
 		if args[x].find('ip=') != -1:
 			tcpIP = str(args[x][len('ip='):])
@@ -88,6 +108,7 @@ def main(name, args):
 	labelPort = myfont.render("Port:", 1, (255,255,0))
 	labelDesiredName = myfont.render("Desired Name:", 1, (255,255,0))
 	
+	#TODO: use int or round because the default conversion is deprecated...
 	screen.blit(labelHost, ((1*screen_width)/32, (2*screen_height)/5 + 10 + 40 -50))
 	screen.blit(labelPort, ((1*screen_width)/32, (3*screen_height)/5 + 10 + 40 -50))
 	screen.blit(labelDesiredName, ((1*screen_width)/32, (4*screen_height)/5 + 10 + 40 -50))
@@ -145,15 +166,15 @@ def main(name, args):
 		
 		if enterPressed == 1:
 			colourDatBox = colourDatBox + 1
-			print 'TESTING ENTRIES!'
-			print str(textBox1.getCurrentText())
-			print str(textBox2.getCurrentText())
-			print str(textBox3.getCurrentText())
+			print("TESTING ENTRIES!")
+			print(str(textBox1.getCurrentText()) )
+			print(str(textBox2.getCurrentText()) )
+			print(str(textBox3.getCurrentText()) )
 			
 			tcpIP = str(textBox1.getCurrentText())
 			tcpPort = str(textBox2.getCurrentText())
 			name = str(textBox3.getCurrentText())
-			print 'Starting main'
+			print('Starting main')
 			
 			connection = clientContext.ClientContext(tcpIP, tcpPort, name)
 			
@@ -163,7 +184,7 @@ def main(name, args):
 		pygame.display.update()
 		clock.tick(40)
 		
-	print "bye"
+	print("bye")
 	
 PERIOD = 1000
 SHOWCURSONTIME = 500
@@ -179,9 +200,9 @@ def shouldBlinkTextCursor():
 def paintMouseMarkers(screen, mouseJustPressed, mouseJustRelease, mouseHeld, mx, my, greendot, reddot, dot):
 	if mouseJustPressed == 1 or mouseJustRelease==1:
 		screen.blit(greendot, (mx-5, my-5), (0, 0, 10, 10))
-		print 'green'
+		print('green')
 	elif mouseHeld == 1:
-		print 'red'
+		print('red')
 		screen.blit(reddot, (mx-5, my-5), (0, 0, 10, 10))
 	else:
 		screen.blit(dot, (mx-5, my-5), (0, 0, 10, 10))

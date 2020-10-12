@@ -11,7 +11,6 @@ from pygame.locals import *
 from sys import exit
 
 import projectile
-import starterTest
 import mellowClient
 import box
 import clientContext
@@ -146,7 +145,7 @@ class MellowGUI:
 		if self.gameOver == 0:
 			return 1
 		else:
-			print 'GAME OVER according to isStillRunning(self)'
+			print('GAME OVER according to isStillRunning(self)')
 			return 0
 	
 	#Functions called by some controller file:
@@ -221,7 +220,7 @@ class MellowGUI:
 					break
 			
 			if indexCard == -1:
-				print 'AHHH!!!! IndexCard is -1 on throw card.'
+				print('AHHH!!!! IndexCard is -1 on throw card.')
 				sys.exit(1)
 			
 			self.projectiles[0] = self.createSouthCardProjectile(self.southCards, indexCard)
@@ -407,7 +406,7 @@ class MellowGUI:
 	
 	def printcard(self, x, y, num, rotate90):
 		if num >= 52:
-			print 'ERROR: card num is greater than 52!'
+			print('ERROR: card num is greater than 52!')
 			num = 0
 			sys.exit(1)
 		
@@ -589,7 +588,7 @@ class MellowGUI:
 				if my < self.screen_height - self.off_the_edgeY - self.card_height/2:
 					if cardHeldIndex >= 0:
 						if cardHeldIndex >=0 and cardHeldIndex < len(self.southCards):
-							#print 'Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
+							#print('Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
 							self.setCardUserWantsToPlay(convertCardNumToString(self.southCards[cardHeldIndex]))
 							cardHeldIndex = self.NOINDEX
 							
@@ -641,7 +640,7 @@ class MellowGUI:
 	def checkIfUserBidAfterClick(self, x, y):
 		for i in range(0, len(self.bidButtons)):
 			if self.bidButtons[i].isWithinBox(x, y):
-				print 'Clicked on ' + str(i)
+				print('Clicked on ' + str(i))
 				self.currentBid = i
 		return -1
 	
@@ -667,7 +666,7 @@ def convertCardNumToString(num):
 	elif num >=39 and num <52:
 		suit = 'S'
 	else:
-		print 'ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)'
+		print('ERROR: Trying to convert card with num ' + str(num) + ' in convertCardNumToString(num)')
 		sys.exit(1)
 	
 	CardNumber = -1
@@ -698,9 +697,9 @@ def convertCardStringToNum(card):
 	elif card[1:].find('S') != -1:
 		row = 3
 	else:
-		print card
-		print str(len(card))
-		print 'ERROR: unknown suit!'
+		print(card)
+		print(str(len(card)))
+		print('ERROR: unknown suit!')
 		sys.exit(1)
 
 	if card[:1].find('A') != -1:
@@ -741,13 +740,13 @@ def main(connection):
 	#keep track of the last frame/heartbeat so we can throw projectiles smoothly.
 	mellowGUI.updateLastFrameTime()
 	
-	print 'Inside Mellow GUI main!'
+	print('Inside Mellow GUI main!')
 	
 	try:
 		t = Thread(name = 'Testing', target=mellowClient.main, args=(mellowGUI, ['MellowGUI.py', connection]))
 		t.start()
 	except:
-		print "Error: unable to start thread"
+		print("Error: unable to start thread")
 	
 	
 	for x in range(0, 4):#mellowGUI.projectiles.
@@ -799,7 +798,7 @@ def main(connection):
 		
 		#END React to user events:
 		
-		#Print Stuff:
+		#print Stuff:
 		
 		mellowGUI.fill_background()
 		
@@ -823,7 +822,7 @@ def main(connection):
 		
 		mellowGUI.displayCenterGameMsg()
 		
-		#Print colour of cursor depending on what user does:
+		#print colour of cursor depending on what user does:
 		if mouseJustPressed == 1 or mouseJustRelease==1:
 			mellowGUI.screen.blit(mellowGUI.greendot, (mx-5, my-5), (0, 0, 10, 10))
 		elif mouseHeld == 1:
@@ -869,7 +868,7 @@ if __name__ == "__main__":
 	
 	#parse arguments:
 	for x in range (0, len(args)):
-		print str(args[x])
+		print(str(args[x]))
 		if args[x].find('host') != -1:
 			isHostingGame = 1
 		elif args[x].find('meatbag') != -1 or args[x].find('interact') != -1:
@@ -881,9 +880,9 @@ if __name__ == "__main__":
 		elif args[x].find('p=') != -1:
 			tcpPort = int(args[x][len('p='):])
 	
-	print 'IP: ' + str(tcpIP)
-	print 'PORT: ' + str(tcpPort)
-	print 'name: ' + str(name)
+	print('IP: ' + str(tcpIP))
+	print('PORT: ' + str(tcpPort))
+	print('name: ' + str(name))
 	
 	connection = clientContext.ClientContext(tcpIP, tcpPort, name)
 	
@@ -896,22 +895,21 @@ if __name__ == "__main__":
 	connection.setSlowdown(slowdown)
 	main(connection)
 	
-'''
-cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
 
-cd desktop\cardGamePython\pythoninternet
-For autogame:
-python mellowGUI.py Michael host > output1.txt
-python mellowGUI.py Phil
-python mellowGUI.py Richard
-python mellowGUI.py Doris
+#cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
 
-For game played by user:
-python mellowGUI.py Michael host slow interact > output1.txt
-python mellowGUI.py Phil slow
-python mellowGUI.py Richard slow
-python mellowGUI.py Doris slow
+#cd desktop\cardGamePython\pythoninternet
+#For autogame:
+#python mellowGUI.py Michael host > output1.txt
+#python mellowGUI.py Phil
+#python mellowGUI.py Richard
+#python mellowGUI.py Doris
+
+#For game played by user:
+#python mellowGUI.py Michael host slow interact > output1.txt
+#python mellowGUI.py Phil slow
+#python mellowGUI.py Richard slow
+#python mellowGUI.py Doris slow
 
 
-python mellowGUI.py Michael host slow interact p=6789 ip=127.0.0.1
-'''
+#python mellowGUI.py Michael host slow interact p=6789 ip=127.0.0.1

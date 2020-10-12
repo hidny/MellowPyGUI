@@ -10,7 +10,6 @@ import threading
 from pygame.locals import *
 from sys import exit
 
-import starterTest
 import mellowClient
 import box
 import clientContext
@@ -161,14 +160,14 @@ def main(connection):
 	
 	connect4GUI.updateLastFrameTime()
 	
-	print 'Inside Connect 4 GUI main!'
+	print('Inside Connect 4 GUI main!')
 	
 	
 	try:
 		t = Thread(name = 'Testing', target=connect4Client.main, args=(connect4GUI, ['Connect4GUI.py', connection]))
 		t.start()
 	except:
-		print "Error: unable to start thread"
+		print("Error: unable to start thread")
 	
 	
 	#texting adding 
@@ -211,7 +210,7 @@ def main(connection):
 			mx,my = pygame.mouse.get_pos()
 			
 			if mouseJustRelease == 1:
-				#print str(mx) + ',' +  str(my)
+				#print(str(mx) + ',' +  str(my))
 				
 				#Find the slot the player clicked on:
 				if my > connect4GUI.TOP_LEFT_HOLEY - connect4GUI.RADIUS and my < connect4GUI.TOP_LEFT_HOLEY + connect4GUI.Y_DIST_BETWEEN_HOLES * (len(connect4GUI.board)-1) + connect4GUI.RADIUS:
@@ -224,7 +223,7 @@ def main(connection):
 			
 			#END React to user events:
 			
-			#Print Stuff:
+			#printStuff:
 			
 			connect4GUI.fill_background()
 			
@@ -237,7 +236,7 @@ def main(connection):
 			
 			connect4GUI.displayGameMsg()
 			
-			#Print colour of cursor depending on what user does:
+			#print colour of cursor depending on what user does:
 			if mouseJustPressed == 1 or mouseJustRelease==1:
 				connect4GUI.screen.blit(connect4GUI.greendot, (mx-5, my-5), (0, 0, 10, 10))
 			elif mouseHeld == 1:
@@ -270,7 +269,7 @@ def main(connection):
 		
 		connect4GUI.gameOver = 1
 	except:
-		print 'ERROR: in connect4 gui'
+		print('ERROR: in connect4 gui')
 		connect4GUI.setMessage("ERROR: in server listener2")
 		exit(1)
 
@@ -293,7 +292,7 @@ if __name__ == "__main__":
 	
 	#parse arguments:
 	for x in range (0, len(args)):
-		print str(args[x])
+		print(str(args[x]))
 		if args[x].find('host') != -1:
 			isHostingGame = 1
 		elif args[x].find('meatbag') != -1 or args[x].find('interact') != -1:
@@ -305,9 +304,9 @@ if __name__ == "__main__":
 		elif args[x].find('p=') != -1:
 			tcpPort = int(args[x][len('p='):])
 	
-	print 'IP: ' + str(tcpIP)
-	print 'PORT: ' + str(tcpPort)
-	print 'name: ' + str(name)
+	print('IP: ' + str(tcpIP))
+	print('PORT: ' + str(tcpPort))
+	print('name: ' + str(name))
 	
 	connection = clientContext.ClientContext(tcpIP, tcpPort, name)
 	
@@ -320,20 +319,19 @@ if __name__ == "__main__":
 	connection.setSlowdown(slowdown)
 	main(connection)
 	
-'''
-cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
 
-cd desktop\cardGamePython\pythoninternet
-For autogame:
-python connect4GUI.py Michael host > output1.txt
-python connect4GUI.py Phil
-python connect4GUI.py Richard
-python connect4GUI.py Doris
+#cd C:\Users\Michael\Desktop\cardGamePython\MellowPyGUI
 
-For game played by user:
-python connect4GUI.py Michael host slow interact > output1.txt
-python connect4GUI.py Phil slow
+#cd desktop\cardGamePython\pythoninternet
+#For autogame:
+#python connect4GUI.py Michael host > output1.txt
+#python connect4GUI.py Phil
+#python connect4GUI.py Richard
+#python connect4GUI.py Doris
+
+#For game played by user:
+#python connect4GUI.py Michael host slow interact > output1.txt
+#python connect4GUI.py Phil slow
 
 
-python connect4GUI.py Michael host slow interact p=6789 ip=127.0.0.1
-'''
+#python connect4GUI.py Michael host slow interact p=6789 ip=127.0.0.1

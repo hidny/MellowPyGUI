@@ -152,7 +152,7 @@ def main(threadName, args):
 		if mouseJustRelease==1:
 			serverConnectionBoxes.checkClickForTextBoxes(mx, my, 1)
 		
-		#Print buttons:
+		#print buttons:
 		if enterPressed == 0:
 			enterPressed = createButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
 		
@@ -161,7 +161,7 @@ def main(threadName, args):
 		createButton.printButton(pygame, screen)
 		cancelButton.printButton(pygame, screen)
 		
-		#Print gamename/password labels:
+		#print gamename/password labels:
 		myfont = pygame.font.SysFont("comicsansms", 25)
 		label =  myfont.render("room name:", 1, (255, 255, 255))
 		screen.blit(label, ((21*screen_width)/32, (1*screen_height)/5 - DIST_ABOVE_FIELD))
@@ -169,7 +169,7 @@ def main(threadName, args):
 		screen.blit(label, ((21*screen_width)/32, (2*screen_height)/5 - DIST_ABOVE_FIELD))
 		#End print gamename/password labels.
 		
-		#PRINT ERROR MSG:
+		#print ERROR MSG:
 		if printAskForOtherRoomName == 1:
 			if round(time.time() * 1000) < askForOtherNameStartTime + USER_ERROR_MSG_TIME:
 				myfont = pygame.font.SysFont("comicsansms", 25)
@@ -177,7 +177,7 @@ def main(threadName, args):
 				screen.blit(label, ((19*screen_width)/32, (1*screen_height)/5 - 150))
 			else:
 				printAskForOtherRoomName = 0
-		#END PRINT ERR MSG
+		#END print ERR MSG
 		
 		temp = connection.getNextServerMessageInQueue()
 		

@@ -3,7 +3,7 @@ import sys
 import time
 
 import threading
-import thread
+import _thread
 
 import mellowGUI
 import projectile
@@ -65,20 +65,20 @@ def serverListener(connection, reversiGUIObject):
 	
 	try:
 		#Sanity testing:
-		print 'connect4 client in server Listener: '
+		print('connect4 client in server Listener: ')
 		
 		while reversiGUIObject.isGameOver() == 0:
-			#print 'Trying to get message!'
+			#print('Trying to get message!')
 			message = connection.getNextServerMessageInQueue()
 			
-			#print 'Message: ' + message
-			#print '************'
+			#print('Message: ' + message)
+			#print('************')
 			currentLines = message.split('\n')
 			
 			for currentLine in currentLines:
 				if len(currentLine) > 1:
-					#print '*****************************'
-					#print "received message: " + str(currentLine)
+					#print('*****************************')
+					#print("received message: " + str(currentLine))
 					pass
 				else:
 					continue
@@ -118,7 +118,7 @@ def serverListener(connection, reversiGUIObject):
 						
 						
 						if currentLine.find(WIN) != -1:
-							print currentLine.split(" ")[2]
+							print(currentLine.split(" ")[2])
 							if blackPlayer == currentLine.split(" ")[2]:
 								reversiGUIObject.setMessage('Black(' + blackPlayer + ') wins!')
 							elif whitePlayer == currentLine.split(" ")[2]:
@@ -148,8 +148,8 @@ def serverListener(connection, reversiGUIObject):
 						
 				
 	except:
-		print 'ERROR: in server listener'
-		print 'ERROR: ' + currentLine
+		print('ERROR: in server listener')
+		print('ERROR: ' + currentLine)
 		reversiGUIObject.setMessage("ERROR: in reversi server listener")
 
 def getBoardInfoFromLine(reversiGUIObject, line, rowNumber):
@@ -165,7 +165,7 @@ def clientListener(connection, reversiGUIObject):
 	global gameStarted
 	
 	try:
-		print 'Client Listener'
+		print('Client Listener')
 		
 		connection.sendMessageToServer(connection.getCurrentPlayerName() + '\n')
 		if connection.isHosting() == 1:
@@ -177,7 +177,7 @@ def clientListener(connection, reversiGUIObject):
 			if connection.isHosting() == 1 and gameStarted == 0:
 				time.sleep(1)
 				connection.sendMessageToServer('/start' + '\n')
-				print 'sent start msg'
+				print('sent start msg')
 			elif gameStarted == 1:
 				break
 			else:
@@ -187,7 +187,7 @@ def clientListener(connection, reversiGUIObject):
 		
 		
 	except:
-		print 'ERROR: in client listener'
+		print('ERROR: in client listener')
 		reversiGUIObject.setMessage("ERROR: in reversi client listener")
 
 def playMoveDefault(connection, reversiGUIObject):
@@ -226,9 +226,9 @@ def main(reversiGUIObject, args):
 	
 	#start listening t server on a seperate thread:
 	try:
-		thread.start_new_thread( serverListener, (connection, reversiGUIObject) )
+		_thread.start_new_thread( serverListener, (connection, reversiGUIObject) )
 	except:
-		print "Error: unable to start thread 1"
+		print("Error: unable to start thread 1")
 		reversiGUIObject.setMessage("Error: unable to start thread 1")
 		exit(1)
 	
@@ -241,5 +241,5 @@ def slowDownIfInteract(connection, amountOfTime, gameStarted):
 #You have to start it from mellowGUI because pygame has to be the main 
 #thread.
 if __name__ == "__main__":
-	print 'Please use python reversiGUIObject.py to start.'
+	print('Please use python reversiGUIObject.py to start.')
 	exit(1)

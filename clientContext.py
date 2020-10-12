@@ -5,7 +5,7 @@
 import socket
 
 import threading
-import thread
+import _thread
 
 import time
 
@@ -44,18 +44,19 @@ class ClientContext:
 		try:
 			self.serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 			self.serverSocket.connect((self.tcpIP, int(self.tcpPort)))
-			print 'Connected'
+			print('Connected')
 			
-			print currentPlayerName
+			print(currentPlayerName)
 			
 			#Sending name:
 			self.sendMessageToServer(currentPlayerName + '\n')
-			print 'Message sent'
 			
-			print 'Start server listener thread:'
-			thread.start_new_thread(self.getServerMessages, ())
 			
-			print 'Get client name according to server:'
+			print('Start server listener thread:')
+			#TODO: _thread is deprecated, so try to use the more recent solution.
+			_thread.start_new_thread(self.getServerMessages, ())
+			
+			print('Get client name according to server:')
 			message = ''
 			while message == '':
 				message = self.getNextServerMessageInQueue()
@@ -64,19 +65,21 @@ class ClientContext:
 			self.currentPlayerName = message.split(' ')[1]
 			self.currentPlayerName = self.currentPlayerName[0:-1]
 			
-			print 'Your name is now: ' + self.currentPlayerName
+			print('Your name is now: ' + self.currentPlayerName)
 			
-			print 'Done starting client-server context'
+			print('Done starting client-server context')
 			
-		except:
-			print "ERROR: could not find server. tcpIP: " + str(self.tcpIP) + " tcpPort: " + str(self.tcpPort)
+		except Exception as e:
+			print("ERROR connecting to game server at configed IP: " + str(self.tcpIP) + " Port: " + str(self.tcpPort))
+			print("Exception message: " + str(e))
 			exit(1)
 	
 
 	def sendMessageToServer(self, msg):
+		print('Sending: ' + str(msg))
 		with self.sendMsgLock:
-			self.serverSocket.send(str(msg))
-			#print 'Sent: ' + str(msg)
+			self.serverSocket.send(str(msg).encode())
+			print('Sent: ' + str(msg))
 	
 	
 	messageFromServerQueue = []
@@ -107,7 +110,7 @@ class ClientContext:
 					message = self.data[0: self.data.index(END_OF_TRANSMISSION)]
 					self.data = self.data[self.data.index(END_OF_TRANSMISSION) + len(END_OF_TRANSMISSION):]
 					
-					#print 'Received in clientContext: ' + message
+					#print('Received in clientContext: ' + message)
 					with self.recvMsgLock:
 						self.messageFromServerQueue.append(message)
 						
@@ -117,11 +120,12 @@ class ClientContext:
 					
 				else:
 					if self.data == '':
-						self.data = self.serverSocket.recv(BUFFER_SIZE)
+						self.data = self.serverSocket.recv(BUFFER_SIZE).decode()
 					else:
-						self.data = self.data + self.serverSocket.recv(BUFFER_SIZE)
-		except:
-			print 'ERROR: in server listener (ClientContext.py)'
+						self.data = self.data + self.serverSocket.recv(BUFFER_SIZE).decode()
+		except Exception as e:
+			print('ERROR: in server listener (ClientContext.py)')
+			print("Exception message: " + str(e))
 	
 	def setChannelChatBox(self, channelChatBox):
 		self.channelChatBox = channelChatBox

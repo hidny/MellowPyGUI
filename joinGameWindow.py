@@ -147,22 +147,22 @@ def main(threadName, args):
 		
 		#END React to user events:
 		
-		#Print Stuff:
+		#printStuff:
 		
 		joinButton.printButton(pygame, screen)
 		cancelButton.printButton(pygame, screen)
 		
 		
 	
-		#Print gamename/password labels:
+		#printgamename/password labels:
 		myfont = pygame.font.SysFont("comicsansms", 25)
 		label =  myfont.render("room name:", 1, (255, 255, 255))
 		screen.blit(label, ((21*screen_width)/32, (1*screen_height)/5 - 50))
 		label =  myfont.render("password:", 1, (255, 255, 255))
 		screen.blit(label, ((21*screen_width)/32, (2*screen_height)/5 - 50))
-		#End print gamename/password labels.
+		#End printgamename/password labels.
 		
-		#PRINT ERROR MSG:
+		#print ERROR MSG:
 		if printAskForPassword == 1:
 			if round(time.time() * 1000) < errorMessageDisplayStart + USER_PASSWORD_MSG_TIME:
 				myfont = pygame.font.SysFont("comicsansms", 25)
@@ -177,10 +177,10 @@ def main(threadName, args):
 				screen.blit(label, ((21*screen_width)/32, (1*screen_height)/5 - 150))
 			else:
 				printError = 0
-		#END PRINT ERR MSG
+		#END printERR MSG
 		
 		
-		#Print open games in channel:
+		#printopen games in channel:
 		for i in range(0, len(listOfGamesInChannel)):
 			myfont = pygame.font.SysFont("comicsansms", 25)
 			label =  myfont.render(listOfGamesInChannel[i], 1, (255, 255, 255))
@@ -189,14 +189,14 @@ def main(threadName, args):
 			if i > 0:
 				if mouseJustRelease == 1:
 					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:
-						print 'BUTTON pressed: ' + str(i)
+						print('BUTTON pressed: ' + str(i))
 						roomNameTextBox.setCurrentText(listOfGamesInChannel[i].split(' ')[1] )
 			else:
 				if mouseJustRelease == 1:
 					if mx > 100 and mx < 800 and my > 30 + 30*i and my < 30 + 30*i + 30:
-						print 'Pressed number of games message.'
+						print('Pressed number of games message.')
 		
-		#End print stuff.
+		#End printstuff.
 		
 		#React to server messages:
 		temp = connection.getNextServerMessageInQueue()
@@ -254,7 +254,7 @@ def main(threadName, args):
 				foundListOfUsers = 0
 			
 			else:
-				print 'DEBUG: ' + temp
+				print('DEBUG: ' + temp)
 			
 		
 		#End React to server messages

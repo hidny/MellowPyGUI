@@ -368,7 +368,7 @@ class TextBox:
 		self.isFocussed = 1
 	
 	def setUnFocussed(self):
-		print 'UNfOCUS on textbox'
+		print('UNfOCUS on textbox')
 		self.isFocussed = 0
 		self.setFingerLiftedOffKey()
 	

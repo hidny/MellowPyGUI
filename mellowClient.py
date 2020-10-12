@@ -3,7 +3,7 @@ import sys
 import time
 
 import threading
-import thread
+import _thread
 
 import mellowGUI
 import projectile
@@ -85,8 +85,8 @@ def serverListener(connection, mellowGUIVars):
 			
 			for currentLine in currentLines:
 				if len(currentLine) > 1:
-					#print '*****************************'
-					#print "received message: " + str(currentLine)
+					#print('*****************************')
+					#print("received message: " + str(currentLine))
 					pass
 				if currentLine.startswith(START_MSG):
 					gameStarted = 1
@@ -111,7 +111,7 @@ def serverListener(connection, mellowGUIVars):
 					currentLine = currentLine[currentLine.index(YOUR_BID) + len(YOUR_BID):]
 					with turn_lock:
 						itsYourBid=1
-						#print 'Its my bid!'
+						#print('Its my bid!')
 						if connection.getInteract() == 1:
 							mellowGUIVars.askUserForBid()
 					
@@ -128,26 +128,26 @@ def serverListener(connection, mellowGUIVars):
 						card = currentLine.split(' ')[4]
 						
 						if isACard(card) == 0:
-							#print 'UH OH! Could not find card: ' + str(card)
+							#print('UH OH! Could not find card: ' + str(card))
 							sys.exit(1)
 						
 						if players[0] != player:
 							slowDownIfInteract(connection, 0.25, gameStarted)
 						
 						if players[0] == player:
-							#print 'South(' + player + ') plays ' + card
+							#print('South(' + player + ') plays ' + card)
 							mellowGUIVars.throwSouthCard(card)
 						elif players[1] == player:
-							#print 'West(' + player + ') plays ' + card
+							#print('West(' + player + ') plays ' + card)
 							mellowGUIVars.throwWestCard(card)
 						elif players[2] == player:
-							#print 'North(' + player + ') plays ' + card
+							#print('North(' + player + ') plays ' + card)
 							mellowGUIVars.throwNorthCard(card)
 						elif players[3] == player:
-							#print 'East(' + player + ') plays ' + card
+							#print('East(' + player + ') plays ' + card)
 							mellowGUIVars.throwEastCard(card)
 						else:
-							#print 'ERROR: unknown player plays card!'
+							#print('ERROR: unknown player plays card!'
 							sys.exit(1)
 						
 						#get relative player direction
@@ -173,22 +173,22 @@ def serverListener(connection, mellowGUIVars):
 							if bid.isdigit():
 								if players[0]  == bidder:
 									mellowGUIVars.bidSouth(bid)
-									#print 'South(' + bidder + ') bids ' + bid
+									#print(South(' + bidder + ') bids ' + bid)
 									
 								elif players[1] == bidder:
 									mellowGUIVars.bidWest(bid)
-									#print 'West(' + bidder + ') bids ' + bid
+									#print(West(' + bidder + ') bids ' + bid)
 									
 								elif players[2] == bidder:
 									mellowGUIVars.bidNorth(bid)
-									#print 'North(' + bidder + ') bids ' + bid
+									#print(North(' + bidder + ') bids ' + bid)
 									
 								elif players[3] == bidder:
 									mellowGUIVars.bidEast(bid)
-									#print 'East(' + bidder + ') bids ' + bid
+									#print(East(' + bidder + ') bids ' + bid)
 									
 								else:
-									#print 'ERROR: unknown player bids'
+									#print('ERROR: unknown player bids')
 									sys.exit(1)
 						
 				if currentLine.startswith(PRIVATE_MSG):
@@ -201,10 +201,10 @@ def serverListener(connection, mellowGUIVars):
 						if len(cardsTemp) == STARTING_HAND_LENGTH:
 							mellowGUIVars.setupCardsForNewRound(cardsTemp)
 						
-						#print 'Printing cards:'
+						#print('Printing cards:')
 						#for card in cardsTemp:
-						#	print card
-						#print 'Done printing cards'
+						#	print(card)
+						#print('Done printing cards')
 				
 				
 				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(DEALER_MSG) != -1:
@@ -215,24 +215,24 @@ def serverListener(connection, mellowGUIVars):
 						dealer = dealer[0:-1]
 					
 					if players[0]  == dealer:
-						#print 'Dealer is South(' + dealer + ')'
+						#print('Dealer is South(' + dealer + ')')
 						mellowGUIVars.setDealer("South(" + dealer + ")")
 						
 					elif players[1] == dealer:
-						#print 'Dealer is West(' + dealer + ')'
+						#print('Dealer is West(' + dealer + ')')
 						mellowGUIVars.setDealer("West(" + dealer + ")")
 						
 					elif players[2] == dealer:
-						#print 'Dealer is North(' + dealer + ')'
+						#print('Dealer is North(' + dealer + ')')
 						mellowGUIVars.setDealer("North(" + dealer + ")")
 						
 					elif players[3] == dealer:
-						#print 'Dealer is East(' + dealer + ')'
+						#print('Dealer is East(' + dealer + ')')
 						mellowGUIVars.setDealer("East(" + dealer + ")")
 						
 					else:
-						#print 'current dealer: ' + dealer
-						#print 'ERROR: unknown dealer'
+						#print('current dealer: ' + dealer)
+						#print('ERROR: unknown dealer')
 						sys.exit(1)
 				
 				
@@ -246,27 +246,27 @@ def serverListener(connection, mellowGUIVars):
 					
 					if players[0]  == fightWinner:
 						mellowGUIVars.addTrickSouth()
-						#print 'Fight Winner is South(' + fightWinner + ')'
+						#print('Fight Winner is South(' + fightWinner + ')')
 						
 					elif players[1] == fightWinner:
 						mellowGUIVars.addTrickWest()
-						#print 'Fight Winner is West(' + fightWinner + ')'
+						#print('Fight Winner is West(' + fightWinner + ')')
 						
 					elif players[2] == fightWinner:
 						mellowGUIVars.addTrickNorth()
-						#print 'Fight Winner is North(' + fightWinner + ')'
+						#print('Fight Winner is North(' + fightWinner + ')')
 						
 					elif players[3] == fightWinner:
 						mellowGUIVars.addTrickEast()
-						#print 'Fight Winner is East(' + fightWinner + ')'
+						#print('Fight Winner is East(' + fightWinner + ')')
 						
 					else:
-						#print 'current fightWinner: ' + fightWinner
-						#print 'ERROR: unknown fight winner'
+						#printcurrent fightWinner: ' + fightWinner
+						#print('ERROR: unknown fight winner')
 						sys.exit(1)
 				
 				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(WIN) != -1:
-					#print message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):]
+					#print(message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):])
 					mellowGUIVars.setMessage(message[message.index(PUBLIC_MSG) + len(PUBLIC_MSG):-1])
 				
 				if currentLine.startswith(PUBLIC_MSG) and currentLine.find(TRICKS) != -1:
@@ -278,16 +278,16 @@ def serverListener(connection, mellowGUIVars):
 					number = message.split(' ')[5]
 					
 					#if players[0]  == player:
-					#	print 'python South(' + player + ') has ' + number + ' tricks.'
+					#	print('python South(' + player + ') has ' + number + ' tricks.')
 					#elif players[1] == player:
-					#	print 'West(' + player + ') has ' + number + ' tricks.'
+					#	print('West(' + player + ') has ' + number + ' tricks.')
 					#elif players[2] == player:
-					#	print 'North(' + player + ') has ' + number + ' tricks.'
+					#	print('North(' + player + ') has ' + number + ' tricks.')
 					#elif players[3] == player:
-					#	print 'East(' + player + ') has ' + number + ' tricks.'
+					#	print('East(' + player + ') has ' + number + ' tricks.')
 					#else:
-					#	print 'current player: ' + player
-					#	print 'ERROR: unknown player has tricks.'
+					#	print('current player: ' + player)
+					#	print('ERROR: unknown player has tricks.')
 					#	sys.exit(1)
 				
 				
@@ -343,7 +343,7 @@ def clientListener(connection, mellowGUIVars):
 		
 			
 	except:
-		print 'ERROR: in client listener'
+		print('ERROR: in client listener')
 		mellowGUIVars.setMessage("ERROR: in client listener")
 
 def playCardDefault(connection, mellowGUIVars):
@@ -361,14 +361,14 @@ def playCardDefault(connection, mellowGUIVars):
 					playedACardInFight = 0
 				
 				if itsYourBid==1:
-					#print 'Your bid'
+					#print('Your bid')
 					connection.sendMessageToServer('/move 1' + '\n')
 					itsYourBid = 0
 					itsYourTurn = 0
-					#print 'sent msg'
+					#print('sent msg')
 					
 				elif itsYourTurn==1:
-					#print 'Your turn'
+					#print('Your turn')
 					connection.sendMessageToServer('/move 1' + '\n')
 					playedACardInFight = 1
 					itsYourBid = 0
@@ -401,13 +401,13 @@ def main(mellowGUIVars, args):
 	else:
 		connection = clientContext.ClientContext('127.0.0.1', 6789, 'Michael')
 	
-	print 'HELLO MELLOW CLIENT MAIN'
+	print('HELLO MELLOW CLIENT MAIN')
 	
 	#start listening t server on a seperate thread:
 	try:
-		thread.start_new_thread( serverListener, (connection, mellowGUIVars) )
+		_thread.start_new_thread( serverListener, (connection, mellowGUIVars) )
 	except:
-		print "Error: unable to start thread 1"
+		print("Error: unable to start thread 1")
 		mellowGUIVars.setMessage("Error: unable to start thread 1")
 		exit(1)
 	
