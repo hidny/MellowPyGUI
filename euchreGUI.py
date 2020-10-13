@@ -365,10 +365,10 @@ class EuchreGUI:
     ##START creating projectile functions.
     def createSouthCardProjectile(self, southCards, cardHeldIndex):
         if len(southCards) > 0:
-            southStartX = self.getCardLocation(cardHeldIndex)
-            southStartY = self.screen_height - self.off_the_edgeY - self.card_height / 4
-            southEndX = self.screen_width / 2
-            southEndY = self.screen_height / 2 + self.card_width + self.card_height / 4
+            southStartX = int(self.getCardLocation(cardHeldIndex))
+            southStartY = int(self.screen_height - self.off_the_edgeY - self.card_height / 4)
+            southEndX = int(self.screen_width / 2)
+            southEndY = int(self.screen_height / 2 + self.card_width + self.card_height / 4)
 
             southprojectileId = southCards[cardHeldIndex]
 
@@ -393,11 +393,11 @@ class EuchreGUI:
         if len(westCards) > 0:
             indexThrow = random.randint(0, len(westCards) - 1)
 
-            westStartX = self.off_the_edgeX
-            westStartY = self.getCardEastWestPlayerYLocation(westCards, indexThrow)
+            westStartX = int(self.off_the_edgeX)
+            westStartY = int(self.getCardEastWestPlayerYLocation(westCards, indexThrow))
 
-            westEndX = self.screen_width / 2 - self.card_width - self.card_height / 4
-            westEndY = self.screen_height / 2
+            westEndX = int(self.screen_width / 2 - self.card_width - self.card_height / 4)
+            westEndY = int(self.screen_height / 2)
 
             westCards.pop(indexThrow)
 
@@ -409,10 +409,10 @@ class EuchreGUI:
         if len(northCards) > 0:
             indexThrow = random.randint(0, len(northCards) - 1)
 
-            northStartX = self.getCardLocation(indexThrow)
-            northStartY = self.off_the_edgeY + self.card_height / 2
-            northEndX = self.screen_width / 2
-            northEndY = self.screen_height / 2 - self.card_width - self.card_height / 4
+            northStartX = int(self.getCardLocation(indexThrow))
+            northStartY = int(self.off_the_edgeY + self.card_height / 2)
+            northEndX = int(self.screen_width / 2)
+            northEndY = int(self.screen_height / 2 - self.card_width - self.card_height / 4)
 
             northCards.pop(indexThrow)
 
@@ -424,11 +424,11 @@ class EuchreGUI:
         if len(eastCards) > 0:
             indexThrow = random.randint(0, len(eastCards) - 1)
 
-            eastStartX = self.screen_width - self.off_the_edgeX
-            eastStartY = self.getCardEastWestPlayerYLocation(eastCards, indexThrow)
+            eastStartX = int(self.screen_width - self.off_the_edgeX)
+            eastStartY = int(self.getCardEastWestPlayerYLocation(eastCards, indexThrow))
 
-            eastEndX = self.screen_width / 2 + self.card_width + self.card_height / 4
-            eastEndY = self.screen_height / 2
+            eastEndX = int(self.screen_width / 2 + self.card_width + self.card_height / 4)
+            eastEndY = int(self.screen_height / 2)
 
             eastCards.pop(indexThrow)
 
@@ -581,9 +581,13 @@ class EuchreGUI:
                     self.card_height))
             else:
                 temp = pygame.transform.rotate(self.cardz, 270)
-                self.screen.blit(temp, (x, y), (
-                    (4 - 1) - math.floor(num / 13) * self.card_height, (num % 13) * self.card_width, self.card_height,
-                    self.card_width))
+                self.screen.blit(temp, (x, y),
+                                 (
+                    ((4 - 1) - math.floor(num / 13)) * self.card_height,
+                    (num % 13) * self.card_width,
+                    self.card_height,
+                    self.card_width)
+                                 )
 
     # Implements If you want to use projectiles, this function must be there.
     def printProjectile(self, x, y, idNum, rotation):

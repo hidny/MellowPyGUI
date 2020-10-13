@@ -406,9 +406,13 @@ class MellowGUI:
                     self.card_height))
             else:
                 temp = pygame.transform.rotate(self.cardz, 270)
-                self.screen.blit(temp, (x, y), (
-                    ((4 - 1) - math.floor(num / 13)) * self.card_height, (num % 13) * self.card_width, self.card_height,
-                    self.card_width))
+                self.screen.blit(temp, (x, y),
+                                 (
+                    ((4 - 1) - math.floor(num / 13)) * self.card_height,
+                    (num % 13) * self.card_width,
+                    self.card_height,
+                    self.card_width)
+                                 )
 
     # Implements If you want to use projectiles, this function must be there.
     def printProjectile(self, x, y, idNum, rotation):

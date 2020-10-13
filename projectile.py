@@ -25,8 +25,8 @@ class Projectile:
 		#THROW_TIME=100
 		#FRAME_WAIT_TIME = 40
 		if self.beingThrown == 1:
-			currentX = (self.perc * (self.endX) + (100 - self.perc) * (self.startX))/100
-			currentY = (self.perc * (self.endY) + (100 - self.perc) * (self.startY))/100
+			currentX = int((self.perc * (self.endX) + (100 - self.perc) * (self.startX))/100)
+			currentY = int((self.perc * (self.endY) + (100 - self.perc) * (self.startY))/100)
 			
 			guiVars.printProjectile(currentX, currentY, self.projectileId, self.rotation)
 			
