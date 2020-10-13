@@ -10,15 +10,16 @@ import threading
 from pygame.locals import *
 from sys import exit
 
-import mellowClient
-import box
 import clientContext
 
 import connect4Client
 import button
 import channelRoomGUI
+import math
 
 #This is designed to be a singleton object
+
+
 
 class Connect4GUI:
 	
@@ -81,8 +82,6 @@ class Connect4GUI:
 		
 		self.moveUserWantsToMake = -1
 		
-		self.lastFrameTime = int(round(time.time() * 1000))
-		
 		self.isAwaitingBid = 0
 		self.currentBid = -1
 		
@@ -97,9 +96,6 @@ class Connect4GUI:
 			if self.board[len(self.board) - 1 - x][slot_num] == 0:
 				self.board[len(self.board) - 1 - x][slot_num] = colour
 				break
-	
-	def updateLastFrameTime(self):
-		self.lastFrameTime = int(round(time.time() * 1000))
 	
 	def isGameOver(self):
 		if self.gameOver == 0:
@@ -157,8 +153,7 @@ class Connect4GUI:
 
 def main(connection):
 	connect4GUI = Connect4GUI()
-	
-	connect4GUI.updateLastFrameTime()
+
 	
 	print('Inside Connect 4 GUI main!')
 	
@@ -216,7 +211,9 @@ def main(connection):
 				if my > connect4GUI.TOP_LEFT_HOLEY - connect4GUI.RADIUS and my < connect4GUI.TOP_LEFT_HOLEY + connect4GUI.Y_DIST_BETWEEN_HOLES * (len(connect4GUI.board)-1) + connect4GUI.RADIUS:
 					if connect4GUI.TOP_LEFT_HOLEX > connect4GUI.TOP_LEFT_HOLEX - connect4GUI.RADIUS and connect4GUI.TOP_LEFT_HOLEX < connect4GUI.TOP_LEFT_HOLEX + connect4GUI.X_DIST_BETWEEN_HOLES*(len(connect4GUI.board[0])-1) + connect4GUI.RADIUS:
 						if (mx -  (connect4GUI.TOP_LEFT_HOLEX - connect4GUI.RADIUS)) / connect4GUI.X_DIST_BETWEEN_HOLES >= 0 and (mx -  (connect4GUI.TOP_LEFT_HOLEX - connect4GUI.RADIUS)) / connect4GUI.X_DIST_BETWEEN_HOLES < len(connect4GUI.board[0]):
-							connect4GUI.setMoveUserWantsToMake((mx -  (connect4GUI.TOP_LEFT_HOLEX - connect4GUI.RADIUS)) / connect4GUI.X_DIST_BETWEEN_HOLES)
+							connect4GUI.setMoveUserWantsToMake(math.floor(
+								(mx - (connect4GUI.TOP_LEFT_HOLEX - connect4GUI.RADIUS))
+										/ connect4GUI.X_DIST_BETWEEN_HOLES))
 			
 			if connect4GUI.showBackToChannelButton ==1:
 				returnToChannelPressed = returnToChannelButton.updateButtonAndCheckIfPressed(mx, my, mouseJustPressed, mouseJustRelease)
@@ -262,8 +259,7 @@ def main(connection):
 			#End go back to channel
 			
 			#Update to next frame:
-			
-			connect4GUI.updateLastFrameTime()
+
 			clock.tick(1000/connect4GUI.FRAME_WAIT_TIME)
 		
 		

@@ -102,8 +102,6 @@ class MellowGUI:
 
         self.cardUserWantsToPlay = ''
 
-        self.lastFrameTime = int(round(time.time() * 1000))
-
         self.isAwaitingBid = 0
         self.currentBid = -1
 
@@ -126,9 +124,6 @@ class MellowGUI:
         self.westBid = -1
         self.northBid = -1
         self.eastBid = -1
-
-    def updateLastFrameTime(self):
-        self.lastFrameTime = int(round(time.time() * 1000))
 
     def isStillRunning(self):
         if self.gameOver == 0:
@@ -726,8 +721,6 @@ def sortCards(tempArray):
 
 def main(connection):
     mellowGUI = MellowGUI()
-    # keep track of the last frame/heartbeat so we can throw projectiles smoothly.
-    mellowGUI.updateLastFrameTime()
 
     print('Inside Mellow GUI main!')
 
@@ -831,8 +824,6 @@ def main(connection):
         # End print stuff.
 
         # Update to next frame:
-
-        mellowGUI.updateLastFrameTime()
         clock.tick_busy_loop(1000 / mellowGUI.FRAME_WAIT_TIME)
 
 

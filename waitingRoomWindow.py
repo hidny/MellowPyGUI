@@ -208,7 +208,6 @@ def main(threadName, args):
 		
 		#React to user events:
 		enterPressed = 0
-		cancelPressed = 0
 		mouseJustRelease = 0
 		mouseJustPressed = 0
 		frameHasKeyboardEvent = 0
@@ -284,8 +283,12 @@ def main(threadName, args):
 		#React to server messages:
 		
 		temp = connection.getNextServerMessageInQueue()
+
 		
 		if temp != '':
+
+			print("DEBUG Message from server: " + temp)
+
 			if temp.endswith('\n'):
 				temp = temp[0:-1]
 				
@@ -302,6 +305,7 @@ def main(threadName, args):
 				elif connection.getCurrentGameName() == "connect_four":
 					connect4GUI.main(connection)
 				elif connection.getCurrentGameName() == "reversi":
+					print("DEBUG: reversi")
 					reversiGUI.main(connection)
 				elif connection.getCurrentGameName() == "euchre":
 					euchreGUI.main(connection)

@@ -62,7 +62,7 @@ def serverListener(connection, reversiGUIObject):
 	
 	try:
 		#Sanity testing:
-		print('connect4 client in server Listener: ')
+		#print('reversi client in server Listener: ')
 		
 		while reversiGUIObject.isGameOver() == 0:
 			#print('Trying to get message!')
@@ -73,10 +73,8 @@ def serverListener(connection, reversiGUIObject):
 			currentLines = message.split('\n')
 			
 			for currentLine in currentLines:
-				if len(currentLine) > 1:
-					#print('*****************************')
-					#print("received message: " + str(currentLine))
-					pass
+				if len(currentLine) > 0:
+					reversiGUIObject.setMessage("received message: " + str(currentLine))
 				else:
 					continue
 				
@@ -115,7 +113,7 @@ def serverListener(connection, reversiGUIObject):
 						
 						
 						if currentLine.find(WIN) != -1:
-							print(currentLine.split(" ")[2])
+							# print(currentLine.split(" ")[2])
 							if blackPlayer == currentLine.split(" ")[2]:
 								reversiGUIObject.setMessage('Black(' + blackPlayer + ') wins!')
 							elif whitePlayer == currentLine.split(" ")[2]:
@@ -145,8 +143,8 @@ def serverListener(connection, reversiGUIObject):
 						
 				
 	except:
-		print('ERROR: in server listener')
-		print('ERROR: ' + currentLine)
+		# print('ERROR: in server listener')
+		# print('ERROR: ' + currentLine)
 		reversiGUIObject.setMessage("ERROR: in reversi server listener")
 
 def getBoardInfoFromLine(reversiGUIObject, line, rowNumber):
@@ -162,7 +160,7 @@ def clientListener(connection, reversiGUIObject):
 	global gameStarted
 	
 	try:
-		print('Client Listener')
+		#print('Client Listener')
 		
 		connection.sendMessageToServer(connection.getCurrentPlayerName() + '\n')
 		if connection.isHosting() == 1:
@@ -174,7 +172,7 @@ def clientListener(connection, reversiGUIObject):
 			if connection.isHosting() == 1 and gameStarted == 0:
 				time.sleep(1)
 				connection.sendMessageToServer('/start' + '\n')
-				print('sent start msg')
+				#print('sent start msg')
 			elif gameStarted == 1:
 				break
 			else:
@@ -190,14 +188,12 @@ def clientListener(connection, reversiGUIObject):
 def playMoveDefault(connection, reversiGUIObject):
 	global turn_lock
 	global itsYourTurn
-	
-	playedACardInFight = 0
+
 	
 	while reversiGUIObject.isGameOver() == 0:
 		with turn_lock:
 			if connection.getInteract() == 0:
 				if itsYourTurn==1:
-					move = 1
 					connection.sendMessageToServer('/move ' + str(1) + '\n')
 					itsYourTurn = 0
 					
@@ -225,7 +221,7 @@ def main(reversiGUIObject, args):
 	try:
 		_thread.start_new_thread( serverListener, (connection, reversiGUIObject) )
 	except:
-		print("Error: unable to start thread 1")
+		#print("Error: unable to start thread 1")
 		reversiGUIObject.setMessage("Error: unable to start thread 1")
 		exit(1)
 	
