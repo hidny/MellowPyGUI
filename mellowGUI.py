@@ -50,9 +50,11 @@ class MellowGUI:
 
     cardz_image_file = 'Image/cardz.png'
     cardz = pygame.image.load(cardz_image_file)
+    cardz_horizontal = pygame.transform.rotate(cardz, 270)
 
     backcard_image_file = 'Image/back.jpg'
     backcard = pygame.image.load(backcard_image_file)
+    backcard_horizontal = pygame.transform.rotate(backcard, 270)
 
     dot_image_file = 'Image/dot.png'
     dot = pygame.image.load(dot_image_file).convert()
@@ -396,8 +398,7 @@ class MellowGUI:
                 self.screen.blit(self.backcard, (x, y),
                                  (self.backIsBlue * self.card_width, 0, self.card_width, self.card_height))
             else:
-                temp = pygame.transform.rotate(self.backcard, 270)
-                self.screen.blit(temp, (x, y),
+                self.screen.blit(self.backcard_horizontal, (x, y),
                                  (0, self.backIsBlue * self.card_width, self.card_height, self.card_width))
         else:
             if rotate90 == 0:
@@ -405,8 +406,7 @@ class MellowGUI:
                     (num % 13) * self.card_width, math.floor(num / 13) * self.card_height, self.card_width,
                     self.card_height))
             else:
-                temp = pygame.transform.rotate(self.cardz, 270)
-                self.screen.blit(temp, (x, y),
+                self.screen.blit(self.cardz_horizontal, (x, y),
                                  (
                     ((4 - 1) - math.floor(num / 13)) * self.card_height,
                     (num % 13) * self.card_width,
@@ -451,9 +451,10 @@ class MellowGUI:
         self.printcard(x, y, 13 * suit + num, 1)
 
     def fill_background(self):
-        for y in range(0, self.screen_height, self.background.get_height()):
-            for x in range(0, self.screen_width, self.background.get_width()):
-                self.screen.blit(self.background, (x, y))
+        #for y in range(0, self.screen_height, self.background.get_height()):
+        #    for x in range(0, self.screen_width, self.background.get_width()):
+        #        self.screen.blit(self.background, (x, y))
+        self.screen.blit(self.background, (0, 0))
 
     def printSouthCards(self, mx, my):
         currentX = self.getXCordFirstCardNorthSouth(self.southCards)
@@ -761,7 +762,24 @@ def main(connection):
 
     pygame.event.set_allowed([QUIT, MOUSEBUTTONDOWN, MOUSEBUTTONUP])
 
+    #print background:
+    mellowGUI.fill_background()
+
+    mellowGUI.screen.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
+    mellowGUI.screen.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
+
+    # TODO: Chat box:
+    pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE,
+                     [(6 * mellowGUI.width) / 8, (4 * mellowGUI.height) / 5 + 10, 300, 200])
+
+    mellowGUI.printScore()
+    #end print background
+
+    iter = 0
+
     while 1:
+
+        iter = iter + 1
 
         # React to user events:
         for event in pygame.event.get():
@@ -787,16 +805,18 @@ def main(connection):
 
         # print Stuff:
 
-        mellowGUI.fill_background()
+        # Try printing background every other frame to make the movements smoother???
+        if iter % 2 == 0:
+            mellowGUI.fill_background()
 
-        mellowGUI.screen.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
-        mellowGUI.screen.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
+            mellowGUI.screen.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
+            mellowGUI.screen.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
 
-        # TODO: Chat box:
-        pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE,
-                         [(6 * mellowGUI.width) / 8, (4 * mellowGUI.height) / 5 + 10, 300, 200])
+            # TODO: Chat box:
+            pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE,
+                             [(6 * mellowGUI.width) / 8, (4 * mellowGUI.height) / 5 + 10, 300, 200])
 
-        mellowGUI.printScore()
+            mellowGUI.printScore()
 
         mellowGUI.printSouthCards(mx, my)
         mellowGUI.printWestCards()
