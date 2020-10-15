@@ -5,6 +5,8 @@ import random
 
 class Projectile:
 
+
+
 	def __init__(self, beingThrown, startX, startY, endX, endY, projectileId, rotation, percStop = 0):
 		self.beingThrown=beingThrown
 		self.startX = startX
@@ -32,6 +34,14 @@ class Projectile:
 			
 			if self.perc < self.percStop:
 				jump = (100*guiVars.FRAME_WAIT_TIME)/guiVars.THROW_TIME
+
+				#TODO: make it more formal:
+				# Hack to slow down the horizontal throw time:
+				#The idea is to make horizontal throws slower because it's a longer travel distance!
+				if self.rotation != 0:
+					jump = jump / 2.0
+				#End hack
+
 				self.perc = self.perc + jump
 				
 				if self.perc > self.percStop:

@@ -33,6 +33,11 @@ class MellowGUI:
 
     screen = pygame.display.set_mode(size)
 
+    backgroundLayer = pygame.Surface(size)
+    refreshRegions = []
+    refreshScore = 0
+    removeBidButtons = 0
+
     off_the_edgeX = 150
     off_the_edgeY = 150
 
@@ -40,7 +45,7 @@ class MellowGUI:
     card_height = 123
 
     THROW_TIME = 200
-    FRAME_WAIT_TIME = 20
+    FRAME_WAIT_TIME = 40
 
     WHITE = (255, 255, 255)
 
@@ -322,6 +327,7 @@ class MellowGUI:
                             return 0
 
     def updateScore(self, us, them):
+        self.refreshScore = 1
 
         with self.scoreLock:
             self.prevScoreForUs = self.scoreForUs
@@ -336,11 +342,11 @@ class MellowGUI:
     # END CONTROL FUNCTIONS
     def printScore(self):
 
-        pygame.draw.rect(self.screen, (255, 255, 255, 0), ((1 * self.width) / 32, (4 * self.height) / 5 + 10, 300, 200))
+        pygame.draw.rect(self.backgroundLayer, (255, 255, 255, 0), ((1 * self.width) / 32, (4 * self.height) / 5 + 10, 300, 200))
         # Make summation lines:
-        pygame.draw.rect(self.screen, (0, 0, 255, 0),
+        pygame.draw.rect(self.backgroundLayer, (0, 0, 255, 0),
                          ((1 * self.width) / 32, (4 * self.height) / 5 + 10 + 3 * 40, 60, 5))
-        pygame.draw.rect(self.screen, (0, 0, 255, 0),
+        pygame.draw.rect(self.backgroundLayer, (0, 0, 255, 0),
                          ((1 * self.width) / 32 + 70, (4 * self.height) / 5 + 10 + 3 * 40, 60, 5))
 
         with self.scoreLock:
@@ -357,16 +363,17 @@ class MellowGUI:
             labelExample4 = myfont.render(
                 str(self.scoreForUs) + "    " + str(self.scoreForThem) + "  (" + self.dealer + ")", 1, (0, 0, 255))
 
-            self.screen.blit(labelExample1, ((1 * self.width) / 32, (4 * self.height) / 5 + 10))
+            self.backgroundLayer.blit(labelExample1, ((1 * self.width) / 32, (4 * self.height) / 5 + 10))
 
             if self.diffScoreThem == FIRST_ROUND:
                 # If it's the first round and don't put the previous scores up...
                 pass
             else:
-                self.screen.blit(labelExample2, ((1 * self.width) / 32, (4 * self.height) / 5 + 10 + 1 * 40))
-                self.screen.blit(labelExample3, ((1 * self.width) / 32, (4 * self.height) / 5 + 10 + 2 * 40))
-            self.screen.blit(labelExample4, ((1 * self.width) / 32, (4 * self.height) / 5 + 10 + 3 * 40))
+                self.backgroundLayer.blit(labelExample2, ((1 * self.width) / 32, (4 * self.height) / 5 + 10 + 1 * 40))
+                self.backgroundLayer.blit(labelExample3, ((1 * self.width) / 32, (4 * self.height) / 5 + 10 + 2 * 40))
+            self.backgroundLayer.blit(labelExample4, ((1 * self.width) / 32, (4 * self.height) / 5 + 10 + 3 * 40))
 
+    TRICK_DISPLAY_SIZE = 60
     def printTricks(self):
         myfont = pygame.font.SysFont("comicsansms", 30)
 
@@ -375,16 +382,21 @@ class MellowGUI:
         labelTricksNorth = myfont.render(str(self.tricks[2]) + "/" + str(self.northBid), 1, (0, 0, 255))
         labelTricksEast = myfont.render(str(self.tricks[3]) + "/" + str(self.eastBid), 1, (0, 0, 255))
 
+        #TODO: make 30 a constant...
         if int(self.westBid) >= 0:
+            self.refreshRegions.append((5, self.height / 2, self.TRICK_DISPLAY_SIZE, self.TRICK_DISPLAY_SIZE))
             self.screen.blit(labelTricksWest, (5, self.height / 2))
 
         if int(self.eastBid) >= 0:
+            self.refreshRegions.append((1 * self.width - 85, self.height / 2, self.TRICK_DISPLAY_SIZE, self.TRICK_DISPLAY_SIZE))
             self.screen.blit(labelTricksEast, (1 * self.width - 85, self.height / 2))
 
         if int(self.northBid) >= 0:
+            self.refreshRegions.append((self.width / 2, self.height / 20, self.TRICK_DISPLAY_SIZE, self.TRICK_DISPLAY_SIZE))
             self.screen.blit(labelTricksNorth, (self.width / 2, self.height / 20))
 
         if int(self.southBid) >= 0:
+            self.refreshRegions.append((self.width / 2, self.height - 90, self.TRICK_DISPLAY_SIZE, self.TRICK_DISPLAY_SIZE))
             self.screen.blit(labelTricksSouth, (self.width / 2, self.height - 90))
 
     def printcard(self, x, y, num, rotate90):
@@ -393,18 +405,24 @@ class MellowGUI:
             num = 0
             sys.exit(1)
 
-        if num < 0:
-            if rotate90 == 0:
+        if rotate90 == 0:
+
+            self.refreshRegions.append((x, y, self.card_width, self.card_height))
+
+            if num < 0:
                 self.screen.blit(self.backcard, (x, y),
                                  (self.backIsBlue * self.card_width, 0, self.card_width, self.card_height))
             else:
-                self.screen.blit(self.backcard_horizontal, (x, y),
-                                 (0, self.backIsBlue * self.card_width, self.card_height, self.card_width))
-        else:
-            if rotate90 == 0:
                 self.screen.blit(self.cardz, (x, y), (
                     (num % 13) * self.card_width, math.floor(num / 13) * self.card_height, self.card_width,
                     self.card_height))
+        else:
+
+            self.refreshRegions.append((x, y, self.card_height, self.card_width))
+
+            if num < 0:
+                self.screen.blit(self.backcard_horizontal, (x, y),
+                                 (0, self.backIsBlue * self.card_width, self.card_height, self.card_width))
             else:
                 self.screen.blit(self.cardz_horizontal, (x, y),
                                  (
@@ -454,7 +472,7 @@ class MellowGUI:
         #for y in range(0, self.screen_height, self.background.get_height()):
         #    for x in range(0, self.screen_width, self.background.get_width()):
         #        self.screen.blit(self.background, (x, y))
-        self.screen.blit(self.background, (0, 0))
+        self.backgroundLayer.blit(self.background, (0, 0))
 
     def printSouthCards(self, mx, my):
         currentX = self.getXCordFirstCardNorthSouth(self.southCards)
@@ -636,6 +654,8 @@ class MellowGUI:
     def consumeBid(self):
         if self.currentBid >= 0:
             self.isAwaitingBid = 0
+            self.removeBidButtons = 1
+
         temp = self.currentBid
         self.currentBid = -1
         return temp
@@ -763,17 +783,20 @@ def main(connection):
     pygame.event.set_allowed([QUIT, MOUSEBUTTONDOWN, MOUSEBUTTONUP])
 
     #print background:
+
     mellowGUI.fill_background()
 
-    mellowGUI.screen.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
-    mellowGUI.screen.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
+    mellowGUI.backgroundLayer.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
+    mellowGUI.backgroundLayer.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
 
     # TODO: Chat box:
-    pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE,
+    pygame.draw.rect(mellowGUI.backgroundLayer, mellowGUI.WHITE,
                      [(6 * mellowGUI.width) / 8, (4 * mellowGUI.height) / 5 + 10, 300, 200])
 
     mellowGUI.printScore()
     #end print background
+
+    mellowGUI.screen.blit(mellowGUI.backgroundLayer, (0, 0, mellowGUI.width, mellowGUI.height), (0, 0, mellowGUI.width, mellowGUI.height))
 
     iter = 0
 
@@ -805,18 +828,23 @@ def main(connection):
 
         # print Stuff:
 
-        # Try printing background every other frame to make the movements smoother???
-        if iter % 2 == 0:
-            mellowGUI.fill_background()
-
-            mellowGUI.screen.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
-            mellowGUI.screen.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
-
-            # TODO: Chat box:
-            pygame.draw.rect(mellowGUI.screen, mellowGUI.WHITE,
-                             [(6 * mellowGUI.width) / 8, (4 * mellowGUI.height) / 5 + 10, 300, 200])
-
+        if mellowGUI.refreshScore == 1:
+            #TODO: put refreshRegions dimensions in a constant:
+            mellowGUI.refreshRegions.append(((1 * mellowGUI.width) / 32, (4 * mellowGUI.height) / 5 + 10, 300, 200))
             mellowGUI.printScore()
+            mellowGUI.refreshScore = 0
+
+        if mellowGUI.removeBidButtons == 1:
+            #TODO: put refreshRegions dimensions in a constant:
+            mellowGUI.refreshRegions.append((mellowGUI.width / 2 - 200, mellowGUI.height / 2 - 100, 400, 200))
+            mellowGUI.removeBidButtons = 0
+
+        #TODO: fill in refresh regions:
+        for region in mellowGUI.refreshRegions:
+            mellowGUI.screen.blit(mellowGUI.backgroundLayer, (region[0], region[1], region[2], region[3]),
+                                                        (region[0], region[1], region[2], region[3]))
+        mellowGUI.refreshRegions = []
+        # END fill in background regions
 
         mellowGUI.printSouthCards(mx, my)
         mellowGUI.printWestCards()
@@ -837,6 +865,8 @@ def main(connection):
         else:
             mellowGUI.screen.blit(mellowGUI.dot, (mx - 5, my - 5), (0, 0, 10, 10))
         # end print colour of cursor.
+
+        mellowGUI.refreshRegions.append((mx - 5, my - 5, 10, 10))
 
         if mellowGUI.isWaitingForBid() == 1:
             mellowGUI.displayBidChoices()
