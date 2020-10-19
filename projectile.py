@@ -37,10 +37,10 @@ class Projectile:
 
 				#TODO: make it more formal:
 				# Hack to slow down the horizontal throw time:
-				#The idea is to make horizontal throws slower because it's a longer travel distance!
+				# The idea is to make horizontal throws slower because it's a longer travel distance!
 				if self.rotation != 0:
 					jump = jump / 2.0
-				#End hack
+				# End hack
 
 				self.perc = self.perc + jump
 				
