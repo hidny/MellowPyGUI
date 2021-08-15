@@ -69,6 +69,7 @@ class MellowGUI:
 
     green_dot_image_file = 'Image/greendot.png'
     greendot = pygame.image.load(green_dot_image_file).convert()
+    
 
     def __init__(self):
         self.bidButtons = []
@@ -108,6 +109,7 @@ class MellowGUI:
         self.currentMsg = ''
 
         self.cardUserWantsToPlay = ''
+        self.yellowDotIndex = -1
 
         self.isAwaitingBid = 0
         self.currentBid = -1
@@ -489,6 +491,12 @@ class MellowGUI:
                 else:
                     self.printcardFromCenter(currentX, self.screen_height - self.off_the_edgeY, self.southCards[index],
                                              0)
+                
+                if index == self.yellowDotIndex:
+                    #yellow = FFFF00
+                    pygame.draw.circle(self.screen, (255, 255, 100), (int(currentX - self.card_width/4), self.screen_height - self.off_the_edgeY), 20)
+                    print('Yellow circle at index ' + str(index))
+                
                 currentX = currentX + (self.card_width / 2)
 
     def printWestCards(self):
@@ -567,6 +575,7 @@ class MellowGUI:
 
     def setCardUserWantsToPlayToNull(self):
         self.cardUserWantsToPlay = ''
+        self.yellowDotIndex = -1
 
     def getCardUserWantsToPlay(self):
         return self.cardUserWantsToPlay
@@ -577,7 +586,6 @@ class MellowGUI:
 
             mouseHoveringOverCard = self.isMouseHoveringOverCard(mx, my)
 
-            # no card held:
             if mouseJustPressed == 1:
 
                 if mouseHoveringOverCard == 1:
@@ -586,6 +594,9 @@ class MellowGUI:
             if mouseJustRelease == 1:
                 if self.isWaitingForBid() == 1:
                     self.checkIfUserBidAfterClick(mx, my)
+
+                #After the user clicks, the card selection should go away:
+                self.setCardUserWantsToPlayToNull()
 
                 #Rough guess at the intentions of the player...
                 #If player release card over edge or make a line with slope pointing up more than sideways, assume they want to play a card:
@@ -596,8 +607,9 @@ class MellowGUI:
                         if 0 <= cardHeldIndex < len(self.southCards):
                             # print('Trying to play: ' + str(convertCardNumToString(self.southCards[cardHeldIndex]))
                             self.setCardUserWantsToPlay(convertCardNumToString(self.southCards[cardHeldIndex]))
+                            self.yellowDotIndex=cardHeldIndex
                             cardHeldIndex = self.NOINDEX
-
+                            print('Yellow dot index: ' + str(self.yellowDotIndex))
 
             if mouseHeld == 1:
                 if mouseHoveringOverCard == 1:
@@ -789,9 +801,9 @@ def main(connection):
     mellowGUI.backgroundLayer.blit(mellowLogo, (0, 0, 500, 500), (0, 0, 500, 500))
     mellowGUI.backgroundLayer.blit(versNumber, (20, 50, 500, 500), (0, 0, 500, 500))
 
-    # TODO: Chat box:
-    pygame.draw.rect(mellowGUI.backgroundLayer, mellowGUI.WHITE,
-                     [(6 * mellowGUI.width) / 8, (4 * mellowGUI.height) / 5 + 10, 300, 200])
+    # No Chat box:
+    #pygame.draw.rect(mellowGUI.backgroundLayer, mellowGUI.WHITE,
+    #                 [(6 * mellowGUI.width) / 8, (4 * mellowGUI.height) / 5 + 10, 300, 200])
 
     mellowGUI.printScore()
     #end print background
