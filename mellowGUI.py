@@ -495,7 +495,7 @@ class MellowGUI:
                 if index == self.yellowDotIndex:
                     #yellow = FFFF00
                     pygame.draw.circle(self.screen, (255, 255, 100), (int(currentX - self.card_width/4), self.screen_height - self.off_the_edgeY), 20)
-                    print('Yellow circle at index ' + str(index))
+                    #print('Yellow circle at index ' + str(index))
                 
                 currentX = currentX + (self.card_width / 2)
 
@@ -831,6 +831,13 @@ def main(connection):
                 if event.button == 1:
                     mouseHeld = 0
                     mouseJustRelease = 1
+
+            #Adjust cards so it could fit onto smaller screens:
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_DOWN:
+                    mellowGUI.off_the_edgeY = mellowGUI.off_the_edgeY - 1
+                elif event.key == pygame.K_UP:
+                    mellowGUI.off_the_edgeY = mellowGUI.off_the_edgeY + 1
 
         mx, my = pygame.mouse.get_pos()
 
